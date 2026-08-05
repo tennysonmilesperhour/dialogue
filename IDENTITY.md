@@ -35,6 +35,7 @@ Rules: no exclamation points. No emoji in product copy. No second-person accusat
 - **Borders:** hard 1.5px black rules with offset shadows. No soft blur. The weight is the point.
 - **Type:** Fraunces for display and app names. IBM Plex Mono for every number, label, and timestamp, tabular figures always. IBM Plex Serif for body and the user's own written reminders, italic.
 - **Stamps:** verdicts land as rubber stamps, rotated a few degrees, multiply blend. "Dismissed +1" in red, "Logged" in green. This is the app's one moment of delight and it should feel physical.
+- **Named columns:** during setup the user names each watched app ("What do you call this app?"). This is load-bearing, not flavor: Apple's tokens expose no app names to us, so the user's own labels are the only names that can print in the debrief notification, the weekly review, and the ledger. Set them in Plex Serif italic, like the reminder lines. The user's handwriting in the book.
 
 **Direction locked:** the heavier analog v1, not the sleek iOS-native pass. The ink weight is what makes it not look like every other app in the category, and it sets the design for the Shield screens.
 

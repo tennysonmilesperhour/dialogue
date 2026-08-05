@@ -49,4 +49,4 @@ Append-only. Newest at the bottom. Format: decision, date, rationale, what would
 
 ---
 
-*Next decisions pending: close-detection prototype outcome (week 1), free tier boundary (before beta), launch pricing test (before public launch).*
+*Next decisions pending: D012 close-detection and gate-flow verdict (week 1 prototype: direct link, notification hop, or notification-action chips), D013 login method (proposal: Sign in with Apple only, decide before the Sync build), free tier boundary (before beta), launch pricing test (before public launch), EU DSA trader vs US-first launch (weeks 7 to 8).*
