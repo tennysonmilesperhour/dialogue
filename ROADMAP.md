@@ -4,7 +4,7 @@
 
 Two things gate everything and both must start on day one:
 
-1. **Family Controls entitlement requests, all five bundle IDs.** Requests are per bundle ID and every Screen Time extension needs its own. Approval runs from about four business days to several weeks and is reviewed manually. Development entitlement works locally in the meantime, so submitting early costs nothing and submitting late costs the launch.
+1. **Family Controls entitlement requests, all five bundle IDs.** Requests are per bundle ID and every Screen Time extension needs its own. Approval runs from about four business days to several weeks and is reviewed manually. Development entitlement works locally in the meantime, so submitting early costs nothing and submitting late costs the launch. Note: every TestFlight build, internal or external, is distribution-signed, so **entitlement approval gates the week 6 beta, not just the week 11 submission**. Check request status weekly; escalate through developer support after 10 days of silence.
 2. **Close-detection prototype.** If iOS cannot tell us when a session ended, the debrief degrades and the product changes shape. Answer this in week one, before writing production code.
 
 ---
@@ -15,23 +15,30 @@ Two things gate everything and both must start on day one:
 - [ ] Register all five bundle IDs (see ARCHITECTURE.md)
 - [ ] Submit Family Controls (Distribution) request for each, with a clear digital-wellbeing use case and an explicit statement that no usage data is collected for advertising or profiling
 - [ ] USPTO + App Store name clearance on "dialogue"
+- [ ] Create the App Store Connect app record and resolve the store name now (the bare word is likely taken; pick the fallback calmly, not under submission pressure)
 - [ ] Secure domain and social handles
 - [ ] Repo initialized with these docs in `/docs`
+- [ ] CI bootstrapped with a TestFlight upload lane (Xcode Cloud or GitHub Actions + fastlane)
+- [ ] Marketing site stub live with a waitlist. Demand signal starts now, while the entitlement requests sit in Apple's queue, not at launch.
 
 ## Week 1, de-risk
 
 - [ ] Throwaway prototype: shield an app, render a custom shield, capture Enter and Never mind actions
-- [ ] Test all three close-detection layers on a physical device across a full day
+- [ ] Measure the shield-to-app hop. Direct open from the action extension is likely impossible (see ARCHITECTURE.md); test the notification deep link, and prototype reason chips as notification action buttons as the alternative gate shape
+- [ ] Test all three close-detection layers on a physical device across a full day, including real re-arm granularity and callback latency
 - [ ] **Gate decision:** does layer 1 (re-arm timestamp) give usable session lengths? Log the answer in DECISIONS.md before proceeding.
 - [ ] Design the gate card at production fidelity within the shield template's real constraints
 
 ## Weeks 2 to 4, core build
 
-- [ ] Onboarding: authorization, FamilyActivityPicker, reminder line, chip setup, soft budgets
-- [ ] Gate: shield config + shield action + deep link to chip card
+- [ ] Onboarding: authorization, FamilyActivityPicker, per-app naming (tokens expose no display name), reminder line, chip setup, soft budgets
+- [ ] Gate: shield config + shield action + the reason path the week 1 verdict picked
 - [ ] Debrief: verdict, stat line, note, stamp animation
 - [ ] Home: app rows with IMS, never-mind streak
 - [ ] `DialogueKit`: IMS math, SwiftData models, design tokens
+- [ ] Extensions write to a lightweight app group store; main app ingests into SwiftData
+- [ ] Privacy manifest (`PrivacyInfo.xcprivacy`) across all targets
+- [ ] DialogueKit unit tests (IMS math, tier rules) and copy lint (em dashes, exclamation points, emoji) in CI
 - [ ] Local-only. No Supabase yet.
 
 ## Week 5, review layer
@@ -39,21 +46,26 @@ Two things gate everything and both must start on day one:
 - [ ] Weekly review screen: IMS trend, reason cost table, one rule-based pattern
 - [ ] Sunday evening local notification
 - [ ] TelemetryDeck instrumentation on the four beta metrics (debrief completion, dismissal rate, retention, IMS trend)
+- [ ] Privacy policy and support pages live (required for external TestFlight, not just the App Store)
+- [ ] External build submitted to Beta App Review (budget a few days, more for Screen Time apps)
 
 ## Week 6, beta
 
 - [ ] TestFlight build, 50 users
 - [ ] Recruit: your SLC network, the local AI skill-building group, r/nosurf, r/digitalminimalism, Indie Hackers
 - [ ] Run 6 weeks. Instrument day 30 hard, since that is where the category dies.
-- [ ] **Go/no-go:** debrief completion above 50% proceeds. Below 35% means rework before spend.
+- [ ] **Go/no-go at the beta week 3 checkpoint (calendar week 9),** so the decision does not wait on data that arrives after submission: debrief completion at or above 50% and holding proceeds to submission prep. 35 to 50% means one round of friction reduction and a two week slip. Below 35% means rework before spend (D001's reversal condition).
 
 ## Weeks 7 to 10, monetize and polish (parallel with beta)
 
 - [ ] StoreKit 2 + RevenueCat, one-time IAP + optional Sync subscription
-- [ ] Supabase sync for the Sync tier
-- [ ] Paywall after first debrief, with the "pay once" line
+- [ ] Supabase sync for the Sync tier, row-level security verified per table
+- [ ] Sign in with Apple as the only login
+- [ ] In-app account deletion with full server-side wipe (required once Sync creates accounts)
+- [ ] Paywall after first debrief, with the "pay once" line, plus price, term, privacy policy, and EULA links
 - [ ] Next.js marketing site on Vercel
-- [ ] Privacy policy, support page, App Privacy nutrition label (accurate, minimal)
+- [ ] App Privacy nutrition label (accurate, minimal; policy and support pages went live in week 5)
+- [ ] EU DSA trader verification started, or a deliberate US-first launch logged in DECISIONS.md
 
 ## Week 11, App Store submission
 
@@ -61,6 +73,9 @@ Two things gate everything and both must start on day one:
 - [ ] Screenshots: gate, debrief with stamp, weekly review, home, adaptive gate
 - [ ] Review notes: state plainly that this is a personal digital-wellbeing tool for the account holder's own device, that no data is collected for advertising, and that the app never blocks access
 - [ ] Category: Health & Fitness, secondary Productivity
+- [ ] Attach all IAPs to the build (one-time unlock, Sync monthly, Sync annual)
+- [ ] Export compliance key (`ITSAppUsesNonExemptEncryption = NO`) in every target
+- [ ] Submit with **manual release**, so approval can sit until the beta checkpoint confirms
 - [ ] Budget 2 to 3 review cycles. Screen Time apps get extra scrutiny.
 
 ## Week 12, launch
@@ -71,6 +86,14 @@ Launch assets, in priority order:
 3. Show HN and r/nosurf, leading with the psychology base and the pay-once model
 4. Outreach to digital wellbeing and productivity newsletters. The pay-once stance is your press angle: an app that refuses the subscription treadmill.
 5. Beta users' IMS improvement charts, with permission, as social proof
+
+## Distribution loop (weekly, from launch)
+
+Launch week is an event; distribution is a system. The two shareable artifacts (the gate card and the reason cost table) are the raw material.
+
+- One piece of short-form content per week built on a real artifact: a gate card render, a reason cost table, an IMS trend
+- A handful of UGC creators in the digital wellbeing and productivity niche, seeded with the pay-once angle
+- Paid acquisition only after organic conversion data exists. Buying users is allowed (the entitlement risk is collecting usage data for ads, which we never do); buying users before the funnel converts is just burning the runway.
 
 ## Post-launch
 

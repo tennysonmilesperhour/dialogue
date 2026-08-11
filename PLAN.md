@@ -189,9 +189,27 @@ Beyond INTENT.md's five:
 8. **Name collision.** If "dialogue" is unavailable as an App Store name, the brand survives through the wordmark and a qualified store name. Decide the fallback in week 0.
 9. **Callback latency noise.** If close timestamps run minutes late, session lengths blur but verdicts survive. IMS is verdict-based, so the one metric is robust to this. Label lengths as approximate everywhere, which is already policy.
 
-## 6. Suggested edits to the existing docs
+## 6. Edits to the existing docs (applied 2026-08-05)
 
-- **ARCHITECTURE.md:** absorb 2.1, the gate flow (notification hop or notification-action chips), grace mechanics as approximate, user-entered app names, report extension as display-only, and the extension write pattern.
-- **ROADMAP.md:** absorb 2.2 (checkpointed go/no-go, manual release) and 2.3 (compliance rows, privacy pages moved to week 5, the TestFlight entitlement dependency called out at week 6).
-- **DECISIONS.md:** reserve D012 for the week 1 prototype verdict; add D013 for the login decision (Sign in with Apple only) when it is made.
-- **IDENTITY.md:** add the per-app naming step ("What do you call this app?") to the design language. It is on-voice and it is load-bearing (2.1.C).
+- **ARCHITECTURE.md:** absorbed 2.1, the gate flow (notification hop or notification-action chips), grace mechanics as approximate, user-entered app names, report extension as display-only, and the extension write pattern.
+- **ROADMAP.md:** absorbed 2.2 (checkpointed go/no-go, manual release) and 2.3 (compliance items in their weeks, privacy pages moved to week 5, the TestFlight entitlement dependency called out in the critical path), plus the distribution loop from section 7.
+- **DECISIONS.md:** pending list now reserves D012 for the week 1 prototype verdict and D013 for the login decision.
+- **IDENTITY.md:** per-app naming ("What do you call this app?") added to the design language as a load-bearing element (2.1.C).
+
+## 7. Borrowed from the fast-shipper playbook
+
+Reviewed a circulating indie playbook (demand-first idea selection, rapid wireframes, AI-assisted build, ship V1 in hours, distribute through UGC creators and paid ads, relentless iteration, a portfolio of 45+ apps). The claims are survivorship-flavored, one $30K/month hit implies a long tail of quiet deaths, but the system underneath is sound. What transfers to dialogue and what does not:
+
+**Adopt**
+
+- **Demand signal before code.** The playbook starts with market, not code. dialogue's equivalent: the waitlist page goes live in week 0 while the entitlement requests sit in Apple's queue. Zero cost, and it converts the entitlement wait into a demand test. Added to ROADMAP.md week 0.
+- **Distribution as a system, not a launch event.** The playbook's real edge is not build speed, it is a standing distribution loop. dialogue has two natively shareable artifacts (the gate card and the reason cost table); the loop is weekly short-form content built on them, plus a handful of UGC creators in the digital wellbeing niche. Added to ROADMAP.md as its own section.
+- **Paid acquisition, gated.** Running ads to acquire users does not threaten the Family Controls entitlement (the entitlement risk is collecting usage data for advertising, which never happens here). But paid spend waits for organic conversion data. Small tests only after the funnel converts.
+- **Fast kill criteria.** The hidden lesson of 45 apps: most died quickly and cheaply. dialogue already has this discipline. The week 1 prototype is the cheap death, and the 35% debrief floor (D001) is the kill switch. Keep both sacred.
+- **Paywall iteration discipline.** Their Superwall maps to RevenueCat experiments here, already planned. The part worth copying is cadence: instrument the paywall funnel from day one and run the MONETIZATION.md pricing tests on a calendar, not "eventually."
+
+**Reject**
+
+- **Ship V1 in hours.** Impossible for this product (entitlement approval, five native targets) and wrong for it: the moat is a considered mechanism, not speed to market. The speed lesson still applies where it can: the week 1 throwaway prototype and a TestFlight build on every merge.
+- **Subscription-paywall maximization.** The playbook's monetization tooling exists to optimize subscription conversion. dialogue's entire wedge is refusing the category's subscription treadmill (D009). Optimizing the one-time paywall is fine; importing hard-sell mechanics is brand suicide.
+- **Portfolio thinking, for now.** One app, one platform, done well (INTENT.md). The portfolio lesson applies in exactly one form: if the kill criteria fire, actually kill it and move on.
