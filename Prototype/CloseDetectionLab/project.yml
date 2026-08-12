@@ -1,0 +1,91 @@
+name: CloseDetectionLab
+options:
+  deploymentTarget:
+    iOS: "17.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    # Set your Apple Developer team ID here or per-target in Xcode.
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+
+targets:
+  LabApp:
+    type: application
+    platform: iOS
+    sources:
+      - Sources/Lab
+      - Sources/Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.dialogue.lab
+        CODE_SIGN_ENTITLEMENTS: Entitlements/LabApp.entitlements
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_CFBundleDisplayName: dialogue lab
+    info:
+      path: Generated/LabApp-Info.plist
+      properties:
+        CFBundleURLTypes:
+          - CFBundleURLSchemes: [dialoguelab]
+    dependencies:
+      - target: LabShield
+        embed: true
+      - target: LabShieldAction
+        embed: true
+      - target: LabMonitor
+        embed: true
+
+  LabShield:
+    type: app-extension
+    platform: iOS
+    sources:
+      - Sources/ShieldConfig
+      - Sources/Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.dialogue.lab.shield
+        CODE_SIGN_ENTITLEMENTS: Entitlements/LabShield.entitlements
+        GENERATE_INFOPLIST_FILE: YES
+    info:
+      path: Generated/LabShield-Info.plist
+      properties:
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.ManagedSettingsUI.shield-configuration-service
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ShieldConfigurationExtension
+
+  LabShieldAction:
+    type: app-extension
+    platform: iOS
+    sources:
+      - Sources/ShieldAction
+      - Sources/Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.dialogue.lab.shieldaction
+        CODE_SIGN_ENTITLEMENTS: Entitlements/LabShieldAction.entitlements
+        GENERATE_INFOPLIST_FILE: YES
+    info:
+      path: Generated/LabShieldAction-Info.plist
+      properties:
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.ManagedSettings.shield-action-service
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ShieldActionExtension
+
+  LabMonitor:
+    type: app-extension
+    platform: iOS
+    sources:
+      - Sources/Monitor
+      - Sources/Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.dialogue.lab.monitor
+        CODE_SIGN_ENTITLEMENTS: Entitlements/LabMonitor.entitlements
+        GENERATE_INFOPLIST_FILE: YES
+    info:
+      path: Generated/LabMonitor-Info.plist
+      properties:
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.deviceactivity.monitor-extension
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).MonitorExtension

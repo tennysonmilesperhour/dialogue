@@ -1,0 +1,268 @@
+/* Analog ledger, not wellness app. Values mirror DialogueKit/DesignTokens. */
+
+:root {
+  --paper: #f5f1e6;
+  --ink: #1c1a16;
+  --green: #2e5e3f;
+  --red: #b23a2f;
+  --rule: rgba(28, 26, 22, 0.14);
+  --line: 30px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(to right, transparent 25px, var(--red) 25px, var(--red) 27px, transparent 27px),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--line) - 1px),
+      var(--rule) calc(var(--line) - 1px),
+      var(--rule) var(--line)
+    );
+  color: var(--ink);
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 17px;
+  line-height: var(--line);
+}
+
+main {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: calc(var(--line) * 2) 20px calc(var(--line) * 4) 44px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 600;
+  line-height: var(--line);
+}
+
+h1 {
+  font-size: 56px;
+  line-height: calc(var(--line) * 2);
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: 26px;
+  margin-top: calc(var(--line) * 2);
+  margin-bottom: var(--line);
+}
+
+p {
+  margin-bottom: var(--line);
+}
+
+a {
+  color: var(--ink);
+  text-decoration-color: var(--red);
+  text-decoration-thickness: 1.5px;
+}
+
+.mono {
+  font-family: var(--font-mono), monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+}
+
+.reminder {
+  font-style: italic;
+  color: var(--red);
+}
+
+.kicker {
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--red);
+}
+
+/* Hard borders with offset shadows. No soft blur; the weight is the point. */
+.card {
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  box-shadow: 5px 5px 0 var(--ink);
+  padding: calc(var(--line) - 8px) 22px;
+  margin: calc(var(--line) * 1.5) 0;
+}
+
+.card .app-line {
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  border-bottom: 1.5px solid var(--ink);
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.chip {
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  border: 1.5px solid var(--ink);
+  padding: 5px 12px;
+  background: transparent;
+}
+
+.chip.honest {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.gate-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.btn {
+  font-family: var(--font-mono), monospace;
+  font-size: 14px;
+  padding: 10px 18px;
+  border: 1.5px solid var(--ink);
+  cursor: pointer;
+}
+
+.btn.primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btn.secondary {
+  background: transparent;
+  color: var(--ink);
+}
+
+.stamp {
+  display: inline-block;
+  font-family: var(--font-mono), monospace;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: 2.5px solid var(--green);
+  color: var(--green);
+  padding: 4px 12px;
+  transform: rotate(-4deg);
+  mix-blend-mode: multiply;
+}
+
+.stamp.red {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+table.ledger {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono), monospace;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: var(--line);
+}
+
+table.ledger caption {
+  text-align: left;
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding-bottom: 8px;
+}
+
+table.ledger th,
+table.ledger td {
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+  padding: 6px 4px;
+}
+
+table.ledger th {
+  border-bottom: 1.5px solid var(--ink);
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+
+table.ledger td.num {
+  text-align: right;
+}
+
+.waitlist-form {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.waitlist-form input {
+  flex: 1 1 260px;
+  font-family: var(--font-mono), monospace;
+  font-size: 15px;
+  padding: 11px 14px;
+  border: 1.5px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+}
+
+.waitlist-form input:focus {
+  outline: 2px solid var(--red);
+  outline-offset: 1px;
+}
+
+.form-note {
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+.form-note.ok {
+  color: var(--green);
+}
+
+.form-note.err {
+  color: var(--red);
+}
+
+footer {
+  margin-top: calc(var(--line) * 3);
+  border-top: 1.5px solid var(--ink);
+  padding-top: var(--line);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 560px) {
+  h1 {
+    font-size: 40px;
+  }
+  main {
+    padding-left: 40px;
+  }
+}

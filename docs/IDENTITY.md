@@ -19,10 +19,13 @@ dialogue is a good bookkeeper. Precise, unsentimental, never moralizing. It stat
 - "Honest answers welcome. Bored is a legal entry."
 
 **It never sounds like:**
+
+<!-- copy-lint: off, these are the counter-examples -->
 - "You've wasted 4 hours this week!" (shame)
 - "Let's crush your goals!" (hype)
 - "Take a mindful breath." (wellness cliché)
 - "Are you sure you want to continue?" (nagging, and implies a wrong answer)
+<!-- copy-lint: on -->
 
 Rules: no exclamation points. No emoji in product copy. No second-person accusations. Numbers do the persuading. Never use em dashes; use commas, parentheses, or rewrite.
 
