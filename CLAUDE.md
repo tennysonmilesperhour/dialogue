@@ -25,3 +25,9 @@ docs/                  strategy docs and submission paperwork
 ```
 
 The execution plan and its gates live in `docs/PLAN.md`. Log every decision in `docs/DECISIONS.md`, append-only.
+
+CI runs three jobs on every pull request: copy lint (the voice rules above,
+mechanically), the web build, and `swift test` for DialogueKit. Run the lint
+locally with `python3 scripts/copy_lint.py`. To quote copy that breaks a rule
+on purpose, mark the line `copy-lint: allow` or wrap the block in
+`copy-lint: off` and `copy-lint: on`.
