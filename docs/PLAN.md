@@ -154,6 +154,10 @@ Checklist in section 4. Submit with manual release selected.
 
 ## 4. Submission checklist (week 11)
 
+*Field-by-field values for every App Store Connect box below, plus the
+privacy label answers, the IAP definitions, and the screenshot spec, live in
+`docs/submission/APP_STORE_METADATA.md`.*
+
 **Binary**
 - [ ] All five entitlements show Distribution in the portal
 - [ ] Every provisioning profile regenerated after that, then a clean archive (a main app on Distribution with one extension still on Development is the classic silent killer, per ROADMAP.md)
