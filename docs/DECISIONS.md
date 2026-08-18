@@ -47,6 +47,10 @@ Append-only. Newest at the bottom. Format: decision, date, rationale, what would
 **D011. Submit all five Family Controls entitlement requests on day one.**
 2026-08-03. Requests are per bundle ID, including every extension, and approval runs from about four business days to several weeks. The development entitlement works locally in the meantime, so this cost is zero if submitted early and fatal if submitted late.
 
+**D014. Store name: claim "dialogue" if it is free, but ship "dialogue: intention ledger" unless a trademark search clears.**
+2026-08-18. App Store Connect enforces exact-string uniqueness and nothing about trademarks, so availability and safety are two different questions. A US store search found Dialogue AAC, Dialogue Health, and Dialogue: Your Chats Live On live, none of them holding the bare string, so the name may well be free; the authoritative check is typing it into the app record. The trademark question is the one that matters. Dialogue Health Technologies runs a health and wellness platform with a live US listing, and dialogue files under Health & Fitness, so it is the same word on the same shelf. The qualified store name costs nothing, because the wordmark carries the brand and the keyword field carries search, and it removes the collision. Full reasoning in docs/submission/APP_STORE_METADATA.md section 2.
+*Reverses if:* an attorney's class 9 and class 44 search comes back clean, at which point ship the bare word.
+
 ---
 
 *Next decisions pending: D012 close-detection and gate-flow verdict (week 1 prototype: direct link, notification hop, or notification-action chips), D013 login method (proposal: Sign in with Apple only, decide before the Sync build), free tier boundary (before beta), launch pricing test (before public launch), EU DSA trader vs US-first launch (weeks 7 to 8).*
