@@ -1,0 +1,18 @@
+# The Xcode project is generated from project.yml. Never commit it.
+*.xcodeproj
+*.xcworkspace
+Generated/
+
+# Xcode
+DerivedData/
+build/
+*.xcuserstate
+xcuserdata/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Packages/
+
+# macOS
+.DS_Store

@@ -22,6 +22,21 @@ public enum DesignTokens {
         public static let borderWidth: Double = 1.5
     }
 
+    /// Splits a six digit hex string into components in 0...1. Nil for any
+    /// string that is not six hex digits, so a typo in a token fails loudly
+    /// at the call site instead of rendering as black.
+    public static func components(hex: String) -> (red: Double, green: Double, blue: Double)? {
+        let digits = hex.hasPrefix("#") ? String(hex.dropFirst()) : hex
+        guard digits.count == 6, digits.allSatisfy(\.isHexDigit),
+              let value = UInt32(digits, radix: 16)
+        else { return nil }
+        return (
+            red: Double((value >> 16) & 0xFF) / 255,
+            green: Double((value >> 8) & 0xFF) / 255,
+            blue: Double(value & 0xFF) / 255
+        )
+    }
+
     public enum FontName {
         /// Display and app names.
         public static let display = "Fraunces"
