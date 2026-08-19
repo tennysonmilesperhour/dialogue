@@ -79,9 +79,9 @@ Phases mirror ROADMAP.md weeks. Each has an exit gate; do not start the next pha
 
 ### Phase 0: setup (days 1 to 2)
 
-- [ ] Apple Developer Program active; Small Business Program application submitted
-- [ ] Register all five bundle IDs (list in ARCHITECTURE.md)
-- [ ] Submit Family Controls (Distribution) requests for all five, same day. Use-case wording: personal digital wellbeing tool for the account holder's own device; no usage data collected for advertising or profiling; the app never blocks access.
+- [x] Apple Developer Program active (team T4PQ8SNY8D). Small Business Program application still outstanding
+- [x] Register all five bundle IDs (list in ARCHITECTURE.md), plus the `group.app.dialogue` App Group. Done 2026-08-19
+- [x] Submit the Family Controls (Distribution) request. Done 2026-08-19. Corrected: it is **one team-level request**, not five, and the form has no use-case field to fill (D016). The wording drafted here was never submitted because there was nowhere to put it.
 - [ ] Create the App Store Connect app record; resolve the name or lock the fallback (2.3)
 - [ ] USPTO and App Store search on "dialogue" (D008 is blocked on this)
 - [ ] Secure domain and social handles

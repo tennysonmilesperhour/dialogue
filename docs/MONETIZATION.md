@@ -35,7 +35,7 @@ Read that as a market instruction. The category has trained users to expect a su
 
 **dialogue Sync, $1.99/mo or $14.99/yr, optional**
 - Cross-device sync (iPhone + iPad)
-- Web review at dialogue.app
+- Web review on the marketing domain (currently `dialogue-five.vercel.app`, pending a real domain)
 - Cloud backup of the ledger
 - Monthly deep patterns (time-of-day, day-of-week, reason drift)
 

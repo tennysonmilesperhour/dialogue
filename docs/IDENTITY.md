@@ -6,7 +6,7 @@
 
 The name carries the architecture. The gate is the opening line. The debrief is the closing line. The weekly review is the conversation you have been having with yourself all along.
 
-**Trademark note:** Dialogue Health Technologies (Canadian telehealth) holds the name in health services. Clear a USPTO and App Store search before any brand spend. Domain strategy: assume the bare dictionary word is gone, target `dialogue.app`, `usedialogue.com`, or `indialogue.app`.
+**Trademark note:** Dialogue Health Technologies (Canadian telehealth) holds the name in health services. Clear a USPTO and App Store search before any brand spend. Domain strategy: assume the bare dictionary word is gone. Checked 2026-08-19, and `dialogue.app`, `usedialogue.com`, `dialogueapp.com`, `trydialogue.com`, `getdialogue.app`, and `dialogue.ink` are all registered to other parties, so the obvious targets are gone too. Showing no DNS at that check, and worth pricing: `dialogueledger.com`, `intentionledger.com`. Until one is bought, the site lives at `https://dialogue-five.vercel.app`.
 
 ## Voice
 
