@@ -34,6 +34,29 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+  xcode:
+    name: Xcode targets
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate the app project
+        run: xcodegen generate --spec project.yml --project .
+      - name: Generate the prototype project
+        run: >
+          xcodegen generate
+          --spec Prototype/CloseDetectionLab/project.yml
+          --project Prototype/CloseDetectionLab
+      - name: Build every target for the simulator
+        run: >
+          xcodebuild build
+          -project Dialogue.xcodeproj
+          -scheme Dialogue
+          -sdk iphonesimulator
+          -destination 'generic/platform=iOS Simulator'
+          CODE_SIGNING_ALLOWED=NO
+
   dialoguekit:
     name: DialogueKit tests
     runs-on: macos-latest
