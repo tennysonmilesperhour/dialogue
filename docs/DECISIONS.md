@@ -55,6 +55,37 @@ Append-only. Newest at the bottom. Format: decision, date, rationale, what would
 2026-08-19. Five targets, five bundle IDs, five entitlement files, and one app group have to stay in lockstep, and a mismatch between them is the classic silent submission killer (ROADMAP.md's warning about one extension left on Development signing). A `.pbxproj` is a binary-shaped file nobody reviews and every merge conflicts in. XcodeGen makes the target graph a reviewable 160 line spec, and CI regenerates and builds it on every pull request, so a broken target fails in review rather than at archive time. Cost: one `brew install xcodegen` in setup, and the project has to be regenerated after pulling.
 *Reverses if:* XcodeGen cannot express something Xcode needs (Xcode Cloud workflow config or a capability it does not model), at which point commit the project file and accept the review cost.
 
+
+**D016. Family Controls is one team-level entitlement, not five per-bundle requests.**
+2026-08-19. Submitted the request and found the process is not what D011 and
+ENTITLEMENT_REQUEST.md described. Apple's form at
+developer.apple.com/contact/request/family-controls-distribution now has no
+bundle ID field and no use-case text box. It prefills name, email, and Team ID,
+states the terms, and offers a single Get Entitlement button. The grant is per
+developer team, so one submission covers every bundle ID under T4PQ8SNY8D.
+The use-case statement drafted in ENTITLEMENT_REQUEST.md had nowhere to go.
+
+Submitted 2026-08-19 for team T4PQ8SNY8D. Apple replied "we will review your
+request and contact you soon with a status update", so it is reviewed rather
+than instant. Status still unknown; check weekly and escalate through developer
+support after 10 days of silence, exactly as ROADMAP.md says.
+
+What this changes: the "five requests, five approvals" framing in D011,
+ROADMAP.md, and PLAN.md section 2.3 is obsolete. Risk 7 (entitlement approval
+gates the beta) survives unchanged, because one team-level approval still gates
+every TestFlight build. The registration work is real and done: all five bundle
+IDs exist with Family Controls (Development) and App Groups enabled, plus the
+group.app.dialogue App Group.
+*Reverses if:* Apple returns to a per-bundle-ID request flow.
+
+**D017. Registered identifiers, 2026-08-19.**
+app.dialogue.ios, app.dialogue.ios.shield, app.dialogue.ios.shieldaction,
+app.dialogue.ios.monitor, app.dialogue.ios.report, all with Family Controls
+(Development) and App Groups enabled, plus App Group group.app.dialogue. These
+match project.yml and all five .entitlements files exactly. Note for anyone
+re-creating the App Group: the portal field carries a fixed "group." prefix, so
+type only "app.dialogue" into it.
+
 ---
 
 *Next decisions pending: D012 close-detection and gate-flow verdict (week 1 prototype: direct link, notification hop, or notification-action chips), D013 login method (proposal: Sign in with Apple only, decide before the Sync build), free tier boundary (before beta), launch pricing test (before public launch), EU DSA trader vs US-first launch (weeks 7 to 8).*

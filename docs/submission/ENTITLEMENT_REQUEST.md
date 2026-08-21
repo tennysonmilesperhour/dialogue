@@ -1,13 +1,55 @@
-# Family Controls entitlement request
+# Family Controls entitlement
 
-Submit one request per bundle ID at
+**Status: submitted 2026-08-19 for team T4PQ8SNY8D. Awaiting Apple's reply.**
+
+## How the request actually works
+
+Corrected on 2026-08-19 against the live form. See D016.
+
+The request lives at
 https://developer.apple.com/contact/request/family-controls-distribution
-after enrolling in the Apple Developer Program and registering the bundle IDs.
-All five must be requested, the same day. The development entitlement can be
-enabled in Xcode immediately and does not require approval; the distribution
-entitlement below is what gates TestFlight and the App Store.
+and it is much smaller than this file used to assume. It has:
 
-## Bundle IDs to request
+- Name, email, and Team ID, all prefilled from the signed-in account
+- The terms and conditions, reproduced below
+- A single "Get Entitlement" button
+
+There is no bundle ID field and no free-text use-case box. The entitlement is
+granted **per developer team, not per bundle ID**, so one submission covers
+every identifier under the team. The long use-case statement this file used to
+carry had nowhere to be pasted, and has been removed rather than left to
+mislead the next session.
+
+Apple's response on submit: "We'll review your request and contact you soon
+with a status update." So it is human-reviewed, not instant.
+
+## Terms Apple binds you to
+
+Quoted from the form. The app must have a primary purpose of either:
+
+1. offering family controls for parents and guardians, through Family Sharing,
+   to supervise their children's app usage; or
+2. offering individuals the ability to manage their devices to enable focus and
+   productivity through focus controls, timers and task management, or personal
+   device usage management.
+
+dialogue qualifies under 2, and only 2. Never describe it as a parental control
+product, in the review notes, the store listing, or the category choice.
+
+Further restrictions, all of which CONTEXT.md's non-negotiables already meet:
+
+- May not be used for ad blocking, in organizational settings, or to manage the
+  device of another adult individual.
+- Device or usage data from the framework may be used only for providing the
+  individual's own device management.
+- That data may not be shared beyond the individual and their device, may not be
+  used for advertising or advertising measurement, and may not be shared with a
+  data broker.
+
+## Registered identifiers
+
+All five exist in the portal as of 2026-08-19, each with Family Controls
+(Development) and App Groups enabled:
 
 ```
 app.dialogue.ios                 Main app
@@ -17,63 +59,27 @@ app.dialogue.ios.monitor         DeviceActivityMonitorExtension
 app.dialogue.ios.report          DeviceActivityReportExtension
 ```
 
-If Apple has renamed or restructured the request form since this was written,
-the substance below still applies; adapt the fields.
+Plus the App Group `group.app.dialogue`. These match `project.yml` and all five
+`.entitlements` files exactly.
 
-## Use-case statement (paste for each bundle ID)
+Gotcha when registering an App Group: the portal's Identifier field carries a
+fixed `group.` prefix that cannot be deleted. Type only `app.dialogue` into it.
+Typing the full `group.app.dialogue` produces `group.group.app.dialogue`.
 
-> dialogue is a personal digital wellbeing app for the account holder's own
-> device. The user chooses apps they want to be more intentional about. When
-> they open one, dialogue shows a brief screen asking why they are opening it,
-> and when the session ends it asks whether that reason held up. The app keeps
-> a private, on-device record of these answers and computes an Intention Match
-> Score from them.
->
-> dialogue never blocks access to any app. The shield is used only to present
-> a question; the user can always proceed. This is not a parental control
-> product and has no remote monitoring of any kind. There is exactly one user:
-> the device owner, managing their own attention.
->
-> We use FamilyControls for authorization and app selection,
-> ManagedSettings/ManagedSettingsUI to present the gate screen, and
-> DeviceActivity to observe session boundaries on device. App selections are
-> opaque tokens; dialogue cannot and does not enumerate the user's apps.
->
-> No usage data is collected for advertising or profiling. No usage data
-> leaves the device at all. The only data that can sync to our servers is the
-> user's own written entries (their stated reasons, verdicts, and notes), and
-> only if they explicitly create an optional account. There are no ad SDKs
-> and no data brokers in the app, and there never will be.
-
-## Per-extension notes
-
-- **shield** (`.shield`): renders the gate card UI on the shield using
-  ManagedSettingsUI. Display only.
-- **shieldaction** (`.shieldaction`): handles the two shield buttons (proceed
-  or dismiss). Writes a minimal local record of the choice.
-- **monitor** (`.monitor`): observes DeviceActivity schedule and threshold
-  events to approximate session boundaries, locally.
-- **report** (`.report`): renders Apple-computed usage figures inside the
-  app. Display only; no data leaves the extension.
-
-## Form answers likely to be asked
-
-- Collects usage data for advertising: **No**
-- Shares data with third parties: **No**
-- Parental control features: **No, single-user personal tool**
-- Target audience: adults managing their own device use
-
-## After approval
-
-1. Confirm every one of the five bundle IDs shows the Distribution
-   entitlement in the developer portal.
-2. Regenerate all provisioning profiles, then archive clean.
-3. A main app on Distribution with any extension still on Development is the
-   most common cause of a blocked submission in this API. Check all five,
-   every release.
+The Development entitlement works in Xcode immediately and needs no approval.
+The Distribution grant is what gates TestFlight and the App Store.
 
 ## Tracking
 
-Log the submission date for each bundle ID in docs/DECISIONS.md. Check status
-weekly. Escalate through developer support after 10 days of silence. Approval
-reports range from about four business days to several weeks.
+Submitted 2026-08-19. Check status weekly in the developer portal, under each
+App ID's Capability Requests tab. Escalate through developer support after 10
+days of silence, so by 2026-08-31.
+
+## After approval
+
+1. Confirm Family Controls (Distribution) shows as granted for the team, and
+   that each of the five App IDs reflects it.
+2. Regenerate all provisioning profiles, then archive clean.
+3. A main app on Distribution with any extension still on Development is the
+   most common cause of a blocked submission in this API. Check all five, every
+   release.

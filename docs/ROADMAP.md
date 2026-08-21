@@ -4,16 +4,16 @@
 
 Two things gate everything and both must start on day one:
 
-1. **Family Controls entitlement requests, all five bundle IDs.** Requests are per bundle ID and every Screen Time extension needs its own. Approval runs from about four business days to several weeks and is reviewed manually. Development entitlement works locally in the meantime, so submitting early costs nothing and submitting late costs the launch. Note: every TestFlight build, internal or external, is distribution-signed, so **entitlement approval gates the week 6 beta, not just the week 11 submission**. Check request status weekly; escalate through developer support after 10 days of silence.
+1. **Family Controls entitlement. Submitted 2026-08-19, awaiting reply.** Corrected against the live form: the grant is **per developer team, not per bundle ID**, and one submission covers all five identifiers. There is no use-case field to fill. See D016 and `docs/submission/ENTITLEMENT_REQUEST.md`. Approval is manually reviewed and runs from about four business days to several weeks. Development entitlement works locally in the meantime. Note: every TestFlight build, internal or external, is distribution-signed, so **entitlement approval gates the week 6 beta, not just the week 11 submission**. Check status weekly; escalate through developer support after 10 days of silence, so by 2026-08-31.
 2. **Close-detection prototype.** If iOS cannot tell us when a session ended, the debrief degrades and the product changes shape. Answer this in week one, before writing production code.
 
 ---
 
 ## Week 0, setup (2 days)
 
-- [ ] Apple Developer Program enrollment active, Small Business Program applied (15% rate)
-- [ ] Register all five bundle IDs (see ARCHITECTURE.md)
-- [ ] Submit Family Controls (Distribution) request for each, with a clear digital-wellbeing use case and an explicit statement that no usage data is collected for advertising or profiling
+- [x] Apple Developer Program enrollment active (team T4PQ8SNY8D). Small Business Program still to apply for (15% rate)
+- [x] Register all five bundle IDs (see ARCHITECTURE.md), each with Family Controls (Development) and App Groups. Done 2026-08-19, plus the `group.app.dialogue` App Group
+- [x] Submit the Family Controls (Distribution) request. Done 2026-08-19, one team-level request, no use-case field (D016)
 - [ ] USPTO + App Store name clearance on "dialogue"
 - [ ] Create the App Store Connect app record and resolve the store name now (the bare word is likely taken; pick the fallback calmly, not under submission pressure)
 - [ ] Secure domain and social handles

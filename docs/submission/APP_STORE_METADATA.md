@@ -115,7 +115,7 @@ of the current period, and your Apple Account is charged for renewal within
 24 hours of the end of the period. Manage or cancel your subscription in your
 Apple Account settings after purchase.
 
-Privacy policy: https://dialogue.app/privacy
+Privacy policy: https://dialogue-five.vercel.app/privacy
 Terms of use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 ```
 
@@ -141,15 +141,23 @@ them.
 
 **URLs**
 
+Live and serving as of 2026-08-19. Use these values today.
+
 | Field | Value |
 |---|---|
-| Marketing URL | `https://dialogue.app` |
-| Support URL | `https://dialogue.app/support` |
-| Privacy Policy URL | `https://dialogue.app/privacy` |
+| Marketing URL | `https://dialogue-five.vercel.app` |
+| Support URL | `https://dialogue-five.vercel.app/support` |
+| Privacy Policy URL | `https://dialogue-five.vercel.app/privacy` |
 
 Support and privacy URLs are required before external TestFlight, not just
-before submission. Until the domain is secured, the deployed site URL stands
-in for all three; both pages already exist in `web/`.
+before submission. All three return 200. This unblocks the week 5 Beta App
+Review dependency.
+
+These are interim. `dialogue.app` was the placeholder in earlier drafts and is
+not ours: registered 2024-04-28, Cloudflare nameservers, redacted registrant.
+Do not put it in App Store Connect. When a domain is secured, point it at the
+same Vercel project and replace all three rows here plus the privacy policy
+line in the description block above.
 
 **Copyright:** `2026 <account holder or registered entity>`
 **Content rights:** contains no third-party content.
@@ -195,8 +203,9 @@ Recommendation:
    trademark attorney has run a proper class 9 and class 44 search. This is
    an hour of a lawyer's time and it is the cheapest insurance in the plan.
 
-Domain strategy is unchanged from IDENTITY.md: assume the bare dictionary
-word is gone, target `dialogue.app`, `usedialogue.com`, or `indialogue.app`.
+Domain strategy lives in IDENTITY.md. Short version after the 2026-08-19
+check: `dialogue.app` and every other obvious candidate is already registered
+to someone else, so the site runs on the Vercel URL until a domain is bought.
 
 ---
 
@@ -375,9 +384,18 @@ Blocked on the account holder, in the portal:
 - [ ] Create the App Store Connect record and learn whether `dialogue` is
       claimable. Everything in section 1 is ready to paste behind it.
 - [ ] Trademark clearance with an attorney before any brand spend (section 2).
-- [ ] Secure the domain, then replace the three URLs in section 1.
+- [ ] Secure the domain, then replace the three URLs in section 1. Deferred by
+      the account holder on 2026-08-19; the live Vercel URLs stand in and are
+      sufficient for TestFlight and submission in the meantime.
 - [ ] Small Business Program application. The 15 percent rate in
       MONETIZATION.md assumes approval.
+
+Done since this list was written:
+
+- [x] Marketing, support, and privacy URLs live and returning 200 (section 1)
+- [x] All five bundle IDs and the `group.app.dialogue` App Group registered
+      (D017)
+- [x] Family Controls (Distribution) requested, 2026-08-19 (D016)
 
 Blocked on the build:
 
