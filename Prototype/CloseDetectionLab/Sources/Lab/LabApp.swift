@@ -8,10 +8,6 @@ struct LabApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .onOpenURL { url in
-                    // Question 1: did a notification tap deep link us in?
-                    LabLog.append(source: "app", name: "opened_via_url", detail: url.absoluteString)
-                }
         }
     }
 }
@@ -38,8 +34,11 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
             let reason = String(action.dropFirst(ReasonNotification.chipActionPrefix.count))
             GraceController.shared.begin(reason: reason)
         } else if action == UNNotificationDefaultActionIdentifier {
-            // Body tap: the notification-hop variant. onOpenURL logs arrival.
-            GraceController.shared.begin(reason: "via_app_open")
+            // Body tap: the notification-hop variant. The app presents the
+            // same four chips as soon as it becomes active.
+            UserDefaults(suiteName: LabLog.suiteName)?
+                .set(true, forKey: ReasonNotification.pendingReasonPickerKey)
+            LabLog.append(source: "app", name: "notification_hop_opened")
         }
     }
 

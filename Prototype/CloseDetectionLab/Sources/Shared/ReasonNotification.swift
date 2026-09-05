@@ -7,6 +7,7 @@ import UserNotifications
 enum ReasonNotification {
     static let categoryID = "REASON_GATE"
     static let chipActionPrefix = "chip."
+    static let pendingReasonPickerKey = "lab.pendingReasonPicker"
     static let chips = ["Reply", "Look up", "Bored", "Avoiding something"]
 
     static func registerCategory() {

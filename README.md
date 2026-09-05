@@ -39,6 +39,13 @@ and the ledger arrive in phase 2, after the week-1 prototype settles D012.
 Run the DialogueKit tests with `swift test` in `DialogueKit/`, and the copy
 lint with `python3 scripts/copy_lint.py` from the root.
 
+For a complete unsigned App Store configuration check, run
+`scripts/verify_release.sh`. It tests DialogueKit, audits and builds the web
+app, builds every iOS target with the device SDK, and inspects the resulting
+app and extension bundles. Signing, entitlement approval, and the physical
+device prototype remain external checks. See
+`docs/submission/LAUNCH_READINESS.md` for the current launch gate.
+
 ## Doc map (in docs/)
 
 - CONTEXT.md, read first in any session
@@ -50,3 +57,4 @@ lint with `python3 scripts/copy_lint.py` from the root.
 - MONETIZATION.md, pricing model and rationale
 - RESEARCH.md, the psychology base with citations
 - PLAN.md, gated execution plan and doc-review findings
+- submission/LAUNCH_READINESS.md, verified release checks and open launch gates

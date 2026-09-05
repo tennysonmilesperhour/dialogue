@@ -58,7 +58,7 @@ export default function WaitlistForm() {
       </button>
       {state === "error" && (
         <p className="form-note err">
-          That did not go through. Check the address and try again.
+          The waitlist is temporarily unavailable. Try again later.
         </p>
       )}
     </form>

@@ -4,8 +4,10 @@ import ManagedSettings
 import UserNotifications
 
 struct ContentView: View {
+    @Environment(\.scenePhase) private var scenePhase
     @State private var selection = FamilyActivitySelection()
     @State private var pickerPresented = false
+    @State private var reasonPickerPresented = false
     @State private var authorized = false
     @State private var shielded = false
     @State private var events: [LabEvent] = []
@@ -87,12 +89,45 @@ struct ContentView: View {
             .onAppear {
                 refresh()
                 LabSelectionSync()
+                showPendingReasonPicker()
             }
             .onChange(of: selection) { _, newValue in
                 LabSelection.save(newValue)
                 LabLog.append(source: "app", name: "selection_saved",
                               detail: "\(newValue.applicationTokens.count) tokens")
                 refresh()
+            }
+            .onChange(of: scenePhase) { _, phase in
+                if phase == .active {
+                    refresh()
+                    showPendingReasonPicker()
+                }
+            }
+            .sheet(isPresented: $reasonPickerPresented) {
+                NavigationStack {
+                    List(ReasonNotification.chips, id: \.self) { reason in
+                        Button(reason) {
+                            LabLog.append(
+                                source: "app",
+                                name: "reason_picked_after_hop",
+                                detail: reason
+                            )
+                            GraceController.shared.begin(reason: reason)
+                            reasonPickerPresented = false
+                            refresh()
+                        }
+                    }
+                    .navigationTitle("Why are you opening it?")
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Cancel") {
+                                LabLog.append(source: "app", name: "reason_hop_cancelled")
+                                reasonPickerPresented = false
+                            }
+                        }
+                    }
+                }
+                .presentationDetents([.medium])
             }
         }
     }
@@ -105,5 +140,13 @@ struct ContentView: View {
         if let saved = LabSelection.load() {
             selection = saved
         }
+    }
+
+    private func showPendingReasonPicker() {
+        guard let defaults = UserDefaults(suiteName: LabLog.suiteName),
+              defaults.bool(forKey: ReasonNotification.pendingReasonPickerKey)
+        else { return }
+        defaults.removeObject(forKey: ReasonNotification.pendingReasonPickerKey)
+        reasonPickerPresented = true
     }
 }

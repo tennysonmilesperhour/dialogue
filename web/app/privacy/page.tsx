@@ -20,21 +20,18 @@ export default function Privacy() {
         private storage, covered by your normal device backups.
       </p>
 
-      <h2>If you do nothing</h2>
+      <h2>From the app</h2>
       <p>
-        We receive anonymous, aggregate app health signals (for example, a
-        debrief was completed) through TelemetryDeck, with no advertising
-        identifier and no way to tie a signal to you.
+        The current build sends no analytics, identifiers, ledger entries,
+        or usage data to us. If you do not join the website waitlist, we
+        receive nothing from you.
       </p>
 
-      <h2>If you create a Sync account</h2>
+      <h2>Accounts and Sync</h2>
       <p>
-        Sync is optional and off by default. With an account, your written
-        entries are encrypted in transit and stored with our database
-        provider so your ledger can back up and appear on your other devices.
-        App tokens never sync; they are meaningless off your device. You can
-        delete your account and every synced row from inside the app, at any
-        time, completely.
+        The current build has no account system and no cloud Sync feature.
+        If either is added later, this policy and the App Store privacy label
+        will be updated before that version is released.
       </p>
 
       <h2>This waitlist</h2>
@@ -49,6 +46,12 @@ export default function Privacy() {
       <p>
         No selling or sharing data. No usage data collected for advertising
         or profiling. No ad SDKs. We do not read your ledger. It is yours.
+      </p>
+
+      <h2>Questions and deletion requests</h2>
+      <p>
+        Use the <a href="/support">support page</a> to contact us. Waitlist
+        deletion requests are handled manually and confirmed when complete.
       </p>
 
       <footer>

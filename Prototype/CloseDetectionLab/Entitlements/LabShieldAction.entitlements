@@ -6,7 +6,7 @@
 	<true/>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.app.dialogue.lab</string>
+		<string>group.app.dialogue</string>
 	</array>
 </dict>
 </plist>
