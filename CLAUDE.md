@@ -13,11 +13,11 @@ Hard rules that apply to every file, commit, and UI string in this project:
 Repo layout (target state, see `docs/ARCHITECTURE.md`):
 
 ```
-Dialogue/              main app (not yet created)
-DialogueShield/        shield configuration extension (not yet created)
-DialogueShieldAction/  shield action extension (not yet created)
-DialogueMonitor/       device activity monitor extension (not yet created)
-DialogueReport/        device activity report extension (not yet created)
+Dialogue/              main app
+DialogueShield/        shield configuration extension
+DialogueShieldAction/  shield action extension
+DialogueMonitor/       device activity monitor extension
+DialogueReport/        device activity report extension
 DialogueKit/           shared Swift package: models, IMS math, design tokens
 Prototype/             week-1 throwaway close-detection lab (never ships)
 web/                   Next.js marketing site + waitlist

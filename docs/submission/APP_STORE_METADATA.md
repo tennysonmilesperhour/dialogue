@@ -236,6 +236,13 @@ The label must match the privacy manifest and the actual behavior. It is
 audited against the binary, and it is a common cause of rejection when the
 two drift.
 
+**Current build, 2026-09-04:** select **Data Not Collected** and **Tracking:
+No**. The app has no account, Sync, analytics, or purchase SDK. The website
+waitlist is outside the app and does not belong on the app privacy label.
+
+The table below is the later Sync build target. Do not use these answers until
+those features and SDKs are present in the submitted binary.
+
 **Tracking: No.** No data is used to track across apps or websites, no ad
 network SDK ships, and no ATT prompt is needed.
 
@@ -264,9 +271,9 @@ marketing site is not app data and does not belong on this label.
 
 - `NSPrivacyTracking`: false
 - `NSPrivacyTrackingDomains`: empty
-- `NSPrivacyCollectedDataTypes`: matching the table above
-- `NSPrivacyAccessedAPITypes` with required reasons: UserDefaults (CA92.1),
-  file timestamp (C617.1), disk space (E174.1), system boot time (35F9.1)
+- `NSPrivacyCollectedDataTypes`: empty in the current build
+- `NSPrivacyAccessedAPITypes`: UserDefaults (CA92.1) in the main app. Add only
+  the approved reasons used by code that actually ships.
 
 RevenueCat, Supabase, and TelemetryDeck ship their own manifests. Keep the
 versions current so their declarations stay accurate at submission.
@@ -298,9 +305,7 @@ release day.
 
 Description:
 ```
-Unlimited watched apps, history that never expires, the weekly review, the
-adaptive gate, the reason cost table, and export of your ledger. Paid once,
-yours permanently.
+Unlimited apps, full history, review, export.
 ```
 
 ### Subscription group
@@ -319,9 +324,7 @@ purchase.
 
 Description, both:
 ```
-Keep your ledger on every device, backed up, with the web review and monthly
-deep patterns. Optional. Everything essential to dialogue is in the one-time
-purchase.
+Sync, backup, web review, and deep patterns.
 ```
 
 No introductory offer and no free trial. A trial that auto-converts is the
@@ -352,10 +355,11 @@ The first two are what a browsing user actually sees.
 4. **Home, the app rows with their scores.**
 5. **The adaptive gate explainer.** Friction as consequence, not constant.
 
-Sizes: produce the 6.9 inch iPhone set, which is the required one and scales
-to the other iPhone slots. Add a 6.5 inch set only if it needs different art.
-No iPad set is needed while V1 is iPhone only. Apple revises the required
-sizes periodically, so confirm in App Store Connect at upload.
+Sizes: produce the 6.9 inch iPhone set at 1320 by 2868 pixels from the iPhone
+17 Pro Max simulator. App Store Connect accepts one to ten screenshots and
+scales the highest-resolution set to smaller iPhones. No iPad set is needed
+while V1 is iPhone only. Confirm the accepted sizes in App Store Connect at
+upload because Apple revises them periodically.
 
 Caption discipline: burned-in captions are allowed and useful, but they follow
 the voice rules like every other string. No exclamation points, no emoji, no
@@ -401,8 +405,13 @@ Blocked on the build:
 
 - [ ] IAP products created and attached (section 4). Needs the app record.
 - [ ] Screenshots (section 5). Needs the real screens, which are gated on D012.
-- [ ] Privacy manifest and export compliance keys in all five targets
-      (section 3). Needs the Xcode project.
+- [x] Privacy manifests included in all five built targets.
+- [x] Export compliance key included in all five built targets.
+- [x] App icon included at 1024 by 1024 pixels without transparency.
+
+Current upload requirement, verified 2026-09-04: submissions must be built
+with Xcode 26 or later and an iOS 26 SDK. `scripts/verify_release.sh` enforces
+that floor and inspects the device-SDK release bundle.
 
 Not blocked, done here: sections 1, 2, 3, 4, and 6 are drafted and reviewed
 against the voice rules. Nothing in this file needs to wait on the prototype.

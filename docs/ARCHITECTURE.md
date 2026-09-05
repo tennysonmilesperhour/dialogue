@@ -5,7 +5,7 @@
 | Layer | Choice | Note |
 |---|---|---|
 | App | Swift / SwiftUI, iOS 17+ | Not React Native. Screen Time API is native-only. |
-| Interception | FamilyControls, ManagedSettings, DeviceActivity | Requires Apple entitlement per bundle ID |
+| Interception | FamilyControls, ManagedSettings, DeviceActivity | Requires Apple approval for distribution |
 | Local store | SwiftData | Source of truth. App works fully offline. |
 | Sync / auth | Supabase | Optional account. Ledger backup and web review. |
 | Web | Next.js on Vercel | Marketing site, weekly review, support pages |
@@ -14,7 +14,10 @@
 
 ## Targets and bundle IDs
 
-Every one of these needs its own Family Controls entitlement request. This is the most commonly missed step and the most common cause of a blocked App Store submission.
+The team needs Apple's Family Controls distribution approval. After approval,
+the capability must be enabled on every App ID and included in the provisioning
+profile for every target below. Missing it from any one target blocks that
+extension from shipping correctly.
 
 ```
 app.dialogue.ios                 Main app

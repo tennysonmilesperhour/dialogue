@@ -1,17 +1,13 @@
-# dialogue privacy policy (draft)
+# dialogue privacy policy
 
-*Draft for review before publication. Publish at the marketing site under
-/privacy before external TestFlight. Plain language is the point; resist
-legal boilerplate that obscures the actual posture.*
-
-Effective date: to be set at publication.
+Effective date: September 4, 2026.
 
 ## The short version
 
 dialogue is a ledger you keep with yourself. Your reasons, verdicts, and
 notes live on your device. We cannot see which apps you watch. We do not
-collect usage data. We do not run ads, sell data, or profile you. If you
-never create an account, nothing leaves your phone.
+collect usage data. We do not run ads, sell data, or profile you. The current
+app has no account or cloud Sync feature, so nothing leaves your phone.
 
 ## What dialogue stores on your device
 
@@ -25,28 +21,22 @@ never create an account, nothing leaves your phone.
 All of this stays in the app's private storage. It is included in your normal
 device backups under Apple's standard backup protections.
 
-## What we collect if you do nothing
+## What the current app collects
 
-Anonymous, aggregate app health signals through TelemetryDeck (for example,
-"a debrief was completed"), with no advertising identifier, no fingerprinting,
-and no way to tie a signal to you. No account is required and none of your
-entries are included.
+Nothing. The current build sends no analytics, identifiers, ledger entries, or
+usage data to us.
 
-## What changes if you create a Sync account
+## Accounts and Sync
 
-Sync is optional and off by default. If you create an account, your ledger
-entries (reasons, verdicts, notes, and the labels you wrote) are encrypted in
-transit and stored with our database provider (Supabase) so you can back up
-and view your ledger on your other devices. App tokens never sync; they are
-meaningless off your device.
+The current build has no account system and no cloud Sync feature. If either
+is added later, this policy and the App Store privacy label will be updated
+before that version is released.
 
-You can delete your account and all synced data from inside the app at any
-time. Deletion is immediate and complete on our side.
+## Website waitlist
 
-## Purchases
-
-Payments are processed by Apple. We use RevenueCat to manage entitlements;
-it receives purchase receipts, not your ledger.
+The marketing website stores the email address you submit to its waitlist.
+The address is used only for beta and launch notices. The website has no
+analytics cookies or trackers. Use the support page to request deletion.
 
 ## What we will never do
 
@@ -62,7 +52,8 @@ children and has no parental control features.
 
 ## Contact
 
-Questions to the support address published at the marketing site.
+Questions and deletion requests can be sent through the support page at
+https://dialogue-five.vercel.app/support.
 
 ## Changes
 

@@ -5,9 +5,11 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.9"
-    # Set your Apple Developer team ID here or per-target in Xcode.
-    DEVELOPMENT_TEAM: ""
+    DEVELOPMENT_TEAM: T4PQ8SNY8D
     CODE_SIGN_STYLE: Automatic
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    TARGETED_DEVICE_FAMILY: "1"
 
 targets:
   LabApp:
@@ -18,11 +20,13 @@ targets:
       - Sources/Shared
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: app.dialogue.lab
+        PRODUCT_BUNDLE_IDENTIFIER: app.dialogue.ios
         CODE_SIGN_ENTITLEMENTS: Entitlements/LabApp.entitlements
         GENERATE_INFOPLIST_FILE: YES
+        TARGETED_DEVICE_FAMILY: "1"
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_CFBundleDisplayName: dialogue lab
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
     info:
       path: Generated/LabApp-Info.plist
       properties:
@@ -44,9 +48,10 @@ targets:
       - Sources/Shared
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: app.dialogue.lab.shield
+        PRODUCT_BUNDLE_IDENTIFIER: app.dialogue.ios.shield
         CODE_SIGN_ENTITLEMENTS: Entitlements/LabShield.entitlements
         GENERATE_INFOPLIST_FILE: YES
+        TARGETED_DEVICE_FAMILY: "1"
     info:
       path: Generated/LabShield-Info.plist
       properties:
@@ -62,9 +67,10 @@ targets:
       - Sources/Shared
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: app.dialogue.lab.shieldaction
+        PRODUCT_BUNDLE_IDENTIFIER: app.dialogue.ios.shieldaction
         CODE_SIGN_ENTITLEMENTS: Entitlements/LabShieldAction.entitlements
         GENERATE_INFOPLIST_FILE: YES
+        TARGETED_DEVICE_FAMILY: "1"
     info:
       path: Generated/LabShieldAction-Info.plist
       properties:
@@ -80,9 +86,10 @@ targets:
       - Sources/Shared
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: app.dialogue.lab.monitor
+        PRODUCT_BUNDLE_IDENTIFIER: app.dialogue.ios.monitor
         CODE_SIGN_ENTITLEMENTS: Entitlements/LabMonitor.entitlements
         GENERATE_INFOPLIST_FILE: YES
+        TARGETED_DEVICE_FAMILY: "1"
     info:
       path: Generated/LabMonitor-Info.plist
       properties:

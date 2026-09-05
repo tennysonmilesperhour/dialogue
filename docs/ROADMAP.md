@@ -37,7 +37,7 @@ Two things gate everything and both must start on day one:
 - [ ] Home: app rows with IMS, never-mind streak
 - [ ] `DialogueKit`: IMS math, SwiftData models, design tokens
 - [ ] Extensions write to a lightweight app group store; main app ingests into SwiftData
-- [ ] Privacy manifest (`PrivacyInfo.xcprivacy`) across all targets
+- [x] Privacy manifest (`PrivacyInfo.xcprivacy`) across all targets
 - [ ] DialogueKit unit tests (IMS math, tier rules) and copy lint (em dashes, exclamation points, emoji) in CI
 - [ ] Local-only. No Supabase yet.
 

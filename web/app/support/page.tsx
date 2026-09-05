@@ -36,16 +36,17 @@ export default function Support() {
 
       <h2>What does the subscription add?</h2>
       <p>
-        Nothing essential. Everything that makes dialogue work is in the
-        one-time purchase. Sync adds cross-device backup, the web review, and
-        monthly deep patterns, priced against the real recurring cost of
-        running servers.
+        The current build has no subscription. Optional Sync is planned for a
+        later version, after the local ledger has been tested in public.
       </p>
 
       <h2>Contact</h2>
       <p>
-        The beta is not open yet; the waitlist on the home page is the best
-        channel. A support address will live here when the app does.
+        <a href="https://github.com/tennysonmilesperhour/dialogue/issues/new">
+          Open a support request on GitHub
+        </a>
+        . Requests are public, so do not include private ledger entries or
+        other personal information.
       </p>
 
       <footer>

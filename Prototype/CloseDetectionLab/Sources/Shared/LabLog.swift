@@ -12,7 +12,7 @@ struct LabEvent: Codable, Identifiable {
 /// Cross-process writes can race; for a lab that occasionally drops an event
 /// under contention that is acceptable. Production uses one writer per store.
 enum LabLog {
-    static let suiteName = "group.app.dialogue.lab"
+    static let suiteName = "group.app.dialogue"
     private static let key = "lab.events"
 
     static func append(source: String, name: String, detail: String = "") {

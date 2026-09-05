@@ -26,13 +26,16 @@ export from the app. Carry the phone for a full day and export the log.
 ## Setup
 
 1. `brew install xcodegen`, then `xcodegen generate` in this directory.
-2. Open `CloseDetectionLab.xcodeproj`, set your team on all four targets.
+2. Open `CloseDetectionLab.xcodeproj`. Team `T4PQ8SNY8D` is already set.
 3. In Signing & Capabilities, confirm each target shows Family Controls
-   (Development) and the `group.app.dialogue.lab` App Group. Create the
-   group in the portal if Xcode does not offer to.
+   (Development) and the `group.app.dialogue` App Group.
 4. Run on a physical device (Screen Time APIs do not work in the simulator).
 5. In the app: request authorization, pick one victim app (Safari is fine),
    grant notifications, start monitoring, then shield.
+
+The lab deliberately uses the registered production bundle IDs so it can run
+without four more portal records. Installing it replaces the phase 0 dialogue
+app on the device. Reinstall the main project when testing is complete.
 
 If Xcode rejects an extension at launch, diff the generated Info.plist
 NSExtension entries against a fresh Xcode template of the same extension

@@ -87,7 +87,7 @@ Phases mirror ROADMAP.md weeks. Each has an exit gate; do not start the next pha
 - [ ] Secure domain and social handles
 - [ ] Xcode workspace scaffolded: app, four extensions, DialogueKit package, shared app group; builds and runs on a physical device
 - [ ] CI bootstrapped with a TestFlight upload lane
-- [ ] `web/` scaffolded (Next.js on Vercel); privacy and support pages stubbed
+- [x] `web/` scaffolded (Next.js on Vercel); privacy and support pages live
 
 **Exit gate:** all five entitlement requests submitted, and the empty workspace installs on a device.
 
