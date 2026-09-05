@@ -2,7 +2,7 @@
 
 An iOS app that wraps each session in a watched app with a two-sided ritual: a gate that asks why you are opening it, and a debrief that asks whether that turned out to be true. It never blocks. The record between those two questions is the product.
 
-Status: phase 0. Strategy docs complete, the five app targets and DialogueKit scaffolded, week-1 prototype ready to run, waitlist site live.
+Status: the local-first product loop is implemented across all five app targets. Onboarding, watched app setup, the intention gate, session monitoring, debrief, ledger, IMS, weekly review, and settings are ready for physical-device validation.
 
 ## Layout
 
@@ -30,11 +30,10 @@ reviewable. Regenerate it after every pull.
    App Group in Signing and Capabilities
 5. Run on a physical device. Screen Time APIs do nothing in the simulator.
 
-What phase 0 ships is a smoke test, not the product: Home reports whether
-Screen Time access is granted, whether the app group is readable from the
-app, and whether DialogueKit linked. The extensions register their callbacks
-and render the gate template with the ledger tokens. The gate, the debrief,
-and the ledger arrive in phase 2, after the week-1 prototype settles D012.
+The main app and extensions share one compact, on-device ledger through the
+App Group. The shield records walk-aways and routes intentional visits into
+the reason gate. Device Activity closes visits at the selected soft budget,
+re-arms the shield, and requests the debrief.
 
 Run the DialogueKit tests with `swift test` in `DialogueKit/`, and the copy
 lint with `python3 scripts/copy_lint.py` from the root.

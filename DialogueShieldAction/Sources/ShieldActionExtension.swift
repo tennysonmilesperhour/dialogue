@@ -1,21 +1,38 @@
+import DialogueKit
+import Foundation
 import ManagedSettings
+import UserNotifications
 
-/// The two buttons on the gate card.
-///
-/// The extension's entire vocabulary is close, defer, and none. It has no
-/// openURL, so "Choose a reason" cannot open dialogue directly. Which shape
-/// the reason path takes (a notification whose tap deep links, or reason
-/// chips riding as notification actions) is D012, which the week 1 prototype
-/// decides. Phase 0 therefore keeps the responses and nothing else: dismiss
-/// closes, the reason path defers so the shield stays up until something
-/// clears it.
 class ShieldActionExtension: ShieldActionDelegate {
     override func handle(
         action: ShieldAction,
         for application: ApplicationToken,
         completionHandler: @escaping (ShieldActionResponse) -> Void
     ) {
-        completionHandler(response(to: action))
+        guard let tokenData = ScreenTimeTokenCodec.encode(application) else {
+            completionHandler(.none)
+            return
+        }
+
+        switch action {
+        case .primaryButtonPressed:
+            recordDismissal(for: tokenData)
+            completionHandler(.close)
+        case .secondaryButtonPressed:
+            SharedDialogueStore.setPendingGate(PendingGateRequest(applicationTokenData: tokenData))
+            if #available(iOS 26.5, *) {
+                completionHandler(.openParentalControlsApp)
+            } else {
+                scheduleOpenDialogueNotification()
+                completionHandler(.defer)
+            }
+        case .firstSecondarySubmenuItemPressed,
+             .secondSecondarySubmenuItemPressed,
+             .thirdSecondarySubmenuItemPressed:
+            completionHandler(.defer)
+        @unknown default:
+            completionHandler(.none)
+        }
     }
 
     override func handle(
@@ -23,7 +40,7 @@ class ShieldActionExtension: ShieldActionDelegate {
         for webDomain: WebDomainToken,
         completionHandler: @escaping (ShieldActionResponse) -> Void
     ) {
-        completionHandler(response(to: action))
+        completionHandler(action == .primaryButtonPressed ? .close : .defer)
     }
 
     override func handle(
@@ -31,19 +48,29 @@ class ShieldActionExtension: ShieldActionDelegate {
         for category: ActivityCategoryToken,
         completionHandler: @escaping (ShieldActionResponse) -> Void
     ) {
-        completionHandler(response(to: action))
+        completionHandler(action == .primaryButtonPressed ? .close : .defer)
     }
 
-    private func response(to action: ShieldAction) -> ShieldActionResponse {
-        switch action {
-        case .primaryButtonPressed:
-            // "Never mind." Dismissing costs nothing, by design. Phase 2
-            // records the dismissal here.
-            return .close
-        case .secondaryButtonPressed:
-            return .defer
-        @unknown default:
-            return .none
-        }
+    private func recordDismissal(for tokenData: Data) {
+        var state = SharedDialogueStore.load()
+        guard let app = state.watchedApps.first(where: { $0.applicationTokenData == tokenData }) else { return }
+        state.dismissals.insert(
+            Dismissal(appID: app.id, occurredAt: Date(), gateTier: app.gateTier),
+            at: 0
+        )
+        SharedDialogueStore.save(state)
+    }
+
+    private func scheduleOpenDialogueNotification() {
+        let content = UNMutableNotificationContent()
+        content.title = "Choose your reason"
+        content.body = "Open dialogue to begin this intentional visit."
+        content.sound = .default
+        let request = UNNotificationRequest(
+            identifier: "dialogue.open-gate",
+            content: content,
+            trigger: UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        )
+        UNUserNotificationCenter.current().add(request)
     }
 }

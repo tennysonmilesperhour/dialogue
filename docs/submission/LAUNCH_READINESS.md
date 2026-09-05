@@ -7,10 +7,10 @@ build is necessary, but it is not the same as a releasable product.
 
 ## Current verdict
 
-**Not ready to submit.** The repository now produces a valid device-SDK
-release build with the five expected targets, release identifiers, privacy
-manifests, export compliance declarations, an App Store icon, and current
-dependencies. The shipping product loop is still a phase 0 scaffold.
+**Build 2 is ready for signed archive and physical-device validation.** The
+repository produces the complete local-first product loop and a valid
+device-SDK release build with the five expected targets, release identifiers,
+privacy manifests, export compliance declarations, and App Store icon.
 
 The critical path is the physical-device Screen Time prototype, D012. No
 physical iPhone was connected during this audit, so the reason handoff,
@@ -29,7 +29,12 @@ that result.
       identifiers in D017.
 - [x] Team ID `T4PQ8SNY8D` is set across generated targets.
 - [x] V1 advertises iPhone support only.
-- [x] Version is `1.0.0` with build number `1`.
+- [x] Version is `1.0.0` with build number `2`.
+- [x] Onboarding requests Screen Time access and configures named watched apps.
+- [x] The shield records walk-aways and routes users to intention capture.
+- [x] Sessions unshield one app, close at the soft budget, and queue a debrief.
+- [x] The main app includes the ledger, IMS home, usage summary, weekly reason
+      table, adaptive gate tiers, pause, watched-app editing, and local deletion.
 - [x] `ITSAppUsesNonExemptEncryption` is false in every built bundle.
 - [x] A privacy manifest is embedded in every built bundle.
 - [x] Every entitlement file has Family Controls and `group.app.dialogue`.
@@ -50,24 +55,23 @@ dependency audit.
 
 - [ ] Run `Prototype/CloseDetectionLab` on a physical iPhone for a full day
       and record D012 in `docs/DECISIONS.md`.
-- [ ] Replace the phase 0 Home smoke test with the real onboarding, watched
+- [x] Replace the phase 0 Home smoke test with the real onboarding, watched
       app setup, reason handoff, session ledger, two-tap debrief, IMS home,
-      weekly review, purchase, restore, and settings flows.
+      weekly review, and settings flows.
 - [ ] Confirm the Family Controls Distribution entitlement is approved for
       team `T4PQ8SNY8D`. The request was submitted August 19, 2026.
 - [ ] Produce a signed App Store archive with distribution provisioning for
       the app and all four extensions.
-- [ ] Create the App Store Connect app record and choose the final store name.
-- [ ] Decide the 1.0 commercial scope. The current binary has no StoreKit,
-      account, Sync, RevenueCat, or TelemetryDeck code, while the drafted
-      listing promises all of them.
-- [ ] Create and attach every IAP that the submitted build actually offers.
+- [x] Create the App Store Connect app record and choose the store name
+      `dialogue: intention ledger`.
+- [x] Keep 1.0 free and local-only. StoreKit, accounts, Sync, RevenueCat, and
+      third-party analytics are outside this build and must not appear in the listing.
 - [ ] Capture the five 1320 by 2868 App Store screenshots from the finished
       product.
 - [ ] Complete the current age-rating questionnaire and final App Privacy
       answers against the uploaded binary.
-- [ ] Verify purchase, restore, Screen Time authorization, shield, debrief,
-      and data deletion behavior on the oldest supported iPhone.
+- [ ] Verify Screen Time authorization, shield, reason handoff, debrief, and
+      data deletion behavior on the oldest supported iPhone.
 
 ## External service blockers
 

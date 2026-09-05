@@ -1,47 +1,42 @@
-# App Review notes (draft)
+# App Review notes
 
-*Paste into the Review Notes field in App Store Connect at submission.
-Screen Time apps get extra scrutiny; the notes should preempt the three
-assumptions reviewers commonly make: that this is a blocker, that it is a
-parental control app, and that usage data is being collected.*
+Paste the content below into the Review Notes field for build 2.
 
 ---
 
 dialogue is a personal digital wellbeing tool for the account holder's own
-device. It is not a parental control app and cannot monitor anyone else.
+iPhone. It is not a parental control app and cannot monitor anyone else.
 
-Three things reviewers usually ask about this category:
+Three implementation details may help review:
 
-1. **dialogue never blocks apps.** The shield screen is a question, not a
-   wall. The user can always proceed into the app they opened. There is no
-   lockout mode anywhere in the product.
+1. dialogue never permanently locks an app. The shield is a reflective gate.
+   "Never mind" closes the attempted visit. "Choose a reason" opens dialogue
+   so the user can name an intention and begin the visit. All gates can also
+   be paused in Settings.
 
-2. **No usage data is collected.** App selections are opaque Screen Time
-   tokens; we cannot see which apps the user picked. Nothing about usage
-   leaves the device. The only server-stored data is the user's own written
-   entries, and only if they explicitly create the optional Sync account.
-   There is no advertising and no analytics SDK that collects usage data.
+2. No data is collected. App selections are opaque Screen Time tokens. The
+   user's labels, reasons, verdicts, and notes remain in the local App Group.
+   The app has no account, advertising, analytics SDK, purchase SDK, or Sync.
 
-3. **Screen Time authorization is required for core function.** The app
-   requests FamilyControls authorization (individual, not parent/guardian)
-   during onboarding because presenting the gate requires it.
+3. Screen Time authorization is required for the core function. The app
+   requests FamilyControls authorization for the individual account during
+   onboarding because presenting and removing the gate requires it.
 
 ## Demo script
 
-1. Complete onboarding: grant Screen Time authorization when prompted.
-2. Pick any app in the picker (Safari works), give it a short label when
-   asked, accept the default reason chips and soft budget.
-3. Open the picked app. The gate appears. Choose a reason to proceed, or
-   "Never mind" to leave. Both paths work; neither is ever blocked.
-4. Use the app briefly, then leave it. Open dialogue again: the debrief card
-   asks whether the session matched the stated reason. Two taps completes it.
-5. The home screen now shows the app row with its Intention Match Score.
+1. Complete onboarding and grant Screen Time authorization.
+2. Pick any individual app in the picker, give it a short label and optional
+   reminder, then choose a soft budget.
+3. Open the picked app. On the shield, tap "Choose a reason." On iOS versions
+   before 26.5, tap the immediate notification or open dialogue manually.
+4. In dialogue, choose a reason, wait for the brief settle timer, and tap the
+   button to begin the visit. Return to the selected app; it is now available.
+5. To complete the loop immediately, return to dialogue and tap "End visit
+   and reflect" on Today. Choose Yes, Partly, or No. The entry appears in the
+   Ledger and updates the Intention Match Score.
+6. Review shows Screen Time in watched apps, average duration and match rate
+   by reason. Settings includes pause, watched-app editing, privacy links, and
+   complete local data deletion.
 
-The paywall appears after the first completed debrief. The free tier (one
-watched app, full gate and debrief) remains fully functional without
-purchase, so the core loop above is reviewable at no cost.
-
-## Account deletion
-
-Settings, first screen: Delete account removes the Supabase account and all
-synced rows immediately. (Only relevant if a Sync account was created.)
+The complete build is free and has no sign-in, demo account, paywall, in-app
+purchase, or subscription.

@@ -6,9 +6,8 @@ name: Dialogue
 #
 #   brew install xcodegen && xcodegen generate
 #
-# Phase 0 scaffold: every target compiles, links DialogueKit, and installs on
-# a device. The gate, the debrief, and the ledger land in phase 2, after the
-# week 1 prototype settles D012 (docs/PLAN.md).
+# The app, shield, action, monitor, and report targets ship as one local-first
+# intention loop. Keep their identifiers and shared entitlements aligned here.
 
 options:
   deploymentTarget:
@@ -26,7 +25,7 @@ settings:
     DEVELOPMENT_TEAM: T4PQ8SNY8D
     CODE_SIGN_STYLE: Automatic
     MARKETING_VERSION: "1.0.0"
-    CURRENT_PROJECT_VERSION: "1"
+    CURRENT_PROJECT_VERSION: "2"
     SWIFT_STRICT_CONCURRENCY: complete
     TARGETED_DEVICE_FAMILY: "1"
     SUPPORTS_MACCATALYST: NO
