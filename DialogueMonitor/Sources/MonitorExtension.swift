@@ -1,21 +1,12 @@
 import DeviceActivity
+import DialogueKit
 import Foundation
+import UserNotifications
 
-/// Session events, and the timestamp source for close detection.
-///
-/// Phase 2 hangs three things off these callbacks: the soft budget threshold
-/// that fires the debrief notification, the re-arm that closes a grace
-/// window, and the timestamps layer 1 grades sessions from. Which of those
-/// the monitor actually owns is D012, so phase 0 registers the callbacks and
-/// nothing else. Callbacks here routinely arrive minutes late, which is why
-/// every session length in the product is labeled approximate.
 class MonitorExtension: DeviceActivityMonitor {
-    override func intervalDidStart(for activity: DeviceActivityName) {
-        super.intervalDidStart(for: activity)
-    }
-
     override func intervalDidEnd(for activity: DeviceActivityName) {
         super.intervalDidEnd(for: activity)
+        closeSession(for: activity, source: .inferred)
     }
 
     override func eventDidReachThreshold(
@@ -23,5 +14,40 @@ class MonitorExtension: DeviceActivityMonitor {
         activity: DeviceActivityName
     ) {
         super.eventDidReachThreshold(event, activity: activity)
+        closeSession(for: activity, source: .threshold)
+    }
+
+    private func closeSession(for activity: DeviceActivityName, source: CloseSource) {
+        guard let sessionID = DialogueScreenTime.sessionID(from: activity.rawValue) else { return }
+        var state = SharedDialogueStore.load()
+        guard let index = state.sessions.firstIndex(where: { $0.id == sessionID }),
+              state.sessions[index].closedAt == nil
+        else { return }
+
+        state.sessions[index].closedAt = Date()
+        state.sessions[index].closeSource = source
+        if !state.pendingDebriefIDs.contains(sessionID) {
+            state.pendingDebriefIDs.append(sessionID)
+        }
+        SharedDialogueStore.save(state)
+        DialogueShieldController.apply(state)
+        DeviceActivityCenter().stopMonitoring([activity])
+        scheduleDebrief(for: state.sessions[index], state: state)
+    }
+
+    private func scheduleDebrief(for session: SessionRecord, state: DialogueState) {
+        let appName = session.appDisplayName ??
+            state.watchedApps.first(where: { $0.id == session.appID })?.displayName ??
+            "that app"
+        let content = UNMutableNotificationContent()
+        content.title = "How did that visit go?"
+        content.body = "Did your \(appName) visit match \(session.reason.lowercased())?"
+        content.sound = .default
+        let request = UNNotificationRequest(
+            identifier: "dialogue.debrief.\(session.id.uuidString)",
+            content: content,
+            trigger: UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        )
+        UNUserNotificationCenter.current().add(request)
     }
 }

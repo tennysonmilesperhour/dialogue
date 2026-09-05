@@ -17,7 +17,7 @@ struct DialogueReportExtension: DeviceActivityReportExtension {
     }
 }
 
-struct TotalActivityReport: DeviceActivityReportScene {
+struct TotalActivityReport: @preconcurrency DeviceActivityReportScene {
     let context: DeviceActivityReport.Context = .init(rawValue: "Total activity")
     let content: (String) -> TotalActivityView
 

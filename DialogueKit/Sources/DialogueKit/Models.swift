@@ -27,6 +27,11 @@ public struct SessionRecord: Codable, Sendable, Identifiable, Equatable {
     public var closeSource: CloseSource?
     public var verdict: Verdict
     public var note: String?
+    /// Snapshot for ledger history after an app is no longer watched.
+    public var appDisplayName: String?
+    /// The DeviceActivity name used to close this session. Kept as a string
+    /// so the shared model stays available to the macOS test target.
+    public var monitorActivityName: String?
 
     public init(
         id: UUID = UUID(),
@@ -36,7 +41,9 @@ public struct SessionRecord: Codable, Sendable, Identifiable, Equatable {
         closedAt: Date? = nil,
         closeSource: CloseSource? = nil,
         verdict: Verdict = .unlogged,
-        note: String? = nil
+        note: String? = nil,
+        monitorActivityName: String? = nil,
+        appDisplayName: String? = nil
     ) {
         self.id = id
         self.appID = appID
@@ -46,6 +53,8 @@ public struct SessionRecord: Codable, Sendable, Identifiable, Equatable {
         self.closeSource = closeSource
         self.verdict = verdict
         self.note = note
+        self.monitorActivityName = monitorActivityName
+        self.appDisplayName = appDisplayName
     }
 }
 
@@ -60,6 +69,9 @@ public struct WatchedApp: Codable, Sendable, Identifiable, Equatable {
     public var gateTier: GateTier
     public var tierChangedAt: Date?
     public var createdAt: Date
+    /// JSON-encoded ManagedSettings.ApplicationToken. Tokens are opaque by
+    /// design, so the user's own display name remains the visible identity.
+    public var applicationTokenData: Data?
 
     public init(
         id: UUID = UUID(),
@@ -69,7 +81,8 @@ public struct WatchedApp: Codable, Sendable, Identifiable, Equatable {
         softBudgetSeconds: Int = 10 * 60,
         gateTier: GateTier = .standard,
         tierChangedAt: Date? = nil,
-        createdAt: Date = Date()
+        createdAt: Date = Date(),
+        applicationTokenData: Data? = nil
     ) {
         self.id = id
         self.displayName = displayName
@@ -79,6 +92,7 @@ public struct WatchedApp: Codable, Sendable, Identifiable, Equatable {
         self.gateTier = gateTier
         self.tierChangedAt = tierChangedAt
         self.createdAt = createdAt
+        self.applicationTokenData = applicationTokenData
     }
 }
 

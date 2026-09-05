@@ -2,7 +2,7 @@
 
 *Everything App Store Connect asks for, drafted and ready to paste. Section 1
 is the store listing, 2 the name question, 3 the ratings and privacy answers,
-4 the in-app purchases, 5 the screenshots, 6 the build-side settings, 7 the
+4 the commercial scope, 5 the screenshots, 6 the build-side settings, 7 the
 open items and who they are blocked on.*
 
 Companion files: REVIEW_NOTES.md (the Review Notes field), PRIVACY_POLICY.md
@@ -43,86 +43,52 @@ Between the two questions, a record of what your attention was actually for.
 Every screen time app tells you how long. dialogue tells you whether you
 meant it.
 
-You do not open that app because you decided to. A cue fires and the hand
-moves. Blockers answer that with a wall, which you resent and eventually
-defeat. Trackers answer with a number, which cannot tell forty minutes
-helping a friend from twelve minutes of dread-scrolling.
+Sometimes a cue fires and the hand moves before a decision catches up.
+Blockers answer that with a wall. Trackers answer with a number. Neither can
+tell time spent helping a friend from time lost to an aimless scroll.
 
 dialogue asks a better question, and it asks twice.
 
 THE GATE
-When you open a watched app, a card appears and asks why. Pick a reason or
-write one. Bored is a legal entry, and so is Avoiding something. Honest
-answers are the point. Punished answers become lies, and lied-to data is
-worth nothing.
+Choose the apps you want to watch and give each one a reminder. When you open
+a watched app, a card asks whether the visit is on purpose. Walk away, or
+open dialogue and name the reason that is true right now. Honest answers are
+the point.
 
 THE DEBRIEF
-When you come back out, dialogue asks whether that turned out to be true.
-Yes, Partly, or No. Two taps and it is logged. That is the whole ritual and
-it never grows.
+At your chosen soft budget, dialogue re-arms the gate and asks whether the
+visit matched your intention. Yes, Partly, or No. Add an optional note, or
+answer in one tap.
 
 THE LEDGER
-Between those two questions a record accumulates. Your Intention Match Score
-is the percentage of sessions where what you said going in held up on the way
-out, per app, over the last fourteen days. Minutes measure duration. IMS
-measures integrity.
+Between those two questions a private record accumulates. Your Intention
+Match Score summarizes the last fourteen days, overall and per app. The
+weekly review shows Screen Time in watched apps, recurring reasons, average
+visit length, and match rate.
 
-The weekly review prints the reason cost table:
-
-Reply, average 3 minutes, matched 92 percent
-Look up, average 4 minutes, matched 81 percent
-Bored, average 22 minutes, matched 34 percent
-
-Nobody needs to be told that is a problem. The numbers do the persuading.
-No streaks that punish, no shame graphs, no minutes wasted counter.
+No streaks that punish. No shame graph. No minutes-wasted counter.
 
 WHAT DIALOGUE WILL NOT DO
 
-It never blocks. Enter is always reachable, on every screen, permanently.
-What changes is how much friction stands in front of it, and that follows
-your own match rate. Earn a high IMS and the gate becomes a whisper.
+It never locks you out permanently. Every gate includes a way to begin an
+intentional visit, and all gates can be paused in Settings.
 
-It never phones home. Your reasons, verdicts and notes stay on your device
-unless you turn on Sync. dialogue cannot see which apps you chose, because
-Apple hands out opaque tokens instead of names, and we like it that way. No
-ads, no profiling, nothing sold to anyone.
+It never phones home. Your watched apps, reasons, verdicts, and notes stay in
+the app group on your iPhone. dialogue has no account, ads, profiling, or
+third-party analytics.
 
-It never rents itself to you. One price, once. If you stop using dialogue,
-we should not keep charging you for it.
+It never asks you to manage anyone else's device. dialogue is a personal tool
+for the account holder's own iPhone.
 
-FREE
-One watched app, the full gate and debrief, your Intention Match Score, and
-fourteen days of history.
-
-DIALOGUE, ONE TIME PURCHASE
-Unlimited watched apps, history that never expires, the weekly review, the
-adaptive gate, the reason cost table, and export of your whole ledger to CSV
-or JSON.
-
-DIALOGUE SYNC, OPTIONAL SUBSCRIPTION
-Cross-device sync, cloud backup, the web review, and monthly deep patterns.
-Everything that makes dialogue dialogue is in the one-time purchase.
-
-dialogue requires Screen Time authorization to present the gate. It is a
-personal tool for the account holder's own device and cannot monitor anyone
-else.
-
-SUBSCRIPTION TERMS
-dialogue Sync costs 1.99 USD per month or 14.99 USD per year. Payment is
-charged to your Apple Account at confirmation of purchase. The subscription
-renews automatically unless it is cancelled at least 24 hours before the end
-of the current period, and your Apple Account is charged for renewal within
-24 hours of the end of the period. Manage or cancel your subscription in your
-Apple Account settings after purchase.
+dialogue requires Screen Time authorization to present its gate. Session
+lengths are approximate because iOS delivers Screen Time events on its own
+schedule.
 
 Privacy policy: https://dialogue-five.vercel.app/privacy
-Terms of use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 ```
 
-The subscription terms block is not optional garnish. Auto-renewable
-subscriptions require price, term, renewal behavior, and links to the privacy
-policy and the terms of use to be visible, and metadata rejections for
-omitting them are routine.
+Build 2 is free and has no in-app purchases or subscriptions. Add commercial
+terms only when a later binary actually includes the matching products.
 
 **Keywords (100 char limit, comma separated, no spaces after commas)**
 ```
@@ -223,7 +189,7 @@ horror themes. Also:
 | User generated content | No |
 | Messaging or chat | No |
 | Contests | No |
-| In-app purchases | Yes |
+| In-app purchases | No |
 | Age assurance | Not applicable |
 
 Expected result 4+. Apple has revised this questionnaire more than once
@@ -260,10 +226,10 @@ device ID, and crash or performance data (MetricKit reports go to Apple, not
 to us, so nothing is declared under Diagnostics).
 
 Two things worth stating plainly in case the answers are ever questioned. The
-watched app selections are opaque `ApplicationToken` values that cannot be
-resolved to app identities, by Apple's design, so there is no usage data to
-declare in the first place. And the waitlist email address collected by the
-marketing site is not app data and does not belong on this label.
+watched app selections are opaque `ApplicationToken` values. The user's own
+local labels and ledger never leave the device. The waitlist email address
+collected by the marketing site is not app data and does not belong on this
+label.
 
 ### Privacy manifest
 
@@ -275,8 +241,8 @@ marketing site is not app data and does not belong on this label.
 - `NSPrivacyAccessedAPITypes`: UserDefaults (CA92.1) in the main app. Add only
   the approved reasons used by code that actually ships.
 
-RevenueCat, Supabase, and TelemetryDeck ship their own manifests. Keep the
-versions current so their declarations stay accurate at submission.
+If third-party SDKs are added later, keep their manifests and the App Privacy
+answers aligned with the binary.
 
 ### Export compliance
 
@@ -287,11 +253,12 @@ upload.
 
 ---
 
-## 4. In-app purchases
+## 4. Commercial scope
 
-All three must exist, be attached to the build, and be submitted with the
-first review. IAPs reviewed after the app is approved do not appear on
-release day.
+Version 1.0 is free and includes the complete local-first product. It has no
+in-app purchases, subscriptions, paywall, account, or restore flow. The
+product definitions below are planning notes for a later binary and must not
+be created or attached to build 2.
 
 ### Non-consumable
 
@@ -369,10 +336,8 @@ em dashes, and no shame framing. Numbers do the persuading here too.
 
 ## 6. App Review Information
 
-- **Sign-in required:** No. The core loop (gate, session, debrief, score) runs
-  on the free tier with no account.
-- **Demo account:** not needed. If a reviewer wants to exercise Sync, provide
-  a Sign in with Apple test account in the notes at that time.
+- **Sign-in required:** No. The complete product runs locally with no account.
+- **Demo account:** not needed.
 - **Contact:** account holder name, phone, and email.
 - **Notes:** paste REVIEW_NOTES.md verbatim. It preempts the three assumptions
   reviewers make about this category (that it blocks, that it is parental
@@ -385,14 +350,12 @@ em dashes, and no shame framing. Numbers do the persuading here too.
 
 Blocked on the account holder, in the portal:
 
-- [ ] Create the App Store Connect record and learn whether `dialogue` is
-      claimable. Everything in section 1 is ready to paste behind it.
+- [x] Create the App Store Connect record as `dialogue: intention ledger`.
 - [ ] Trademark clearance with an attorney before any brand spend (section 2).
 - [ ] Secure the domain, then replace the three URLs in section 1. Deferred by
       the account holder on 2026-08-19; the live Vercel URLs stand in and are
       sufficient for TestFlight and submission in the meantime.
-- [ ] Small Business Program application. The 15 percent rate in
-      MONETIZATION.md assumes approval.
+- [ ] Small Business Program application before a future paid version.
 
 Done since this list was written:
 
@@ -403,8 +366,8 @@ Done since this list was written:
 
 Blocked on the build:
 
-- [ ] IAP products created and attached (section 4). Needs the app record.
-- [ ] Screenshots (section 5). Needs the real screens, which are gated on D012.
+- [x] No IAP products are required for the free 1.0 binary.
+- [ ] Capture screenshots from the build 2 screens (section 5).
 - [x] Privacy manifests included in all five built targets.
 - [x] Export compliance key included in all five built targets.
 - [x] App icon included at 1024 by 1024 pixels without transparency.

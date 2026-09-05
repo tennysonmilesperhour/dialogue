@@ -66,7 +66,7 @@ assert_equal() {
 echo "Inspecting the built application"
 assert_equal "$(read_plist "$app/Info.plist" CFBundleIdentifier)" "app.dialogue.ios" "App bundle ID"
 assert_equal "$(read_plist "$app/Info.plist" CFBundleShortVersionString)" "1.0.0" "Marketing version"
-assert_equal "$(read_plist "$app/Info.plist" CFBundleVersion)" "1" "Build version"
+assert_equal "$(read_plist "$app/Info.plist" CFBundleVersion)" "2" "Build version"
 assert_equal "$(read_plist "$app/Info.plist" ITSAppUsesNonExemptEncryption)" "false" "Export compliance"
 assert_equal "$(read_plist "$app/Info.plist" UIDeviceFamily:0)" "1" "Supported device family"
 
