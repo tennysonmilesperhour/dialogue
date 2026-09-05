@@ -91,6 +91,7 @@ assert_equal "$(sips -g pixelHeight "$icon" 2>/dev/null | awk '/pixelHeight/ {pr
 assert_equal "$(sips -g hasAlpha "$icon" 2>/dev/null | awk '/hasAlpha/ {print $2}')" "no" "App icon alpha"
 
 extension_names=(DialogueShield DialogueShieldAction DialogueMonitor DialogueReport)
+extension_folders=(PlugIns PlugIns PlugIns Extensions)
 extension_ids=(
   app.dialogue.ios.shield
   app.dialogue.ios.shieldaction
@@ -100,8 +101,9 @@ extension_ids=(
 
 for extension_index in "${!extension_names[@]}"; do
   extension_name="${extension_names[$extension_index]}"
+  extension_folder="${extension_folders[$extension_index]}"
   extension_id="${extension_ids[$extension_index]}"
-  extension="$app/PlugIns/$extension_name.appex"
+  extension="$app/$extension_folder/$extension_name.appex"
   if [[ ! -d "$extension" ]]; then
     echo "$extension_name is missing from the application bundle" >&2
     exit 1
