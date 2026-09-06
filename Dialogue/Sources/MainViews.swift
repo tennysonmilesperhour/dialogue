@@ -29,6 +29,25 @@ struct TodayView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
                         DialogueHeader(kicker: "Today", title: "Your intention ledger")
+                        if model.state.isPaused {
+                            LedgerCard {
+                                Text("Gates are paused. Your apps are open.")
+                                Button("Resume gates") { model.setPaused(false) }
+                                    .buttonStyle(.bordered)
+                            }
+                        }
+                        if !model.hasScreenTimeAuthorization {
+                            LedgerCard {
+                                Text("Screen Time access needs to be restored for your gates to work.")
+                                Button("Restore Screen Time access") { Task { await model.requestAuthorization() } }
+                                    .buttonStyle(.bordered)
+                            }
+                        }
+                        if let message = model.lastLoggedMessage {
+                            Label(message, systemImage: "checkmark.seal")
+                                .font(.system(.body, design: .serif))
+                                .foregroundStyle(Color.ledgerGreen)
+                        }
                         scoreCard
                         if let active = model.activeSession {
                             activeSessionCard(active)
@@ -49,18 +68,19 @@ struct TodayView: View {
 
     private var scoreCard: some View {
         LedgerCard {
-            HStack(alignment: .firstTextBaseline) {
-                VStack(alignment: .leading, spacing: 5) {
-                    Text("INTENTION MATCH")
-                        .font(.system(.caption, design: .monospaced, weight: .semibold))
-                    Text("Last \(IMS.windowDays) days")
-                        .font(.system(.caption, design: .serif))
-                }
-                Spacer()
+            VStack(alignment: .leading, spacing: 12) {
+                Text("INTENTION MATCH")
+                    .font(.system(.caption, design: .monospaced, weight: .semibold))
                 Text(scoreText(model.state.sessions))
-                    .font(.system(size: 42, weight: .semibold, design: .monospaced))
+                    .font(.system(.largeTitle, design: .monospaced, weight: .semibold))
                     .monospacedDigit()
                     .foregroundStyle(scoreColor(model.state.sessions))
+                Text("Last \(IMS.windowDays) days · \(IMS.loggedCount(sessions: model.state.sessions)) reflections")
+                    .font(.system(.caption, design: .monospaced))
+                Text(model.state.sessions.isEmpty
+                     ? "Start one visit below. After you reflect, your first match score appears here."
+                     : "Yes counts in full, Partly counts half. Unlogged visits do not lower your score.")
+                    .font(.system(.body, design: .serif))
             }
         }
     }
@@ -87,7 +107,7 @@ struct TodayView: View {
     private func pendingDebriefCard(_ session: SessionRecord) -> some View {
         LedgerCard {
             VStack(alignment: .leading, spacing: 10) {
-                Text("ONE OPEN QUESTION")
+                Text("\(model.state.pendingDebriefs.count) OPEN REFLECTIONS")
                     .font(.system(.caption, design: .monospaced, weight: .semibold))
                     .foregroundStyle(Color.ledgerRed)
                 Text("Did your \(model.appName(for: session)) visit match \(session.reason.lowercased())?")
@@ -105,6 +125,9 @@ struct TodayView: View {
                     .font(.system(.caption, design: .monospaced, weight: .semibold))
                 Text("You can also open any watched app. Its shield will send you here.")
                     .font(.system(.body, design: .serif))
+                if model.state.watchedApps.isEmpty {
+                    Text("Choose an app in Settings to start a new visit. Your previous entries remain in the ledger.")
+                }
                 ForEach(model.state.watchedApps) { app in
                     Button {
                         model.gateAppID = app.id
@@ -148,8 +171,7 @@ struct TodayView: View {
     }
 
     private var pendingSession: SessionRecord? {
-        guard let id = model.state.pendingDebriefIDs.first else { return nil }
-        return model.state.sessions.first { $0.id == id && $0.verdict == .unlogged }
+        model.state.pendingDebriefs.first
     }
 }
 
@@ -204,6 +226,11 @@ struct LedgerView: View {
             Text(durationText(session))
                 .font(.system(.caption, design: .monospaced))
                 .foregroundStyle(Color.ink.opacity(0.62))
+            if session.closedAt != nil && session.verdict == .unlogged {
+                Button("Reflect on this visit") { model.debriefSessionID = session.id }
+                    .buttonStyle(.bordered)
+                    .accessibilityLabel("Reflect on \(model.appName(for: session)), \(session.reason)")
+            }
             if let note = session.note, !note.isEmpty {
                 Text(note)
                     .font(.system(.body, design: .serif))
@@ -246,7 +273,7 @@ struct WeeklyReviewView: View {
             miniMetric("VISITS", "\(recent.count)")
             miniMetric("MATCH", scoreText(recent))
             miniMetric("WALKED AWAY", "\(recentDismissals)")
-            miniMetric("UNLOGGED", "\(recent.filter { $0.verdict == .unlogged }.count)")
+            miniMetric("UNLOGGED", "\(recent.filter { $0.closedAt != nil && $0.verdict == .unlogged }.count)")
         }
     }
 
@@ -284,6 +311,8 @@ struct WeeklyReviewView: View {
                     Text("Complete a visit to see which intentions recur.")
                         .font(.system(.body, design: .serif))
                 } else {
+                    Text("Visit lengths are approximate elapsed time, including time away from the app.")
+                        .font(.system(.caption, design: .serif))
                     HStack {
                         Text("Reason")
                         Spacer()
@@ -325,7 +354,7 @@ struct WeeklyReviewView: View {
 
     private func miniMetric(_ label: String, _ value: String) -> some View {
         VStack(alignment: .leading, spacing: 5) {
-            Text(label).font(.system(size: 10, design: .monospaced))
+            Text(label).font(.system(.caption2, design: .monospaced))
             Text(value).font(.system(.title2, design: .monospaced, weight: .semibold)).monospacedDigit()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -348,7 +377,7 @@ struct WeeklyReviewView: View {
                 match: scoreText(sessions)
             )
         }
-        .sorted { $0.count > $1.count }
+        .sorted { $0.count == $1.count ? $0.reason < $1.reason : $0.count > $1.count }
     }
 
     private var recentDismissals: Int {
@@ -401,6 +430,8 @@ struct SettingsView: View {
                                     .font(.system(.caption, design: .monospaced, weight: .semibold))
                                 Text("Your watched apps, intentions, notes, and scores stay in the app group on this iPhone. dialogue has no account and sends no analytics.")
                                     .font(.system(.body, design: .serif))
+                                Text("The ledger keeps your latest 1,000 visits and 1,000 walk-aways on this iPhone.")
+                                    .font(.system(.caption, design: .serif))
                                 Link("Read the privacy policy", destination: URL(string: "https://dialogue-five.vercel.app/privacy")!)
                                 Link("Get support", destination: URL(string: "https://dialogue-five.vercel.app/support")!)
                             }
@@ -444,7 +475,7 @@ private func verdictLabel(_ verdict: Verdict) -> String {
     case .yes: return "YES"
     case .partly: return "PARTLY"
     case .no: return "NO"
-    case .unlogged: return "OPEN"
+    case .unlogged: return "UNLOGGED"
     }
 }
 
@@ -459,6 +490,5 @@ private func verdictColor(_ verdict: Verdict) -> Color {
 private func durationText(_ session: SessionRecord) -> String {
     guard let closedAt = session.closedAt else { return "In progress" }
     let minutes = max(1, Int(closedAt.timeIntervalSince(session.enteredAt) / 60))
-    let qualifier = session.closeSource == .rearm ? "" : "Approx. "
-    return "\(qualifier)\(minutes) min"
+    return "Approx. \(minutes) min elapsed"
 }

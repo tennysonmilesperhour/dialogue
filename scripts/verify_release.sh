@@ -28,6 +28,8 @@ swift test --package-path DialogueKit
 echo "Checking the web build and dependency audit"
 npm --prefix web ci
 npm --prefix web audit --audit-level=high
+npm --prefix web test
+npm --prefix web run typecheck
 npm --prefix web run build
 
 echo "Generating the Xcode project"

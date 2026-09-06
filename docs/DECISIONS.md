@@ -89,3 +89,21 @@ type only "app.dialogue" into it.
 ---
 
 *Next decisions pending: D012 close-detection and gate-flow verdict (week 1 prototype: direct link, notification hop, or notification-action chips), D013 login method (proposal: Sign in with Apple only, decide before the Sync build), free tier boundary (before beta), launch pricing test (before public launch), EU DSA trader vs US-first launch (weeks 7 to 8).*
+
+**D018. Serialize local ledger writes and keep private content out of notifications.**
+2026-09-06. The main app, shield action, and monitor are independent writers.
+A protected App Group JSON file with a separate advisory lock now owns the
+ledger and pending gate. Every mutation reads the latest record inside the
+lock. Existing UserDefaults data migrates only after successful decoding and
+writing. Unreadable data is never silently replaced. Notifications contain no
+app name or intention, and deletion clears their pending and delivered copies.
+
+**D019. Verify waitlist submissions on the server before opening beta signups.**
+2026-09-06. Anonymous direct inserts allow verification bypass and membership
+probing through uniqueness errors. The new endpoint requires server-verified
+Turnstile tokens, normalizes email, bounds payload and network work, and returns
+the same response for new and existing addresses. A migration revokes direct
+browser access. Credentials are server-only, and the site displays paused
+availability until all settings exist. Deploy the endpoint and migration as one
+coordinated release after restoring a database. The current app is advertised
+as free and local-only, with no account, subscription, or cloud sync.

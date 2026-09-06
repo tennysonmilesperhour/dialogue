@@ -35,52 +35,25 @@ public struct DialogueState: Codable, Sendable, Equatable {
     }
 }
 
-/// The intentionally small shared record used by the app and extensions.
-/// Fresh encoders avoid shared mutable state across extension processes.
-public enum SharedDialogueStore {
-    private static let stateKey = "dialogue.state.v1"
-    private static let pendingGateKey = "dialogue.pending-gate.v1"
-
-    public static func load() -> DialogueState {
-        guard
-            let data = AppGroup.sharedDefaults?.data(forKey: stateKey),
-            let state = try? JSONDecoder().decode(DialogueState.self, from: data)
-        else { return DialogueState() }
-        return state
+extension DialogueState {
+    /// Derive the queue from valid, closed entries so a stale ID cannot hide later reflections.
+    public var pendingDebriefs: [SessionRecord] {
+        sessions.filter { $0.closedAt != nil && $0.verdict == .unlogged }
+            .sorted { $0.enteredAt > $1.enteredAt }
     }
 
-    public static func save(_ state: DialogueState) {
-        guard let defaults = AppGroup.sharedDefaults,
-              let data = try? JSONEncoder().encode(trimmed(state))
-        else { return }
-        defaults.set(data, forKey: stateKey)
+    public var activeAppIDs: Set<UUID> {
+        Set(sessions.filter { $0.closedAt == nil }.map(\.appID))
     }
 
-    public static func setPendingGate(_ request: PendingGateRequest) {
-        guard let defaults = AppGroup.sharedDefaults,
-              let data = try? JSONEncoder().encode(request)
-        else { return }
-        defaults.set(data, forKey: pendingGateKey)
+    public var shieldedAppIDs: Set<UUID> {
+        guard !isPaused else { return [] }
+        return Set(watchedApps.map(\.id)).subtracting(activeAppIDs)
     }
 
-    public static func consumePendingGate() -> PendingGateRequest? {
-        guard let defaults = AppGroup.sharedDefaults,
-              let data = defaults.data(forKey: pendingGateKey),
-              let request = try? JSONDecoder().decode(PendingGateRequest.self, from: data)
-        else { return nil }
-        defaults.removeObject(forKey: pendingGateKey)
-        return request
-    }
-
-    public static func reset() {
-        AppGroup.sharedDefaults?.removeObject(forKey: stateKey)
-        AppGroup.sharedDefaults?.removeObject(forKey: pendingGateKey)
-    }
-
-    private static func trimmed(_ state: DialogueState) -> DialogueState {
-        var result = state
-        result.sessions = Array(result.sessions.sorted { $0.enteredAt > $1.enteredAt }.prefix(1_000))
-        result.dismissals = Array(result.dismissals.sorted { $0.occurredAt > $1.occurredAt }.prefix(1_000))
-        return result
+    public mutating func normalize() {
+        sessions = Array(sessions.sorted { $0.enteredAt > $1.enteredAt }.prefix(1_000))
+        dismissals = Array(dismissals.sorted { $0.occurredAt > $1.occurredAt }.prefix(1_000))
+        pendingDebriefIDs = pendingDebriefs.map(\.id)
     }
 }

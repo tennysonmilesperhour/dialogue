@@ -28,6 +28,11 @@ struct IntentionGateView: View {
                             .foregroundStyle(Color.ledgerRed)
                     }
 
+                    Text("\(app.gateTier.rawValue.capitalized) gate · \(app.gateTier.settleSeconds) second pause")
+                        .font(.system(.caption, design: .monospaced))
+                    Text("Your gate follows your last 14 days of reflections. Honest reasons are always welcome.")
+                        .font(.system(.footnote, design: .serif))
+
                     Text("Choose the reason that is true right now.")
                         .font(.system(.body, design: .serif))
 
@@ -39,6 +44,7 @@ struct IntentionGateView: View {
                                 .foregroundStyle(selectedReason == reason ? Color.paper : Color.ink)
                                 .background(selectedReason == reason ? Color.ink : Color.clear)
                                 .overlay { Rectangle().stroke(Color.ink, lineWidth: 1) }
+                                .accessibilityAddTraits(selectedReason == reason ? .isSelected : [])
                         }
                     }
 
@@ -56,7 +62,7 @@ struct IntentionGateView: View {
                     .opacity(canEnter ? 1 : 0.45)
 
                     Button("Never mind") {
-                        model.gateAppID = nil
+                        model.dismissGate()
                     }
                     .font(.system(.body, design: .monospaced))
                     .foregroundStyle(Color.ink)
@@ -67,7 +73,7 @@ struct IntentionGateView: View {
         }
         .task {
             while secondsRemaining > 0 {
-                try? await Task.sleep(for: .seconds(1))
+                do { try await Task.sleep(for: .seconds(1)) } catch { return }
                 secondsRemaining -= 1
             }
         }

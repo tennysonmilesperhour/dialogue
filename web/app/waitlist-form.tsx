@@ -1,66 +1,172 @@
 "use client";
 
-import { useState } from "react";
-import { supabase } from "@/lib/supabase";
+import Script from "next/script";
+import { useEffect, useRef, useState } from "react";
 
-type FormState = "idle" | "working" | "done" | "duplicate" | "error";
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (
+        element: HTMLElement,
+        options: Record<string, unknown>,
+      ) => string;
+      reset: (id: string) => void;
+      remove: (id: string) => void;
+    };
+  }
+}
 
-export default function WaitlistForm() {
+export default function WaitlistForm({ siteKey }: { siteKey: string | null }) {
   const [email, setEmail] = useState("");
-  const [state, setState] = useState<FormState>("idle");
+  const [token, setToken] = useState("");
+  const [state, setState] = useState<"idle" | "working" | "done" | "error">(
+    "idle",
+  );
+  const [message, setMessage] = useState("");
+  const [scriptReady, setScriptReady] = useState(false);
+  const container = useRef<HTMLDivElement>(null);
+  const widget = useRef<string | null>(null);
+  const submitting = useRef(false);
+  const status = useRef<HTMLParagraphElement>(null);
 
-  async function submit(event: React.FormEvent) {
-    event.preventDefault();
-    const trimmed = email.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
-      setState("error");
+  const isDone = state === "done";
+
+  useEffect(() => {
+    if (
+      !scriptReady ||
+      !siteKey ||
+      !container.current ||
+      !window.turnstile ||
+      isDone
+    )
       return;
-    }
+    widget.current = window.turnstile.render(container.current, {
+      sitekey: siteKey,
+      action: "waitlist",
+      theme: "light",
+      size: "compact",
+      callback: (value: string) => setToken(value),
+      "expired-callback": () => setToken(""),
+      "error-callback": () => {
+        setToken("");
+        setMessage(
+          "Verification could not load. Check your connection and reload this page.",
+        );
+      },
+    });
+    return () => {
+      if (widget.current) window.turnstile?.remove(widget.current);
+      widget.current = null;
+    };
+  }, [scriptReady, siteKey, isDone]);
+
+  useEffect(() => {
+    if (state === "done") status.current?.focus();
+  }, [state]);
+
+  async function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (submitting.current) return;
+    submitting.current = true;
+    const website = new FormData(event.currentTarget).get("website");
     setState("working");
-    const { error } = await supabase
-      .from("dialogue_waitlist")
-      .insert({ email: trimmed, source: "web" });
-    if (!error) {
-      setState("done");
-    } else if (error.code === "23505") {
-      setState("duplicate");
-    } else {
+    setMessage("");
+    try {
+      const result = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, token, website }),
+        signal: AbortSignal.timeout(20000),
+      });
+      const body = await result.json();
+      setMessage(
+        body.message || "Your request could not be saved. Please try again.",
+      );
+      setState(result.ok ? "done" : "error");
+      if (result.ok) setEmail("");
+    } catch {
       setState("error");
+      setMessage(
+        "The connection did not complete. Your address is still here. Please try again.",
+      );
+    } finally {
+      submitting.current = false;
+      setToken("");
+      if (widget.current) window.turnstile?.reset(widget.current);
     }
   }
 
-  if (state === "done") {
+  if (!siteKey)
     return (
-      <p className="form-note ok">
-        Logged. You are on the list. We will write when there is something
-        worth opening.
+      <p className="availability-note">
+        Signups are paused while we prepare the beta. You can try the preview
+        above and check back here for availability.
       </p>
     );
-  }
-
-  if (state === "duplicate") {
-    return <p className="form-note ok">Already in the ledger. Nothing more to do.</p>;
-  }
 
   return (
-    <form className="waitlist-form" onSubmit={submit}>
-      <input
-        type="email"
-        required
-        placeholder="you@example.com"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        aria-label="Email address"
-        disabled={state === "working"}
+    <>
+      <Script
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+        onReady={() => setScriptReady(true)}
+        onError={() =>
+          setMessage("Verification could not load. Please reload this page.")
+        }
       />
-      <button className="btn primary" type="submit" disabled={state === "working"}>
-        {state === "working" ? "Logging" : "Join the waitlist"}
-      </button>
-      {state === "error" && (
-        <p className="form-note err">
-          The waitlist is temporarily unavailable. Try again later.
-        </p>
+      {state !== "done" && (
+        <form
+          className="waitlist-form"
+          onSubmit={submit}
+          aria-busy={state === "working"}
+        >
+          <label htmlFor="waitlist-email">Email address</label>
+          <div className="form-controls">
+            <input
+              id="waitlist-email"
+              name="email"
+              type="email"
+              required
+              maxLength={254}
+              autoComplete="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              aria-describedby="waitlist-privacy waitlist-status"
+              disabled={state === "working"}
+            />
+            <button
+              className="btn primary"
+              type="submit"
+              disabled={state === "working" || !token}
+            >
+              {state === "working"
+                ? "Saving your request…"
+                : "Request beta access"}
+            </button>
+          </div>
+          <div className="honeypot" aria-hidden="true">
+            <label>
+              Website
+              <input name="website" tabIndex={-1} autoComplete="off" />
+            </label>
+          </div>
+          <div ref={container} className="verification" />
+          <p id="waitlist-privacy" className="form-note">
+            Beta and launch updates only.{" "}
+            <a href="/privacy">How we handle your address</a>.
+          </p>
+        </form>
       )}
-    </form>
+      <p
+        ref={status}
+        id="waitlist-status"
+        tabIndex={-1}
+        role="status"
+        aria-live="polite"
+        className={`form-note ${state === "done" ? "ok" : "err"}`}
+      >
+        {message}
+      </p>
+    </>
   );
 }

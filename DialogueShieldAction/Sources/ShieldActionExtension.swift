@@ -19,7 +19,11 @@ class ShieldActionExtension: ShieldActionDelegate {
             recordDismissal(for: tokenData)
             completionHandler(.close)
         case .secondaryButtonPressed:
-            SharedDialogueStore.setPendingGate(PendingGateRequest(applicationTokenData: tokenData))
+            guard (try? SharedDialogueStore.setPendingGate(PendingGateRequest(applicationTokenData: tokenData))) != nil else {
+                DialogueShieldController.apply(DialogueState())
+                completionHandler(.none)
+                return
+            }
             if #available(iOS 26.5, *) {
                 completionHandler(.openParentalControlsApp)
             } else {
@@ -52,13 +56,10 @@ class ShieldActionExtension: ShieldActionDelegate {
     }
 
     private func recordDismissal(for tokenData: Data) {
-        var state = SharedDialogueStore.load()
-        guard let app = state.watchedApps.first(where: { $0.applicationTokenData == tokenData }) else { return }
-        state.dismissals.insert(
-            Dismissal(appID: app.id, occurredAt: Date(), gateTier: app.gateTier),
-            at: 0
-        )
-        SharedDialogueStore.save(state)
+        _ = try? SharedDialogueStore.update { state in
+            guard let app = state.watchedApps.first(where: { $0.applicationTokenData == tokenData }) else { return }
+            state.dismissals.insert(Dismissal(appID: app.id, occurredAt: Date(), gateTier: app.gateTier), at: 0)
+        }
     }
 
     private func scheduleOpenDialogueNotification() {

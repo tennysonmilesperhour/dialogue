@@ -57,3 +57,20 @@ device prototype remain external checks. See
 - RESEARCH.md, the psychology base with citations
 - PLAN.md, gated execution plan and doc-review findings
 - submission/LAUNCH_READINESS.md, verified release checks and open launch gates
+
+## Web signup setup
+
+Copy `web/.env.example` to `web/.env.local` and configure a healthy Supabase
+project plus a Cloudflare Turnstile widget restricted to your site hostname.
+Apply the original waitlist migration and the hardening migration before
+accepting submissions through `/api/waitlist`. The service role key stays on
+the server. Never put it in a `NEXT_PUBLIC_` variable. Missing configuration
+renders a paused-signups message. Test keys must not be used in production.
+
+Deploy this endpoint and the migration together: the old client-side form
+will no longer have database insert permission. Validate with a controlled
+signup and confirm direct `anon` and `authenticated` table access is denied.
+
+Run `npm --prefix web test`, `npm --prefix web run typecheck`, and
+`npm --prefix web run build`. See `docs/AUDIT-2026-09-06.md` for the audit,
+remaining launch gates, and retention hypotheses.
