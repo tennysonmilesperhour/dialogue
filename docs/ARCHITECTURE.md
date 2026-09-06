@@ -125,3 +125,15 @@ dialogue/
 ```
 
 Keep IMS math and design tokens in `DialogueKit` so the extensions and app never drift.
+
+## Implemented persistence, September 6 audit
+
+The current local-only binary stores a compact JSON record in the App Group,
+protected after the first device unlock. `DialogueFileStore` uses a separate
+POSIX lock file to serialize all app and extension mutations, reads the latest
+state under the lock, and atomically replaces the record. Legacy UserDefaults
+data migrates on first access and is removed only after the new record exists.
+Corruption raises an error and preserves the original bytes. Shield selection
+excludes active visits, and state-derived shield changes are serialized with
+the state mutation. Notifications carry generic reflection copy. There is no
+account, cloud ledger, or analytics SDK in the current binary.

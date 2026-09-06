@@ -84,6 +84,7 @@ struct LedgerCard<Content: View>: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(16)
             .background(Color.paper)
+            .background { Rectangle().fill(Color.ink).offset(x: 3, y: 3) }
             .overlay {
                 Rectangle().stroke(Color.ink, lineWidth: DesignTokens.Layout.borderWidth)
             }

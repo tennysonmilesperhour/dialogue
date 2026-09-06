@@ -32,7 +32,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${display.variable} ${mono.variable} ${serif.variable}`}>
+      <body
+        className={`${display.variable} ${mono.variable} ${serif.variable}`}
+      >
         {children}
       </body>
     </html>

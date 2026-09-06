@@ -1,6 +1,15 @@
 # Launch readiness
 
-Last audited September 4, 2026.
+Last audited September 6, 2026.
+
+September 6 audit adds serialized local persistence, reflection recovery,
+active-visit shield preservation, generic notifications, a working web preview,
+and a protected server signup endpoint. See `../AUDIT-2026-09-06.md` for findings
+and validation. The live Supabase hostname did not resolve during a read-only
+check; no live service or deployment was changed. Configure Turnstile and the
+server credentials, and coordinate the waitlist migration with the website
+release before reopening signups. All physical-device and signing gates below
+remain open until separately verified.
 
 This is the source of truth for whether dialogue can be submitted. A green
 build is necessary, but it is not the same as a releasable product.

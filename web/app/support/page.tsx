@@ -8,16 +8,16 @@ export default function Support() {
 
       <h2>What is dialogue?</h2>
       <p>
-        A ledger for your attention. When you open a watched app, dialogue
-        asks why. When you leave, it asks whether that held up. The record is
-        the product.
+        A ledger for your attention. When you open a watched app, dialogue asks
+        why. At your soft budget, or when you end a visit in dialogue, it asks
+        whether that held up. The record is the product.
       </p>
 
       <h2>Does dialogue block apps?</h2>
       <p>
-        No. Never. The Enter path is always available. What changes over time
-        is how light or deliberate the gate is, and that follows your own
-        match rate.
+        No. Never. The Enter path is always available. What changes over time is
+        how light or deliberate the gate is, and that follows your own match
+        rate.
       </p>
 
       <h2>Why can dialogue not see my app names?</h2>
@@ -30,11 +30,23 @@ export default function Support() {
       <h2>Why is my session length approximate?</h2>
       <p>
         iOS does not tell apps exactly when another app closes. dialogue
-        triangulates from the signals it does get and labels estimates
-        honestly instead of faking precision.
+        triangulates from the signals it does get and labels estimates honestly
+        instead of faking precision.
       </p>
 
-      <h2>What does the subscription add?</h2>
+      <h2>Where did my unfinished reflection go?</h2>
+      <p>
+        Open Today to find your latest unfinished reflection, or open the Ledger
+        and choose Reflect on this visit. Unlogged visits are excluded from your
+        match score.
+      </p>
+      <h2>How do I open my apps while troubleshooting?</h2>
+      <p>
+        Open Settings in dialogue and turn on Pause all gates. If Screen Time
+        access was revoked, restore it from the notice on Today or in watched
+        app settings.
+      </p>
+      <h2>Is there a subscription?</h2>
       <p>
         The current build has no subscription. Optional Sync is planned for a
         later version, after the local ledger has been tested in public.
@@ -45,8 +57,8 @@ export default function Support() {
         <a href="https://github.com/tennysonmilesperhour/dialogue/issues/new">
           Open a support request on GitHub
         </a>
-        . Requests are public, so do not include private ledger entries or
-        other personal information.
+        . Requests are public, so do not include private ledger entries or other
+        personal information.
       </p>
 
       <footer>

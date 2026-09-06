@@ -16,3 +16,13 @@ Packages/
 
 # macOS
 .DS_Store
+
+# Web dependencies, generated output, and private configuration
+node_modules/
+.next/
+*.tsbuildinfo
+.env*
+!.env.example
+
+# Supabase CLI local state
+supabase/.temp/
