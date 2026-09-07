@@ -132,3 +132,12 @@ Ready means all P0 blockers are closed, `scripts/verify_release.sh` passes on
 the submission commit, a signed archive validates in Organizer, every promised
 feature is visible and functional in that archive, the store listing matches
 the binary, and the final build has passed a physical-device smoke test.
+
+## App Store contact verification, September 7
+
+App Store Connect is now accessible. Dialogue app ID `6808845019` has version
+1.0 in Ready for Review with build 2 already attached. Its Support URL points
+to the verified live support page. The App Review email was saved as
+`morphiclabsdata@gmail.com` and confirmed after reopening the version form.
+The attached build's provenance and real-device acceptance remain unverified;
+a portal readiness status does not close the release-quality checks above.
