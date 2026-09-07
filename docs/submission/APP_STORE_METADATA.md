@@ -113,6 +113,7 @@ Live and serving as of 2026-08-19. Use these values today.
 | Field | Value |
 |---|---|
 | Marketing URL | `https://dialogue-five.vercel.app` |
+| Support email | `morphiclabsdata@gmail.com` |
 | Support URL | `https://dialogue-five.vercel.app/support` |
 | Privacy Policy URL | `https://dialogue-five.vercel.app/privacy` |
 

@@ -54,11 +54,10 @@ export default function Support() {
 
       <h2>Contact</h2>
       <p>
-        <a href="https://github.com/tennysonmilesperhour/dialogue/issues/new">
-          Open a support request on GitHub
-        </a>
-        . Requests are public, so do not include private ledger entries or other
-        personal information.
+        Email <a href="mailto:morphiclabsdata@gmail.com">morphiclabsdata@gmail.com</a>
+        {" "}for help, feedback, or a waitlist deletion request. Include your iOS
+        version and a description of the issue. Your ledger stays on your device;
+        you do not need to send private entries to get help.
       </p>
 
       <footer>

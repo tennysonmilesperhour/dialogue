@@ -61,7 +61,8 @@ children and has no parental control features.
 
 ## Contact
 
-Questions and deletion requests can be sent through the support page at
+Email [morphiclabsdata@gmail.com](mailto:morphiclabsdata@gmail.com) for
+privacy questions and deletion requests. The support guide is available at
 https://dialogue-five.vercel.app/support.
 
 ## Changes

@@ -60,7 +60,8 @@ export default function Privacy() {
 
       <h2>Questions and deletion requests</h2>
       <p>
-        Use the <a href="/support">support page</a> to contact us. Waitlist
+        Email <a href="mailto:morphiclabsdata@gmail.com">morphiclabsdata@gmail.com</a>
+        {" "}for privacy questions or deletion requests. Waitlist
         deletion requests are handled manually and confirmed when complete.
       </p>
 

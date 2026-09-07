@@ -84,9 +84,11 @@ dependency audit.
 
 ## Store access and public support
 
-- [ ] Add a private support channel before public launch. GitHub Issues is a
-      working interim contact, but users should not post private ledger data
-      there.
+- [x] User confirmed `morphiclabsdata@gmail.com` as the private support email.
+      Source support pages, privacy contact, in-app links, and metadata use it.
+- [x] Support and privacy pages deployed September 7, 2026 and verified HTTP
+      200 with `mailto:morphiclabsdata@gmail.com`. Deployment:
+      `dpl_E3YC8GyspwGC1eSwVHTVbiPgiXsu`.
 - [ ] Sign in to App Store Connect and resolve any required account agreements
       and the applicable DSA status and territory settings. Banking, tax, and
       Small Business enrollment are not blanket prerequisites for this free

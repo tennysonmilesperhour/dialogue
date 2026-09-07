@@ -433,7 +433,8 @@ struct SettingsView: View {
                                 Text("The ledger keeps your latest 1,000 visits and 1,000 walk-aways on this iPhone.")
                                     .font(.system(.caption, design: .serif))
                                 Link("Read the privacy policy", destination: URL(string: "https://dialogue-five.vercel.app/privacy")!)
-                                Link("Get support", destination: URL(string: "https://dialogue-five.vercel.app/support")!)
+                                Link("Email support", destination: URL(string: "mailto:morphiclabsdata@gmail.com")!)
+                                Link("Support guide", destination: URL(string: "https://dialogue-five.vercel.app/support")!)
                             }
                         }
                         Button("Delete all dialogue data", role: .destructive) {
