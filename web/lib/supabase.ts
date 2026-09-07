@@ -1,10 +1,16 @@
 import { createClient } from "@supabase/supabase-js";
 
-// The publishable key is public by design; row-level security limits it to
-// inserting a waitlist row. It cannot read, update, or delete anything.
-// Schema lives in supabase/migrations/0001_dialogue_waitlist.sql. To move the
-// waitlist to another project, run that file there and change these two lines.
-const SUPABASE_URL = "https://ptwxbkzulstocpfhufea.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_WfVzxDgLTeth_LGSBczewA_nNOEkFY8";
-
-export const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+// Server-side waitlist writer. The publishable key has INSERT access only.
+export function waitlistClient() {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !key) throw new Error("Waitlist storage is not configured");
+  return createClient(url, key, {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: {
+      fetch: (input, options) => fetch(input, {
+        ...options, signal: AbortSignal.timeout(10000),
+      }),
+    },
+  });
+}

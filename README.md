@@ -57,3 +57,9 @@ device prototype remain external checks. See
 - RESEARCH.md, the psychology base with citations
 - PLAN.md, gated execution plan and doc-review findings
 - submission/LAUNCH_READINESS.md, verified release checks and open launch gates
+
+## Shared Supabase backend
+
+The waitlist uses the active Vibe Check project `xyhbuqsxglfjbounogdz`, table `dialogue_waitlist`. Set `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` on the Vercel `dialogue` project; `.env.example` is in `web/`. The browser posts to `/api/waitlist`; the server's public key can insert emails but cannot read or alter the list. New and duplicate emails receive the same response.
+
+Migration `20260907180455_shared_vibe_backend.sql` is deployed. The shared database has migrations from multiple apps; do not reset it or overwrite its history from this repository. The old project `ptwxbkzulstocpfhufea` remains paused, and historical waitlist entries have not been recovered or imported. The iOS ledger remains on device.

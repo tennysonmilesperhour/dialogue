@@ -16,3 +16,13 @@ Packages/
 
 # macOS
 .DS_Store
+
+# Web builds, deployment metadata, and local configuration
+node_modules/
+.next/
+.vercel/
+.env*.local
+*.tsbuildinfo
+
+# Supabase CLI local metadata
+supabase/.temp/
