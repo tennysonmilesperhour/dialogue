@@ -42,7 +42,7 @@ class ShieldConfigurationExtension: ShieldConfigurationDataSource {
 
     private func findWatchedApp(for token: ApplicationToken) -> WatchedApp? {
         guard let data = ScreenTimeTokenCodec.encode(token) else { return nil }
-        return SharedDialogueStore.load().watchedApps.first { $0.applicationTokenData == data }
+        return (try? SharedDialogueStore.load())?.watchedApps.first { $0.applicationTokenData == data }
     }
 
     private var fallbackConfiguration: ShieldConfiguration {

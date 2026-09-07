@@ -27,7 +27,6 @@ The current build has no subscription. Optional Sync is planned for a later
 version, after the local ledger has been tested in public.
 
 **Contact**
-Open a public support request at
-https://github.com/tennysonmilesperhour/dialogue/issues/new. Do not include
-private ledger entries or other personal information. Add a private support
-channel before public launch.
+Email [morphiclabsdata@gmail.com](mailto:morphiclabsdata@gmail.com) for help,
+feedback, or a waitlist deletion request. Include your iOS version and a
+short description of the issue. Private ledger entries are not required.

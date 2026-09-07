@@ -19,29 +19,28 @@ class MonitorExtension: DeviceActivityMonitor {
 
     private func closeSession(for activity: DeviceActivityName, source: CloseSource) {
         guard let sessionID = DialogueScreenTime.sessionID(from: activity.rawValue) else { return }
-        var state = SharedDialogueStore.load()
-        guard let index = state.sessions.firstIndex(where: { $0.id == sessionID }),
-              state.sessions[index].closedAt == nil
-        else { return }
-
-        state.sessions[index].closedAt = Date()
-        state.sessions[index].closeSource = source
-        if !state.pendingDebriefIDs.contains(sessionID) {
-            state.pendingDebriefIDs.append(sessionID)
+        var closedSession: SessionRecord?
+        do {
+            try SharedDialogueStore.update { state in
+                guard let index = state.sessions.firstIndex(where: { $0.id == sessionID }),
+                      state.sessions[index].closedAt == nil else { return }
+                state.sessions[index].closedAt = Date()
+                state.sessions[index].closeSource = source
+                closedSession = state.sessions[index]
+                DialogueShieldController.apply(state)
+            }
+            guard let session = closedSession else { return }
+            DeviceActivityCenter().stopMonitoring([activity])
+            scheduleDebrief(for: session)
+        } catch {
+            DialogueShieldController.apply(DialogueState())
         }
-        SharedDialogueStore.save(state)
-        DialogueShieldController.apply(state)
-        DeviceActivityCenter().stopMonitoring([activity])
-        scheduleDebrief(for: state.sessions[index], state: state)
     }
 
-    private func scheduleDebrief(for session: SessionRecord, state: DialogueState) {
-        let appName = session.appDisplayName ??
-            state.watchedApps.first(where: { $0.id == session.appID })?.displayName ??
-            "that app"
+    private func scheduleDebrief(for session: SessionRecord) {
         let content = UNMutableNotificationContent()
         content.title = "How did that visit go?"
-        content.body = "Did your \(appName) visit match \(session.reason.lowercased())?"
+        content.body = "Your reflection is ready in dialogue."
         content.sound = .default
         let request = UNNotificationRequest(
             identifier: "dialogue.debrief.\(session.id.uuidString)",

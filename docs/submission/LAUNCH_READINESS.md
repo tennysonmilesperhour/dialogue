@@ -1,13 +1,22 @@
 # Launch readiness
 
-Last audited September 4, 2026.
+Last audited September 7, 2026.
+
+September 6 audit adds serialized local persistence, reflection recovery,
+active-visit shield preservation, generic notifications, a working web preview,
+and a protected server signup endpoint. See `../AUDIT-2026-09-06.md` for findings
+and validation. The live Supabase hostname did not resolve during a read-only
+check; no live service or deployment was changed. Configure Turnstile and the
+server credentials, and coordinate the waitlist migration with the website
+release before reopening signups. All physical-device and signing gates below
+remain open until separately verified.
 
 This is the source of truth for whether dialogue can be submitted. A green
 build is necessary, but it is not the same as a releasable product.
 
 ## Current verdict
 
-**Build 2 is ready for signed archive and physical-device validation.** The
+**Not ready for submission. Build 2 still needs signing and device validation.** The
 repository produces the complete local-first product loop and a valid
 device-SDK release build with the five expected targets, release identifiers,
 privacy manifests, export compliance declarations, and App Store icon.
@@ -20,8 +29,8 @@ that result.
 
 ## Verified in the repository
 
-- [x] Xcode 26.5 and the iOS 26.5 SDK build all five targets in Release.
-- [x] DialogueKit has 21 passing tests.
+- [x] Xcode 26.6 and the iOS 26.5 SDK build all five targets in Release.
+- [x] DialogueKit has 27 passing tests, including bounded lock contention recovery.
 - [x] Product copy lint passes.
 - [x] The Next.js 16.3.4 production build passes on Node.js 24.
 - [x] `npm audit --audit-level=high` reports no vulnerabilities.
@@ -73,21 +82,37 @@ dependency audit.
 - [ ] Verify Screen Time authorization, shield, reason handoff, debrief, and
       data deletion behavior on the oldest supported iPhone.
 
-## External service blockers
+## Store access and public support
 
-- [ ] Restore or replace Supabase project `ptwxbkzulstocpfhufea`. It is
-      inactive, database requests time out, and the live waitlist cannot
-      accept signups. The Supabase account connected during this audit does
-      not own that project, so it cannot restore it.
-- [ ] Redeploy the website after the database is healthy. The Vercel project
-      is not connected to Git, so pushes do not deploy automatically.
-- [ ] Add a private support channel before public launch. GitHub Issues is a
-      working interim contact, but users should not post private ledger data
-      there.
-- [ ] Complete agreements, banking, tax, DSA trader status or a US-only
-      availability decision, and the Small Business Program application in
-      App Store Connect.
+- [x] User confirmed `morphiclabsdata@gmail.com` as the private support email.
+      Source support pages, privacy contact, in-app links, and metadata use it.
+- [x] Support and privacy pages deployed September 7, 2026 and verified HTTP
+      200 with `mailto:morphiclabsdata@gmail.com`. Deployment:
+      `dpl_E3YC8GyspwGC1eSwVHTVbiPgiXsu`.
+- [ ] Sign in to App Store Connect and resolve any required account agreements
+      and the applicable DSA status and territory settings. Banking, tax, and
+      Small Business enrollment are not blanket prerequisites for this free
+      build; inspect what the account actually requires.
 - [ ] Obtain trademark clearance or ship the qualified store name from D014.
+
+## Optional website waitlist
+
+The app does not depend on the waitlist. Keep signups paused until the database
+is restored, the access-control migration is applied, and server credentials
+and Turnstile are configured. Deploy those changes together. The Vercel
+project was previously not connected to Git, so a push alone is insufficient.
+Public support and privacy pages must remain available regardless of signups.
+
+## September 7 submission attempt
+
+- Apple Distribution certificate is present for team `T4PQ8SNY8D`.
+- No Dialogue provisioning profiles are installed. Automatic development
+  signing failed for all five targets: the team has no registered devices.
+- No physical iPhone was detected by `devicectl`.
+- App Store Connect browser session requires sign-in. Store data and the
+  Family Controls distribution approval could not be verified.
+- Live privacy and support URLs returned HTTP 200.
+- No binary was uploaded and no review submission was made.
 
 ## Current Apple requirements checked
 
@@ -107,3 +132,12 @@ Ready means all P0 blockers are closed, `scripts/verify_release.sh` passes on
 the submission commit, a signed archive validates in Organizer, every promised
 feature is visible and functional in that archive, the store listing matches
 the binary, and the final build has passed a physical-device smoke test.
+
+## App Store contact verification, September 7
+
+App Store Connect is now accessible. Dialogue app ID `6808845019` has version
+1.0 in Ready for Review with build 2 already attached. Its Support URL points
+to the verified live support page. The App Review email was saved as
+`morphiclabsdata@gmail.com` and confirmed after reopening the version form.
+The attached build's provenance and real-device acceptance remain unverified;
+a portal readiness status does not close the release-quality checks above.

@@ -2,8 +2,7 @@ import Foundation
 
 /// The one app group every target shares. Extensions are memory constrained
 /// (roughly 6MB for the shield), so they never spin up the SwiftData
-/// container: they append minimal records here and the main app ingests them
-/// on next launch. One writer per store, always.
+/// container. DialogueFileStore serializes ledger updates across processes.
 public enum AppGroup {
     public static let identifier = "group.app.dialogue"
 

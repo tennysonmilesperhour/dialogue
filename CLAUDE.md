@@ -31,3 +31,9 @@ mechanically), the web build, and `swift test` for DialogueKit. Run the lint
 locally with `python3 scripts/copy_lint.py`. To quote copy that breaks a rule
 on purpose, mark the line `copy-lint: allow` or wrap the block in
 `copy-lint: off` and `copy-lint: on`.
+
+## Support contact
+
+Use `morphiclabsdata@gmail.com` for public support, privacy/deletion requests,
+in-app support links, and submission support metadata. User confirmed this
+address for all current and future apps on September 7, 2026.

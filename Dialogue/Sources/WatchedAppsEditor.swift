@@ -37,8 +37,9 @@ struct WatchedAppsEditor: View {
 
                         if isOnboarding {
                             intro
-                            permission
                         }
+
+                        if isOnboarding || !model.hasScreenTimeAuthorization { permission }
 
                         selectionSection
 
@@ -90,7 +91,7 @@ struct WatchedAppsEditor: View {
     }
 
     private var intro: some View {
-        Text("dialogue helps you name why you are opening an app, then asks whether the visit matched that intention. It never locks you out permanently.")
+        Text("Name why you are opening an app. Reflect when the visit ends. Over time, see which intentions held up. Start with one app; you can change your choices or pause every gate in Settings.")
             .font(.system(.body, design: .serif))
             .foregroundStyle(Color.ink)
     }
@@ -102,7 +103,7 @@ struct WatchedAppsEditor: View {
                     .font(.system(.caption, design: .monospaced, weight: .semibold))
                 Text(permissionCopy)
                     .font(.system(.body, design: .serif))
-                if model.authorizationStatus != .approved {
+                if !model.hasScreenTimeAuthorization {
                     Button("Allow Screen Time access") {
                         Task { await model.requestAuthorization() }
                     }
@@ -169,7 +170,7 @@ struct WatchedAppsEditor: View {
 
     private var canSave: Bool {
         model.hasScreenTimeAuthorization &&
-        !apps.isEmpty &&
+        (!isOnboarding || !apps.isEmpty) &&
         apps.allSatisfy { !$0.displayName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
     }
 
