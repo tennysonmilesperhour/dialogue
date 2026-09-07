@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
 
-type FormState = "idle" | "working" | "done" | "duplicate" | "error";
+type FormState = "idle" | "working" | "done" | "error";
 
 export default function WaitlistForm() {
   const [email, setEmail] = useState("");
@@ -17,14 +16,13 @@ export default function WaitlistForm() {
       return;
     }
     setState("working");
-    const { error } = await supabase
-      .from("dialogue_waitlist")
-      .insert({ email: trimmed, source: "web" });
-    if (!error) {
-      setState("done");
-    } else if (error.code === "23505") {
-      setState("duplicate");
-    } else {
+    try {
+      const response = await fetch("/api/waitlist", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: trimmed }), signal: AbortSignal.timeout(15000),
+      });
+      setState(response.ok ? "done" : "error");
+    } catch {
       setState("error");
     }
   }
@@ -38,14 +36,11 @@ export default function WaitlistForm() {
     );
   }
 
-  if (state === "duplicate") {
-    return <p className="form-note ok">Already in the ledger. Nothing more to do.</p>;
-  }
-
   return (
     <form className="waitlist-form" onSubmit={submit}>
       <input
         type="email"
+        maxLength={320}
         required
         placeholder="you@example.com"
         value={email}

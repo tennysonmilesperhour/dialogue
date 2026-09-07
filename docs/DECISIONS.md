@@ -89,3 +89,8 @@ type only "app.dialogue" into it.
 ---
 
 *Next decisions pending: D012 close-detection and gate-flow verdict (week 1 prototype: direct link, notification hop, or notification-action chips), D013 login method (proposal: Sign in with Apple only, decide before the Sync build), free tier boundary (before beta), launch pricing test (before public launch), EU DSA trader vs US-first launch (weeks 7 to 8).*
+
+
+## 2026-09-07: Use the active shared Vibe Check backend
+
+Move waitlist capture to the owner-selected active project. Keep the table app-specific and INSERT-only. Route writes through the server with environment-based configuration and a bounded timeout. Preserve the paused source for historical recovery. No changes to iOS ledger storage or account requirements.
