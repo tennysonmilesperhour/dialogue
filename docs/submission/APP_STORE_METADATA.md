@@ -14,9 +14,10 @@ Companion files: REVIEW_NOTES.md (the Review Notes field), PRIVACY_POLICY.md
 
 **Name (30 char limit)**
 ```
-dialogue
+dialogue: intention ledger
 ```
-Fallback, if taken: `dialogue: intention ledger` (26). See section 2.
+26 characters. Qualified name selected in the existing app record; verify it in
+App Store Connect before submitting. See section 2.
 
 **Subtitle (30 char limit)**
 ```
@@ -238,8 +239,9 @@ label.
 - `NSPrivacyTracking`: false
 - `NSPrivacyTrackingDomains`: empty
 - `NSPrivacyCollectedDataTypes`: empty in the current build
-- `NSPrivacyAccessedAPITypes`: UserDefaults (CA92.1) in the main app. Add only
-  the approved reasons used by code that actually ships.
+- `NSPrivacyAccessedAPITypes`: UserDefaults (`1C8F.1`) in the main app, shield, shield action,
+  and monitor for migration of preferences within `group.app.dialogue`. The
+  report extension does not access preferences and declares no required-reason API.
 
 If third-party SDKs are added later, keep their manifests and the App Privacy
 answers aligned with the binary.

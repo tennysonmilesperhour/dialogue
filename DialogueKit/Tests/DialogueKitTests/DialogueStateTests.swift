@@ -1,7 +1,31 @@
+import Darwin
 import XCTest
 @testable import DialogueKit
 
 final class DialogueStateTests: XCTestCase {
+    func testContendedLockTimesOutWithoutChangingLedgerAndRecovers() throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = DialogueFileStore(directory: directory)
+        try store.update { $0.isPaused = true }
+        let url = directory.appendingPathComponent("dialogue-ledger-v2.json")
+        let original = try Data(contentsOf: url)
+        let descriptor = open(directory.appendingPathComponent("dialogue.lock").path, O_RDWR)
+        XCTAssertGreaterThanOrEqual(descriptor, 0)
+        defer { close(descriptor) }
+        XCTAssertEqual(flock(descriptor, LOCK_EX | LOCK_NB), 0)
+        let started = Date()
+        XCTAssertThrowsError(try store.update { $0.isPaused = false }) { error in
+            XCTAssertEqual((error as? POSIXError)?.code, .ETIMEDOUT)
+        }
+        XCTAssertLessThan(Date().timeIntervalSince(started), 3)
+        XCTAssertEqual(try Data(contentsOf: url), original)
+        XCTAssertEqual(flock(descriptor, LOCK_UN), 0)
+        XCTAssertTrue(try store.load().isPaused)
+        try store.update { $0.isPaused = false }
+        XCTAssertFalse(try store.load().isPaused)
+    }
+
     func testQueueRepairsStaleAndMissingIDsAndExcludesActiveVisits() {
         let closed = SessionRecord(appID: UUID(), reason: "Reply", enteredAt: Date(), closedAt: Date())
         let active = SessionRecord(appID: UUID(), reason: "Look up", enteredAt: Date())

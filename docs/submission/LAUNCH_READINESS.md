@@ -1,6 +1,6 @@
 # Launch readiness
 
-Last audited September 6, 2026.
+Last audited September 7, 2026.
 
 September 6 audit adds serialized local persistence, reflection recovery,
 active-visit shield preservation, generic notifications, a working web preview,
@@ -16,7 +16,7 @@ build is necessary, but it is not the same as a releasable product.
 
 ## Current verdict
 
-**Build 2 is ready for signed archive and physical-device validation.** The
+**Not ready for submission. Build 2 still needs signing and device validation.** The
 repository produces the complete local-first product loop and a valid
 device-SDK release build with the five expected targets, release identifiers,
 privacy manifests, export compliance declarations, and App Store icon.
@@ -29,8 +29,8 @@ that result.
 
 ## Verified in the repository
 
-- [x] Xcode 26.5 and the iOS 26.5 SDK build all five targets in Release.
-- [x] DialogueKit has 21 passing tests.
+- [x] Xcode 26.6 and the iOS 26.5 SDK build all five targets in Release.
+- [x] DialogueKit has 27 passing tests, including bounded lock contention recovery.
 - [x] Product copy lint passes.
 - [x] The Next.js 16.3.4 production build passes on Node.js 24.
 - [x] `npm audit --audit-level=high` reports no vulnerabilities.
@@ -82,21 +82,35 @@ dependency audit.
 - [ ] Verify Screen Time authorization, shield, reason handoff, debrief, and
       data deletion behavior on the oldest supported iPhone.
 
-## External service blockers
+## Store access and public support
 
-- [ ] Restore or replace Supabase project `ptwxbkzulstocpfhufea`. It is
-      inactive, database requests time out, and the live waitlist cannot
-      accept signups. The Supabase account connected during this audit does
-      not own that project, so it cannot restore it.
-- [ ] Redeploy the website after the database is healthy. The Vercel project
-      is not connected to Git, so pushes do not deploy automatically.
 - [ ] Add a private support channel before public launch. GitHub Issues is a
       working interim contact, but users should not post private ledger data
       there.
-- [ ] Complete agreements, banking, tax, DSA trader status or a US-only
-      availability decision, and the Small Business Program application in
-      App Store Connect.
+- [ ] Sign in to App Store Connect and resolve any required account agreements
+      and the applicable DSA status and territory settings. Banking, tax, and
+      Small Business enrollment are not blanket prerequisites for this free
+      build; inspect what the account actually requires.
 - [ ] Obtain trademark clearance or ship the qualified store name from D014.
+
+## Optional website waitlist
+
+The app does not depend on the waitlist. Keep signups paused until the database
+is restored, the access-control migration is applied, and server credentials
+and Turnstile are configured. Deploy those changes together. The Vercel
+project was previously not connected to Git, so a push alone is insufficient.
+Public support and privacy pages must remain available regardless of signups.
+
+## September 7 submission attempt
+
+- Apple Distribution certificate is present for team `T4PQ8SNY8D`.
+- No Dialogue provisioning profiles are installed. Automatic development
+  signing failed for all five targets: the team has no registered devices.
+- No physical iPhone was detected by `devicectl`.
+- App Store Connect browser session requires sign-in. Store data and the
+  Family Controls distribution approval could not be verified.
+- Live privacy and support URLs returned HTTP 200.
+- No binary was uploaded and no review submission was made.
 
 ## Current Apple requirements checked
 

@@ -124,6 +124,25 @@ for extension_index in "${!extension_names[@]}"; do
   fi
 done
 
+echo "Checking required-reason privacy declarations in built bundles"
+python3 - "$app" <<'PY'
+import pathlib
+import plistlib
+import sys
+
+app = pathlib.Path(sys.argv[1])
+for relative in [".", "PlugIns/DialogueShield.appex", "PlugIns/DialogueShieldAction.appex", "PlugIns/DialogueMonitor.appex"]:
+    manifest = app / relative / "PrivacyInfo.xcprivacy"
+    with manifest.open("rb") as source:
+        privacy = plistlib.load(source)
+    reasons = {
+        item["NSPrivacyAccessedAPIType"]: item["NSPrivacyAccessedAPITypeReasons"]
+        for item in privacy["NSPrivacyAccessedAPITypes"]
+    }
+    if "1C8F.1" not in reasons.get("NSPrivacyAccessedAPICategoryUserDefaults", []):
+        raise SystemExit(f"Missing App Group UserDefaults reason in {manifest}")
+PY
+
 for entitlements in Dialogue*/Dialogue*.entitlements; do
   assert_equal \
     "$(read_plist "$entitlements" com.apple.developer.family-controls)" \

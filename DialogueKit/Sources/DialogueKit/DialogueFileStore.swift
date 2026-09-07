@@ -44,10 +44,30 @@ public struct DialogueFileStore: Sendable {
 
     private func transaction<T>(discardExisting: Bool = false, _ body: (inout Record) -> T) throws -> T {
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        let descriptor = open(directory.appendingPathComponent("dialogue.lock").path, O_CREAT | O_RDWR, 0o600)
+        let lockURL = directory.appendingPathComponent("dialogue.lock")
+        let descriptor = open(lockURL.path, O_CREAT | O_RDWR, 0o600)
         guard descriptor >= 0 else { throw POSIXError(.EIO) }
         defer { close(descriptor) }
-        guard flock(descriptor, LOCK_EX) == 0 else { throw POSIXError(.EIO) }
+        #if os(iOS)
+        // The monitor must be able to acquire the lock while the phone is locked,
+        // with the same protection policy as the ledger itself.
+        try FileManager.default.setAttributes(
+            [.protectionKey: FileProtectionType.completeUntilFirstUserAuthentication],
+            ofItemAtPath: lockURL.path
+        )
+        #endif
+        // An extension can be suspended while holding a lock. Bound the wait so
+        // callers can surface the storage error and open the gates safely.
+        var attempts = 0
+        while flock(descriptor, LOCK_EX | LOCK_NB) != 0 {
+            let failure = errno
+            guard failure == EWOULDBLOCK || failure == EINTR else {
+                throw POSIXError(POSIXErrorCode(rawValue: failure) ?? .EIO)
+            }
+            guard attempts < 100 else { throw POSIXError(.ETIMEDOUT) }
+            attempts += 1
+            usleep(10_000)
+        }
         defer { flock(descriptor, LOCK_UN) }
 
         let url = directory.appendingPathComponent("dialogue-ledger-v2.json")

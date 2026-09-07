@@ -1,6 +1,6 @@
 # dialogue privacy policy
 
-Effective date: September 4, 2026.
+Effective date: September 7, 2026.
 
 ## The short version
 
@@ -35,12 +35,21 @@ before that version is released.
 ## Website waitlist
 
 The marketing website stores the email address you submit to its waitlist.
-The address is used only for beta and launch notices. The website has no
-analytics cookies or trackers. Use the support page to request deletion.
+The address is used only for beta and launch notices. The website has no advertising or analytics cookies. When signups are enabled,
+Cloudflare Turnstile verifies submissions to reduce automated abuse. The host
+and verification provider process technical request information, such as IP
+addresses, to deliver and protect the service. Use the support page to request
+waitlist deletion.
+
+## Deleting app data
+
+Open Settings and choose Delete all dialogue data. This removes your ledger,
+watched app choices, and dialogue notifications from this device. Existing
+device backups are managed separately through your Apple settings.
 
 ## What we will never do
 
-- Sell or share your data with anyone.
+- Sell your data or share it for advertising.
 - Collect app usage data for advertising or profiling.
 - Add advertising SDKs to the app.
 - Read your ledger. It is yours.

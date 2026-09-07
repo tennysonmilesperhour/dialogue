@@ -107,3 +107,11 @@ browser access. Credentials are server-only, and the site displays paused
 availability until all settings exist. Deploy the endpoint and migration as one
 coordinated release after restoring a database. The current app is advertised
 as free and local-only, with no account, subscription, or cloud sync.
+
+**D020. Bound storage contention and declare shared-preference migration.**
+2026-09-07. A suspended process must not make another process wait indefinitely
+for the ledger. Lock acquisition retries for about one second, then reports a
+storage error through the existing recovery path. The lock uses the same iOS
+file protection policy as the ledger. The main app, shield, action, and monitor
+declare App Group UserDefaults reason `1C8F.1`; the report reads no preferences.
+Release verification checks the declarations in built bundles.
