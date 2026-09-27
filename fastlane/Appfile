@@ -1,0 +1,6 @@
+app_identifier "app.dialogue.ios"
+team_id "T4PQ8SNY8D"
+
+# App Store Connect team, only needed when the Apple ID belongs to more than
+# one. The API key in the Fastfile carries the rest.
+itc_team_id ENV["ASC_TEAM_ID"] if ENV["ASC_TEAM_ID"]

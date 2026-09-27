@@ -94,3 +94,34 @@ type only "app.dialogue" into it.
 ## 2026-09-07: Use the active shared Vibe Check backend
 
 Move waitlist capture to the owner-selected active project. Keep the table app-specific and INSERT-only. Route writes through the server with environment-based configuration and a bounded timeout. Preserve the paused source for historical recovery. No changes to iOS ledger storage or account requirements.
+
+**D018. TestFlight uploads run from fastlane in CI, signed against the five
+named App Store profiles, and stay inert until the secrets exist.**
+2026-09-27. PLAN.md section 2.4 asks for a TestFlight build on every merge to
+main, and LAUNCH_READINESS.md still lists "produce a signed archive with
+distribution provisioning for the app and all four extensions" as a P0
+blocker. Three choices inside that:
+
+Fastlane over Xcode Cloud, because the project is generated from project.yml
+(D015) and Xcode Cloud wants a committed project to attach a workflow to.
+Fastlane also runs the same lanes locally, so a hand-made archive and a CI
+archive follow one path.
+
+Download the existing profiles rather than adopting match. The Release configs
+already sign manually against five profiles by name, set up while fixing
+extension packaging, and match would rename all five and store a second
+certificate in a new private repo. The lanes therefore run read-only: they
+download profiles and import a certificate the team already has, and fail if
+either is missing. A team gets very few distribution certificates, so CI must
+never create one.
+
+Build numbers diverge on purpose. A local archive uses
+CURRENT_PROJECT_VERSION from project.yml, which verify_release.sh asserts
+against, while CI passes the workflow run number, because TestFlight rejects a
+build number it has already accepted and run numbers only climb.
+
+The upload job checks for its five secrets and skips with an explanation when
+any is missing, so the pipeline is honest about being unconfigured instead of
+red. Setup steps in fastlane/README.md.
+*Reverses if:* signing moves to Xcode Cloud, or a second machine needs the
+certificate, at which point match earns its keep.

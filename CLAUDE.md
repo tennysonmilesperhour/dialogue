@@ -26,8 +26,18 @@ docs/                  strategy docs and submission paperwork
 
 The execution plan and its gates live in `docs/PLAN.md`. Log every decision in `docs/DECISIONS.md`, append-only.
 
-CI runs three jobs on every pull request: copy lint (the voice rules above,
-mechanically), the web build, and `swift test` for DialogueKit. Run the lint
-locally with `python3 scripts/copy_lint.py`. To quote copy that breaks a rule
-on purpose, mark the line `copy-lint: allow` or wrap the block in
-`copy-lint: off` and `copy-lint: on`.
+CI runs four jobs on every pull request: copy lint (the voice rules above,
+mechanically), the web build with a high-severity dependency audit, the five
+iOS targets generated from `project.yml` and built with the device SDK, and
+`swift test` for DialogueKit. Run the lint locally with
+`python3 scripts/copy_lint.py`. To quote copy that breaks a rule on purpose,
+mark the line `copy-lint: allow` or wrap the block in `copy-lint: off` and
+`copy-lint: on`.
+
+Two jobs run outside pull requests. A manual `workflow_dispatch` run does the
+full release verification (`scripts/verify_release.sh`), and every merge to
+main uploads a TestFlight build once the signing secrets exist, skipping
+cleanly until then. See `fastlane/README.md`.
+
+The Xcode project is generated, never committed (D015). Run
+`xcodegen generate` after pulling, before opening Xcode.

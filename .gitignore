@@ -17,6 +17,16 @@ Packages/
 # macOS
 .DS_Store
 
+# fastlane artifacts and credentials. Never commit a key or a certificate.
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/test_output/
+*.ipa
+*.dSYM.zip
+*.mobileprovision
+*.p8
+*.p12
+
 # Web builds, deployment metadata, and local configuration
 node_modules/
 .next/
