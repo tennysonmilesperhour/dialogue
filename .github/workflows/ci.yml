@@ -98,3 +98,53 @@ jobs:
         run: swift --version
       - name: Test
         run: swift test
+
+  testflight:
+    name: TestFlight upload
+    # Every merge to main produces a build, once the signing secrets exist.
+    # Without them the job reports why and does nothing, so the absence of
+    # credentials never reads as a broken pipeline.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [copy-lint, web, xcode, dialoguekit]
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check for signing credentials
+        id: signing
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          DIST_CERT_P12: ${{ secrets.DIST_CERT_P12 }}
+          DIST_CERT_PASSWORD: ${{ secrets.DIST_CERT_PASSWORD }}
+        run: |
+          missing=""
+          for name in ASC_KEY_ID ASC_ISSUER_ID ASC_KEY_P8 DIST_CERT_P12 DIST_CERT_PASSWORD; do
+            if [ -z "${!name}" ]; then
+              missing="$missing $name"
+            fi
+          done
+          if [ -n "$missing" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping the upload. Missing secrets:$missing" >> "$GITHUB_STEP_SUMMARY"
+            echo "Setup steps are in fastlane/README.md." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Install the build tools
+        if: steps.signing.outputs.configured == 'true'
+        run: |
+          brew install xcodegen
+          command -v fastlane >/dev/null || brew install fastlane
+      - name: Build and upload to TestFlight
+        if: steps.signing.outputs.configured == 'true'
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          DIST_CERT_P12: ${{ secrets.DIST_CERT_P12 }}
+          DIST_CERT_PASSWORD: ${{ secrets.DIST_CERT_PASSWORD }}
+          DIALOGUE_BUILD_NUMBER: ${{ github.run_number }}
+          FASTLANE_SKIP_UPDATE_CHECK: "1"
+          FASTLANE_HIDE_CHANGELOG: "1"
+        run: fastlane beta

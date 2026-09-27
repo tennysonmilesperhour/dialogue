@@ -1,0 +1,137 @@
+# Fastfile: the one path to a signed build.
+#
+# Local archives and CI uploads run the same lanes, so what GitHub Actions
+# ships cannot drift from what a developer produces by hand.
+#
+# The Release configuration in project.yml signs manually against five named
+# App Store profiles, one per target. These lanes download those profiles by
+# name and refuse to create anything: if the portal does not already hold a
+# profile, or the keychain has no Apple Distribution identity, they fail
+# loudly rather than minting a second certificate against the team's limit.
+
+require "base64"
+require "tmpdir"
+
+default_platform(:ios)
+
+TEAM_ID = "T4PQ8SNY8D"
+
+# Bundle identifier to the profile name project.yml pins for it. Keep this in
+# step with the PROVISIONING_PROFILE_SPECIFIER values in the Release configs.
+PROFILES = {
+  "app.dialogue.ios" => "Dialogue App Store - Main",
+  "app.dialogue.ios.shield" => "Dialogue App Store - Shield",
+  "app.dialogue.ios.shieldaction" => "Dialogue App Store - Shield Action",
+  "app.dialogue.ios.monitor" => "Dialogue App Store - Monitor",
+  "app.dialogue.ios.report" => "Dialogue App Store - Report"
+}.freeze
+
+platform :ios do
+  desc "Build a signed App Store archive. Uploads nothing."
+  lane :signed_archive do
+    key = connect_api_key
+    prepare_signing(key)
+    build_archive
+  end
+
+  desc "Build a signed App Store archive and upload it to TestFlight"
+  lane :beta do
+    key = connect_api_key
+    prepare_signing(key)
+    ipa = build_archive
+
+    upload_to_testflight(
+      api_key: key,
+      ipa: ipa,
+      # External testers go through Beta App Review, which is a deliberate
+      # step, not something a merge to main should trigger.
+      distribute_external: false,
+      skip_waiting_for_build_processing: true
+    )
+  end
+end
+
+# An App Store Connect API key, from an App Manager key in the portal. The .p8
+# arrives base64 encoded so it survives as a single-line secret.
+def connect_api_key
+  app_store_connect_api_key(
+    key_id: fetch_env("ASC_KEY_ID"),
+    issuer_id: fetch_env("ASC_ISSUER_ID"),
+    key_content: fetch_env("ASC_KEY_P8"),
+    is_key_content_base64: true,
+    in_house: false
+  )
+end
+
+# Certificate into a keychain, profiles onto disk. On CI, setup_ci creates a
+# temporary keychain and removes it afterward, so the runner never keeps an
+# identity. Locally this uses the keychain and certificate already present.
+def prepare_signing(key)
+  if is_ci
+    setup_ci
+    import_certificate(
+      certificate_path: distribution_certificate_path,
+      certificate_password: fetch_env("DIST_CERT_PASSWORD"),
+      keychain_name: "fastlane_tmp_keychain",
+      keychain_password: ""
+    )
+  end
+
+  PROFILES.each do |identifier, profile_name|
+    get_provisioning_profile(
+      api_key: key,
+      app_identifier: identifier,
+      provisioning_name: profile_name,
+      team_id: TEAM_ID,
+      # Never create or repair a profile from CI. A missing profile is a
+      # portal problem and should read as one.
+      readonly: true
+    )
+  end
+end
+
+# Writes the base64 DIST_CERT_P12 secret to a temporary .p12 for import.
+def distribution_certificate_path
+  path = File.join(Dir.mktmpdir, "distribution.p12")
+  File.binwrite(path, Base64.decode64(fetch_env("DIST_CERT_P12")))
+  path
+end
+
+# Regenerates the project (D015: it is never committed) and archives the
+# Release configuration with the pinned profiles.
+def build_archive
+  sh("cd .. && xcodegen generate --spec project.yml --project .")
+
+  build_app(
+    project: "Dialogue.xcodeproj",
+    scheme: "Dialogue",
+    configuration: "Release",
+    export_method: "app-store",
+    output_directory: "build",
+    output_name: "dialogue.ipa",
+    xcargs: build_number_argument,
+    export_options: {
+      method: "app-store",
+      signingStyle: "manual",
+      teamID: TEAM_ID,
+      provisioningProfiles: PROFILES
+    }
+  )
+end
+
+# TestFlight rejects a build number it has already seen, so CI passes the
+# workflow run number, which only ever climbs. With nothing set, the build
+# uses CURRENT_PROJECT_VERSION from project.yml, which is what a local archive
+# and scripts/verify_release.sh expect.
+def build_number_argument
+  build_number = ENV["DIALOGUE_BUILD_NUMBER"]
+  return nil if build_number.nil? || build_number.empty?
+
+  "CURRENT_PROJECT_VERSION=#{build_number}"
+end
+
+def fetch_env(name)
+  value = ENV[name]
+  UI.user_error!("#{name} is not set. See fastlane/README.md.") if value.nil? || value.empty?
+  value
+end

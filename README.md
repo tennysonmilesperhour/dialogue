@@ -38,6 +38,11 @@ re-arms the shield, and requests the debrief.
 Run the DialogueKit tests with `swift test` in `DialogueKit/`, and the copy
 lint with `python3 scripts/copy_lint.py` from the root.
 
+To produce a signed archive or a TestFlight build, see `fastlane/README.md`.
+`fastlane signed_archive` builds the Release configuration against the five
+named App Store profiles, `fastlane beta` uploads it, and every merge to main
+runs the upload once the signing secrets are in the repository.
+
 For a complete unsigned App Store configuration check, run
 `scripts/verify_release.sh`. It tests DialogueKit, audits and builds the web
 app, builds every iOS target with the device SDK, and inspects the resulting
