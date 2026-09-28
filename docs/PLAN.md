@@ -82,14 +82,15 @@ Phases mirror ROADMAP.md weeks. Each has an exit gate; do not start the next pha
 - [x] Apple Developer Program active (team T4PQ8SNY8D). Small Business Program application still outstanding
 - [x] Register all five bundle IDs (list in ARCHITECTURE.md), plus the `group.app.dialogue` App Group. Done 2026-08-19
 - [x] Submit the Family Controls (Distribution) request. Done 2026-08-19. Corrected: it is **one team-level request**, not five, and the form has no use-case field to fill (D016). The wording drafted here was never submitted because there was nowhere to put it.
-- [ ] Create the App Store Connect app record; resolve the name or lock the fallback (2.3)
+- [x] Create the App Store Connect app record; store name locked to `dialogue: intention ledger` (D014, 2.3)
 - [ ] USPTO and App Store search on "dialogue" (D008 is blocked on this)
 - [ ] Secure domain and social handles
-- [ ] Xcode workspace scaffolded: app, four extensions, DialogueKit package, shared app group; builds and runs on a physical device
-- [ ] CI bootstrapped with a TestFlight upload lane
+- [x] Xcode workspace scaffolded: app, four extensions, DialogueKit package, shared app group. Generated from `project.yml` (D015). Done 2026-08-19
+- [ ] Workspace installs and runs on a physical device. Never confirmed, which is why the exit gate below is still open
+- [x] CI bootstrapped with a TestFlight upload lane. Done 2026-09-27 (D018, `fastlane/README.md`). Inert until the signing secrets exist
 - [x] `web/` scaffolded (Next.js on Vercel); privacy and support pages live
 
-**Exit gate:** all five entitlement requests submitted, and the empty workspace installs on a device.
+**Exit gate:** the entitlement request submitted (one team-level request, not five, per D016), and the workspace installs on a device. The first half is done. The second has never been performed.
 
 ### Phase 1: de-risk (week 1)
 
@@ -104,14 +105,25 @@ The throwaway prototype answers, on a physical device, with answers logged in DE
 
 **Exit gate:** D012 logged in DECISIONS.md covering the close-detection verdict, the gate flow shape (direct link, notification hop, or notification-action chips), and grace mechanics. No production code before this entry exists.
 
+**This gate was crossed, not cleared.** The full product loop shipped in
+September (#10) while D012 remains unlogged and the prototype has never run on
+a phone. Recording it plainly because the risk did not go away, it moved: the
+shipped gate, session, and debrief are written against assumptions the device
+day was supposed to test. The shield action now takes
+`.openParentalControlsApp` on iOS 26.5 and falls back to a notification below
+that, which is a third answer to 2.1.A that no measurement has confirmed.
+Every session length the product prints depends on monitor callback latency
+nobody has observed. So the device day still has to happen, and it now tests
+the real app rather than the lab. Whatever it finds, log D012.
+
 ### Phase 2: core build (weeks 2 to 4)
 
 Everything in ROADMAP.md weeks 2 to 4, plus:
 
-- [ ] Per-app naming step in onboarding (2.1.C)
-- [ ] Extensions write to the lightweight app group store; main app ingests into SwiftData (2.1)
-- [ ] Privacy manifest in place across targets
-- [ ] DialogueKit unit tests green; copy lint running in CI
+- [x] Per-app naming step in onboarding (2.1.C)
+- [x] Extensions write to the lightweight app group store; main app reads it (2.1). Shipped as a shared defaults store rather than SwiftData
+- [x] Privacy manifest in place across targets. Corrected 2026-09-28: the four extension manifests declared no accessed APIs while reaching app group defaults, which Apple rejects as ITMS-91053
+- [x] DialogueKit unit tests green; copy lint running in CI
 
 **Exit gate:** the full gate, session, debrief loop works offline on a device through three straight days of self-use, and the builder's own IMS renders correctly.
 

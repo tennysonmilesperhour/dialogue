@@ -63,6 +63,24 @@ assert_equal() {
   fi
 }
 
+# Every bundle that reaches app group user defaults has to say so in its own
+# manifest. Apple rejects an undeclared required-reason API (ITMS-91053), and
+# the failure arrives after upload, which is the expensive place to find it.
+assert_declares_user_defaults() {
+  local manifest="$1"
+  local label="$2"
+  local declaration
+  declaration="$(plutil -convert json -o - "$manifest" 2>/dev/null || true)"
+  if [[ "$declaration" != *NSPrivacyAccessedAPICategoryUserDefaults* ]]; then
+    echo "$label: privacy manifest does not declare user defaults access" >&2
+    exit 1
+  fi
+  if [[ "$declaration" != *CA92.1* ]]; then
+    echo "$label: privacy manifest declares no reason for user defaults access" >&2
+    exit 1
+  fi
+}
+
 echo "Inspecting the built application"
 assert_equal "$(read_plist "$app/Info.plist" CFBundleIdentifier)" "app.dialogue.ios" "App bundle ID"
 assert_equal "$(read_plist "$app/Info.plist" CFBundleShortVersionString)" "1.0.0" "Marketing version"
@@ -79,6 +97,8 @@ if [[ ! -f "$app/PrivacyInfo.xcprivacy" ]]; then
   echo "The application privacy manifest is missing from the built bundle" >&2
   exit 1
 fi
+
+assert_declares_user_defaults "$app/PrivacyInfo.xcprivacy" "Application"
 
 if [[ ! -f "$app/Assets.car" ]]; then
   echo "The compiled asset catalog is missing from the built bundle" >&2
@@ -120,6 +140,7 @@ for extension_index in "${!extension_names[@]}"; do
     echo "$extension_name privacy manifest is missing from the built bundle" >&2
     exit 1
   fi
+  assert_declares_user_defaults "$extension/PrivacyInfo.xcprivacy" "$extension_name"
 done
 
 for entitlements in Dialogue*/Dialogue*.entitlements; do

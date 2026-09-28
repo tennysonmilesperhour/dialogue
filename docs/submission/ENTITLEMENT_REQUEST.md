@@ -75,6 +75,49 @@ Submitted 2026-08-19. Check status weekly in the developer portal, under each
 App ID's Capability Requests tab. Escalate through developer support after 10
 days of silence, so by 2026-08-31.
 
+**Overdue as of 2026-09-28.** Forty days, no reply, no escalation filed. This
+is the oldest open item on the project and it gates TestFlight, the beta, and
+the App Store alike, so nothing downstream can start until it clears. File the
+escalation.
+
+### Escalation, ready to send
+
+Through developer support at https://developer.apple.com/contact/, under
+Membership and Account, or by replying to the original request thread if one
+exists.
+
+> Subject: Family Controls (Distribution) entitlement request, team T4PQ8SNY8D,
+> submitted August 19, 2026
+>
+> I submitted a Family Controls (Distribution) entitlement request for team
+> T4PQ8SNY8D on August 19, 2026 and have not received a status update in the
+> forty days since.
+>
+> The app is a personal digital wellbeing tool for the account holder's own
+> device. It qualifies under the second purpose in the entitlement terms:
+> offering individuals the ability to manage their own devices for focus and
+> productivity. It is not a parental control product, it is not used in
+> organizational settings, and it never manages another person's device.
+>
+> The app never blocks access. It shows a reflective prompt before a chosen app
+> opens and asks a two-tap question after the visit ends, and the user can
+> always continue. No Screen Time or usage data leaves the device, and none of
+> it is used for advertising, advertising measurement, profiling, or shared
+> with any data broker. There are no third-party analytics or advertising SDKs
+> in the build.
+>
+> The five identifiers under this team are app.dialogue.ios and its shield,
+> shield action, monitor, and report extensions, all registered with Family
+> Controls and the group.app.dialogue App Group.
+>
+> Could you confirm the status of the request, or tell me what else you need
+> from me? Distribution signing gates internal TestFlight builds, so this
+> request currently blocks all device testing.
+
+Keep the wording aligned with `REVIEW_NOTES.md`. If Apple asks for a use case
+in a reply, the paragraphs above are the answer, and this is the only place the
+form ever accepts one (D016).
+
 ## After approval
 
 1. Confirm Family Controls (Distribution) shows as granted for the team, and

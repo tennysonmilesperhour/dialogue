@@ -4,7 +4,7 @@
 
 Two things gate everything and both must start on day one:
 
-1. **Family Controls entitlement. Submitted 2026-08-19, awaiting reply.** Corrected against the live form: the grant is **per developer team, not per bundle ID**, and one submission covers all five identifiers. There is no use-case field to fill. See D016 and `docs/submission/ENTITLEMENT_REQUEST.md`. Approval is manually reviewed and runs from about four business days to several weeks. Development entitlement works locally in the meantime. Note: every TestFlight build, internal or external, is distribution-signed, so **entitlement approval gates the week 6 beta, not just the week 11 submission**. Check status weekly; escalate through developer support after 10 days of silence, so by 2026-08-31.
+1. **Family Controls entitlement. Submitted 2026-08-19, awaiting reply.** Corrected against the live form: the grant is **per developer team, not per bundle ID**, and one submission covers all five identifiers. There is no use-case field to fill. See D016 and `docs/submission/ENTITLEMENT_REQUEST.md`. Approval is manually reviewed and runs from about four business days to several weeks. Development entitlement works locally in the meantime. Note: every TestFlight build, internal or external, is distribution-signed, so **entitlement approval gates the week 6 beta, not just the week 11 submission**. Check status weekly; escalate through developer support after 10 days of silence, so by 2026-08-31. **As of 2026-09-28 there is still no reply and no escalation has been filed. Forty days of silence, four times the threshold this line sets.** Draft escalation text is in `docs/submission/ENTITLEMENT_REQUEST.md`.
 2. **Close-detection prototype.** If iOS cannot tell us when a session ended, the debrief degrades and the product changes shape. Answer this in week one, before writing production code.
 
 ---
@@ -15,11 +15,11 @@ Two things gate everything and both must start on day one:
 - [x] Register all five bundle IDs (see ARCHITECTURE.md), each with Family Controls (Development) and App Groups. Done 2026-08-19, plus the `group.app.dialogue` App Group
 - [x] Submit the Family Controls (Distribution) request. Done 2026-08-19, one team-level request, no use-case field (D016)
 - [ ] USPTO + App Store name clearance on "dialogue"
-- [ ] Create the App Store Connect app record and resolve the store name now (the bare word is likely taken; pick the fallback calmly, not under submission pressure)
+- [x] Create the App Store Connect app record and resolve the store name. Record created, name locked to `dialogue: intention ledger` (D014)
 - [ ] Secure domain and social handles
-- [ ] Repo initialized with these docs in `/docs`
-- [ ] CI bootstrapped with a TestFlight upload lane (Xcode Cloud or GitHub Actions + fastlane)
-- [ ] Marketing site stub live with a waitlist. Demand signal starts now, while the entitlement requests sit in Apple's queue, not at launch.
+- [x] Repo initialized with these docs in `/docs`
+- [x] CI bootstrapped with a TestFlight upload lane. GitHub Actions plus fastlane, 2026-09-27 (D018). It skips until the signing secrets exist
+- [x] Marketing site stub live with a waitlist. Deployed to Vercel, waitlist on the shared backend since 2026-09-07. Demand signal is running while the entitlement sits in Apple's queue.
 
 ## Week 1, de-risk
 

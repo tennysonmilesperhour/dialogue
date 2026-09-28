@@ -56,6 +56,10 @@ Swift/SwiftUI (iOS 17+), Screen Time API (FamilyControls, ManagedSettings, Devic
 - IDENTITY.md, voice, design language, naming
 - ARCHITECTURE.md, technical structure and data model
 - DECISIONS.md, the running log of choices and why
+- PLAN.md, the gated execution plan, and where reality has diverged from it
 - ROADMAP.md, build phases and App Store rollout
 - MONETIZATION.md, pricing model and rationale
 - RESEARCH.md, the psychology base with citations
+- submission/, the App Store package. LAUNCH_READINESS.md is the one that
+  answers "can we ship yet", ENTITLEMENT_REQUEST.md tracks the entitlement
+  that gates everything, and APP_STORE_METADATA.md holds the listing fields

@@ -1,6 +1,13 @@
 # Launch readiness
 
-Last audited September 4, 2026.
+Build audited September 4, 2026. Reconciled against main September 28, 2026
+at commit 67f6df5.
+
+The September 4 audit ran on a Mac with Xcode. The September 28 pass did not:
+it reconciled this list against what later commits actually changed, and every
+build claim below still rests on the September audit. Re-run
+`scripts/verify_release.sh` on the submission commit before trusting them
+again.
 
 This is the source of truth for whether dialogue can be submitted. A green
 build is necessary, but it is not the same as a releasable product.
@@ -17,6 +24,34 @@ physical iPhone was connected during this audit, so the reason handoff,
 re-arm behavior, callback latency, and real shield presentation remain
 unverified. The repository's own plan correctly blocks production work on
 that result.
+
+## Changed since the September 4 audit
+
+- **Waitlist backend moved** to the active shared project (#12, 2026-09-07).
+- **TestFlight lane added** (#13, 2026-09-27). `fastlane signed_archive` and
+  `fastlane beta`, plus an upload job that skips until the secrets exist.
+- **Extension privacy manifests corrected** (2026-09-28). The audit checked
+  that a manifest was embedded in every bundle, which was true, but not what
+  it declared. All four extensions reach app group user defaults through
+  `SharedDialogueStore` while declaring no accessed API at all, which Apple
+  rejects as ITMS-91053 after upload. Every extension now declares the user
+  defaults category with reason CA92.1, and `verify_release.sh` asserts the
+  declaration in each built bundle so it cannot regress. The report extension
+  declares it too: it does not call the store itself, but it links DialogueKit
+  which does, and an over-declaration is cheap while a missing one costs a
+  review cycle.
+- **PR #11 is still open and now conflicts with main.** Opened 2026-09-06 as a
+  draft, 51 files, last touched 2026-09-07, based on a commit two merges back.
+  Its web half was overtaken by #12, which landed the waitlist route
+  differently, and GitHub reports the branch as conflicted. Its iOS half has
+  not been superseded and is worth rescuing: it serializes the shared store
+  behind a file lock, which matters because five processes currently
+  read-modify-write the same defaults key with no coordination and a lost
+  update silently drops a session or a dismissal. It also adds
+  `docs/submission/DEVICE_ACCEPTANCE.md`, which is the device script D012
+  needs. Decide deliberately: rebase the iOS half onto main, or close the PR
+  and re-derive those two pieces. Leaving it open and stale is the one option
+  that costs something.
 
 ## Verified in the repository
 
@@ -59,9 +94,16 @@ dependency audit.
       app setup, reason handoff, session ledger, two-tap debrief, IMS home,
       weekly review, and settings flows.
 - [ ] Confirm the Family Controls Distribution entitlement is approved for
-      team `T4PQ8SNY8D`. The request was submitted August 19, 2026.
+      team `T4PQ8SNY8D`. Submitted August 19, 2026, no reply as of September
+      28. Escalation was due August 31 and has not been filed. This is the
+      oldest open item on the project and it gates TestFlight as well as the
+      App Store. Draft escalation text is in `ENTITLEMENT_REQUEST.md`.
 - [ ] Produce a signed App Store archive with distribution provisioning for
-      the app and all four extensions.
+      the app and all four extensions. The mechanism now exists:
+      `fastlane signed_archive` builds it against the five named profiles, and
+      `fastlane beta` uploads it (D018, `fastlane/README.md`). Neither has ever
+      run, because both need the entitlement above, an App Store Connect API
+      key, and the distribution certificate.
 - [x] Create the App Store Connect app record and choose the store name
       `dialogue: intention ledger`.
 - [x] Keep 1.0 free and local-only. StoreKit, accounts, Sync, RevenueCat, and
@@ -75,12 +117,19 @@ dependency audit.
 
 ## External service blockers
 
-- [ ] Restore or replace Supabase project `ptwxbkzulstocpfhufea`. It is
-      inactive, database requests time out, and the live waitlist cannot
-      accept signups. The Supabase account connected during this audit does
-      not own that project, so it cannot restore it.
-- [ ] Redeploy the website after the database is healthy. The Vercel project
-      is not connected to Git, so pushes do not deploy automatically.
+- [x] Replace Supabase project `ptwxbkzulstocpfhufea`. Closed 2026-09-07 (#12):
+      the waitlist moved to the active shared Vibe Check project
+      `xyhbuqsxglfjbounogdz`, table `dialogue_waitlist`, INSERT only, written
+      through the server route. The paused project was kept rather than
+      restored, so historical waitlist entries have not been recovered and
+      should be treated as lost unless someone restores it deliberately.
+- [x] Redeploy the website. The `dialogue` Vercel project has a READY
+      production deployment from 2026-09-07, matching the backend move.
+      Unresolved underneath it: the two most recent production deployments
+      carry no commit metadata, which is what a CLI deploy looks like, while
+      an earlier one does. Confirm in the project settings whether pushes to
+      main now deploy on their own, because a site that only updates when
+      someone remembers to run a command will drift from the repository.
 - [ ] Add a private support channel before public launch. GitHub Issues is a
       working interim contact, but users should not post private ledger data
       there.
