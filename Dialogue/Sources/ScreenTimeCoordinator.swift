@@ -10,9 +10,8 @@ struct ScreenTimeCoordinator {
         DialogueShieldController.apply(state)
     }
 
-    func beginSession(for app: WatchedApp, sessionID: UUID, state: DialogueState) throws -> String {
-        guard let token = ScreenTimeTokenCodec.decode(app.applicationTokenData),
-              let tokenData = app.applicationTokenData
+    func beginSession(for app: WatchedApp, sessionID: UUID) throws -> String {
+        guard let token = ScreenTimeTokenCodec.decode(app.applicationTokenData)
         else { throw ScreenTimeError.missingToken }
 
         let activity = DeviceActivityName(DialogueScreenTime.activityPrefix + sessionID.uuidString)
@@ -42,8 +41,17 @@ struct ScreenTimeCoordinator {
             during: schedule,
             events: [DeviceActivityEvent.Name(DialogueScreenTime.budgetEventName): event]
         )
-        DialogueShieldController.allow(tokenData, in: state)
+        do {
+            try SharedDialogueStore.update { DialogueShieldController.apply($0) }
+        } catch {
+            center.stopMonitoring([activity])
+            throw error
+        }
         return activity.rawValue
+    }
+
+    func stopAllMonitoring() {
+        center.stopMonitoring(center.activities.filter { $0.rawValue.hasPrefix(DialogueScreenTime.activityPrefix) })
     }
 
     func stopMonitoring(named rawName: String?) {
