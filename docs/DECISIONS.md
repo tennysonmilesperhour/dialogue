@@ -125,3 +125,39 @@ any is missing, so the pipeline is honest about being unconfigured instead of
 red. Setup steps in fastlane/README.md.
 *Reverses if:* signing moves to Xcode Cloud, or a second machine needs the
 certificate, at which point match earns its keep.
+
+**D019. One writer at a time: the ledger moves from shared defaults to a
+locked file in the App Group.**
+2026-09-29. Ported from the audit on PR #11, which found it first. The main
+app, the shield, the shield action, and the monitor are four independent
+writers against one ledger, and the shipped design had each of them load the
+whole state, change a field, and write the whole state back to a single
+defaults key. Two callbacks overlapping meant one of them lost, silently: a
+recorded dismissal or a closed visit simply gone, with nothing in the product
+to reveal it. IMS is built on those records, so a lost write is a wrong number
+in the one metric.
+
+The ledger and the pending gate now live in a JSON file in the App Group
+container, and every mutation reads the current record inside an advisory lock
+on a separate lock file, so a reader never sees a half-written ledger and a
+writer never overwrites a change it did not see. Data in the old defaults keys
+migrates on first read and only after it decodes and the file write succeeds.
+Unreadable data raises a storage error rather than being replaced with an
+empty ledger, because a corrupt file the user can complain about beats a
+blank one that looks like normal use.
+
+An extension can be suspended mid-transaction, so the lock wait is bounded at
+about a second and then reports a storage error through the recovery path the
+app already has. Waiting forever inside a shield callback would be worse than
+failing: dialogue never blocks, so a jammed store must fail open.
+
+Two things ride along. Debrief notifications no longer name the app or the
+intention, because a lock screen is a public surface and those strings are the
+user's private content. And the App Group defaults declaration in the privacy
+manifests stays `CA92.1`, not the `1C8F.1` that the audit branch used:
+`1C8F.1` covers defaults only the app itself can reach, while `CA92.1` is the
+one written for defaults shared across an App Group, which is what the
+migration path still touches.
+*Reverses if:* the lock proves too slow in a shield callback on a real device,
+at which point the extensions write append-only records and the app folds them
+in, which trades promptness for the same safety.

@@ -33,21 +33,12 @@ public enum DialogueShieldController {
             store.clearAllSettings()
             return
         }
+        let shieldedIDs = state.shieldedAppIDs
         let tokens: Set<ApplicationToken> = Set(state.watchedApps.compactMap {
-            ScreenTimeTokenCodec.decode($0.applicationTokenData)
+            shieldedIDs.contains($0.id) ? ScreenTimeTokenCodec.decode($0.applicationTokenData) : nil
         })
         store.shield.applications = tokens.isEmpty ? nil : tokens
     }
 
-    public static func allow(_ applicationTokenData: Data, in state: DialogueState) {
-        let store = ManagedSettingsStore(
-            named: ManagedSettingsStore.Name(DialogueScreenTime.managedStoreName)
-        )
-        let tokens: Set<ApplicationToken> = Set(state.watchedApps.compactMap {
-            guard $0.applicationTokenData != applicationTokenData else { return nil }
-            return ScreenTimeTokenCodec.decode($0.applicationTokenData)
-        })
-        store.shield.applications = tokens.isEmpty ? nil : tokens
-    }
 }
 #endif
