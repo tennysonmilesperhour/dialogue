@@ -64,7 +64,7 @@ final class DialogueNotifications: NSObject, UIApplicationDelegate, UNUserNotifi
 @MainActor
 final class NotificationRoute: ObservableObject {
     static let shared = NotificationRoute()
-    @Published var pending: (String, String)?
+    @Published var pending: (String, String?)?
 }
 
 struct ReminderInvitation: View {

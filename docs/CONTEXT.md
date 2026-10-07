@@ -40,7 +40,7 @@ Adults who are already self-aware about their phone use and have tried a blocker
 
 ## Stack
 
-Swift/SwiftUI (iOS 17+), Screen Time API (FamilyControls, ManagedSettings, DeviceActivity), Supabase for the ledger and auth, Next.js + Vercel for marketing site and weekly review web view. See ARCHITECTURE.md.
+Swift/SwiftUI (iOS 17+), Screen Time API (FamilyControls, ManagedSettings, DeviceActivity), protected local App Group storage, and Next.js + Vercel for the marketing site. Supabase handles only the website waitlist. Version 1.0 has no account, cloud sync, or web review. Earlier architecture documents include future options; the shipping scope is recorded in submission/LAUNCH_READINESS.md.
 
 ## Non-negotiables
 
