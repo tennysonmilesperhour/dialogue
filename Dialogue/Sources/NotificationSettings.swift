@@ -1,3 +1,4 @@
+import DialogueKit
 import SwiftUI
 import UserNotifications
 
@@ -64,4 +65,38 @@ final class DialogueNotifications: NSObject, UIApplicationDelegate, UNUserNotifi
 final class NotificationRoute: ObservableObject {
     static let shared = NotificationRoute()
     @Published var pending: (String, String)?
+}
+
+struct ReminderInvitation: View {
+    @ObservedObject var model: DialogueModel
+    @State private var requesting = false
+    var body: some View {
+        LedgerPage {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    DialogueHeader(kicker: "Your ledger is ready", title: "A reminder\nto look back?")
+                    Text("A quiet notification can bring you back to your reflection after a visit. It never shows an app name or anything you wrote.")
+                        .font(.system(.title3, design: .serif)).lineSpacing(4)
+                    LedgerCard {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Label("dialogue", systemImage: "bell").font(.system(.caption, design: .monospaced))
+                            Text("How did that visit go?").font(.system(.headline, design: .serif))
+                            Text("Your reflection is ready in dialogue.").font(.system(.body, design: .serif))
+                        }
+                    }
+                    Button(requesting ? "Requesting permission…" : "Enable reflection reminders") {
+                        requesting = true
+                        Task {
+                            await model.requestNotifications()
+                            model.offerReminders = false
+                        }
+                    }.buttonStyle(LedgerButtonStyle()).disabled(requesting)
+                    Button("Not now") { model.offerReminders = false }
+                        .font(.system(.body, design: .serif)).frame(maxWidth: .infinity, minHeight: 48)
+                    Text("You can always reflect from your ledger. Change notifications later in Settings.")
+                        .font(.system(.footnote, design: .serif)).foregroundStyle(Color.ink.opacity(0.75))
+                }.padding(.vertical, 30)
+            }
+        }
+    }
 }

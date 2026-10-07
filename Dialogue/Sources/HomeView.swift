@@ -38,13 +38,15 @@ struct HomeView: View {
         .tint(Color.ledgerRed)
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.22), value: model.state.onboardingCompleted)
         .sheet(isPresented: Binding(
-            get: { model.gateAppID != nil || model.debriefSessionID != nil },
-            set: { if !$0 { model.gateAppID = nil; model.deferDebrief() } }
+            get: { model.gateAppID != nil || model.debriefSessionID != nil || model.offerReminders },
+            set: { if !$0 { model.gateAppID = nil; model.deferDebrief(); model.offerReminders = false } }
         )) {
             if let app = model.gateApp {
                 IntentionGateView(model: model, app: app).interactiveDismissDisabled()
             } else if let session = model.debriefSession {
                 DebriefView(model: model, session: session)
+            } else if model.offerReminders {
+                ReminderInvitation(model: model)
             }
         }
         .alert("A note from dialogue", isPresented: Binding(

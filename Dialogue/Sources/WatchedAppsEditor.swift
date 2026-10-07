@@ -211,4 +211,3 @@ struct WatchedAppsEditor: View {
         }
     }
 }
-

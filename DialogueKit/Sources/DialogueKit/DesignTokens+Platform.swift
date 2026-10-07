@@ -42,9 +42,9 @@ extension UIColor {
         self.init(red: parts.red, green: parts.green, blue: parts.blue, alpha: 1)
     }
 
-    public static var paper: UIColor { UIColor(uiColor: .paper) }
-    public static var ink: UIColor { UIColor(uiColor: .ink) }
-    public static var ledgerGreen: UIColor { UIColor(uiColor: .ledgerGreen) }
-    public static var ledgerRed: UIColor { UIColor(uiColor: .ledgerRed) }
+    public static var paper: UIColor { UIColor { traits in UIColor(token: traits.userInterfaceStyle == .dark ? "#201F1B" : DesignTokens.ColorHex.paper) } }
+    public static var ink: UIColor { UIColor { traits in UIColor(token: traits.userInterfaceStyle == .dark ? "#F5F1E6" : DesignTokens.ColorHex.ink) } }
+    public static var ledgerGreen: UIColor { UIColor { traits in UIColor(token: traits.userInterfaceStyle == .dark ? "#9DCAA7" : DesignTokens.ColorHex.ledgerGreen) } }
+    public static var ledgerRed: UIColor { UIColor { traits in UIColor(token: traits.userInterfaceStyle == .dark ? "#F0937E" : DesignTokens.ColorHex.ledgerRed) } }
 }
 #endif

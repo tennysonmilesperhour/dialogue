@@ -8,6 +8,7 @@ import UserNotifications
 final class DialogueModel: ObservableObject {
     @Published private(set) var isSample = false
     @Published var selectedTab = 0
+    @Published var offerReminders = false
     @Published private(set) var state = DialogueState()
     @Published private(set) var authorizationStatus: AuthorizationStatus
     @Published var gateAppID: UUID?
@@ -82,11 +83,13 @@ final class DialogueModel: ObservableObject {
 
     @discardableResult
     func finishOnboarding(with apps: [WatchedApp]) -> Bool {
-        changeState {
+        let saved = changeState {
             $0.watchedApps = apps
             $0.onboardingCompleted = !apps.isEmpty
             $0.isPaused = false
         }
+        if saved { offerReminders = true }
+        return saved
     }
 
     @discardableResult

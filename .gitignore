@@ -36,3 +36,7 @@ node_modules/
 
 # Supabase CLI local metadata
 supabase/.temp/
+
+# Local validation results and working notes
+work/
+*.xcresult
