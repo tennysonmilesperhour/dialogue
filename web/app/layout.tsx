@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Fraunces, IBM_Plex_Mono, IBM_Plex_Serif } from "next/font/google";
 import "./globals.css";
+import { TAGLINE } from "@/lib/content";
+import { SITE_URL } from "@/lib/site";
 
 const display = Fraunces({
   subsets: ["latin"],
@@ -22,9 +24,9 @@ const serif = IBM_Plex_Serif({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "dialogue",
-  description:
-    "Every screen time app tells you how long. dialogue tells you whether you meant it.",
+  description: TAGLINE,
 };
 
 export default function RootLayout({

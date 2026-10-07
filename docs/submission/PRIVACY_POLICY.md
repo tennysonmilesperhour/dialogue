@@ -38,6 +38,10 @@ The marketing website stores the email address you submit to its waitlist.
 The address is used only for beta and launch notices. The website has no
 analytics cookies or trackers. Use the support page to request deletion.
 
+The website also keeps a short log of visits from crawlers and AI agents (the
+agent name, the page and the time). Web browsers are never logged, and the log
+holds no personal data.
+
 ## What we will never do
 
 - Sell or share your data with anyone.

@@ -1,0 +1,43 @@
+name: Agent review
+
+# First Wednesday of the month, 16:20 UTC. Cron cannot say "first Wednesday",
+# so it fires every Wednesday and the job exits unless the day is 1 to 7.
+# The routine session that reads the export runs at 16:55 UTC.
+on:
+  schedule:
+    - cron: "20 16 * * 3"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  review:
+    name: Export and prune
+    runs-on: ubuntu-latest
+    steps:
+      - name: First Wednesday only
+        id: gate
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$(date -u +%d | sed 's/^0//')" -gt 7 ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v7
+        if: steps.gate.outputs.run == 'true'
+      - name: Write the export
+        if: steps.gate.outputs.run == 'true'
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python3 scripts/agent_review.py
+      - name: Commit the export
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/agent-review
+          git diff --cached --quiet && exit 0
+          git commit -m "Agent review export $(date -u +%F)"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
