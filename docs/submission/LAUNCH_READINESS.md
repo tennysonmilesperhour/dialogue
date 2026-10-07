@@ -54,14 +54,21 @@ Verified October 7, 2026:
   recovery alert is explicitly acknowledged before the welcome capture.
   Screenshots are preserved in the `dialogue-interface-results` CI artifact.
 
-The final code revision 7b3fc59 passed CI:
+The complete functional revision 7b3fc59 passed CI:
 https://github.com/tennysonmilesperhour/dialogue/actions/runs/37581459562
 
 The full release-bundle audit passed at 77d0039:
 https://github.com/tennysonmilesperhour/dialogue/actions/runs/37578680214/job/112653701821
-Subsequent changes affect website typography and the UI-test harness, including
-an appearance override compiled only in DEBUG. The shipping native behavior
-and release configuration are unchanged. The signed archive and physical
+The final visual correction at 82da40a keeps the sample banner dark in both
+appearances so status-bar text remains readable. The focused dark-review test
+passed locally with zero failures, and its native screenshot was inspected.
+The final revision's device-SDK build, 29 unit tests, website, and copy checks
+also passed. CI repeats the full interface suite here:
+https://github.com/tennysonmilesperhour/dialogue/actions/runs/37582618082
+
+Changes since the release-bundle audit affect website typography, this banner,
+and the UI-test harness (including a DEBUG-only appearance override). The
+release bundle configuration is unchanged. The signed archive and physical
 acceptance gates below are separate from these checks.
 
 Use `swift test --package-path DialogueKit`, `scripts/verify_ui.sh`, and
