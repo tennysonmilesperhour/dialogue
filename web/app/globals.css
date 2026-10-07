@@ -266,3 +266,11 @@ footer {
     padding-left: 40px;
   }
 }
+
+/* Upright headings, visible keyboard focus, and comfortable touch targets. */
+h1, h2, h3, h1 em, h2 em, h3 em { font-style: normal; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--red); outline-offset: 5px; }
+button, input { min-height: 44px; }
+footer a { min-height: 44px; display: inline-flex; align-items: center; }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+@media (max-width: 380px) { main { padding-right: 16px; } .card { padding: 18px 12px; } .gate-buttons { flex-direction: column; } }

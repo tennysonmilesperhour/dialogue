@@ -1,0 +1,92 @@
+import XCTest
+
+final class DialogueUITests: XCTestCase {
+    private func launchSample(extra: [String] = []) -> XCUIApplication {
+        let app = XCUIApplication()
+        app.launchArguments = ["-sample-ledger"] + extra
+        app.launch()
+        XCTAssertTrue(app.buttons["exitSample"].waitForExistence(timeout: 15))
+        return app
+    }
+    private func reveal(_ element: XCUIElement, in app: XCUIApplication) {
+        for _ in 0..<9 {
+            if element.isHittable { return }
+            app.swipeUp()
+        }
+        XCTAssertTrue(element.isHittable)
+    }
+    private func capture(_ name: String) {
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+    func testIntentionReflectionUndoAndLedgerSearch() {
+        let app = launchSample()
+        capture("01-today")
+        let begin = app.buttons["Begin visit to Instagram"]
+        reveal(begin, in: app)
+        begin.tap()
+        XCTAssertTrue(app.buttons["beginVisit"].waitForExistence(timeout: 5))
+        capture("02-intention")
+        app.buttons["Reply"].tap()
+        reveal(app.buttons["beginVisit"], in: app)
+        app.buttons["beginVisit"].tap()
+        let finish = app.buttons["endVisit"]
+        XCTAssertTrue(finish.waitForExistence(timeout: 5))
+        reveal(finish, in: app)
+        finish.tap()
+        XCTAssertTrue(app.buttons["verdict-yes"].waitForExistence(timeout: 5))
+        capture("03-reflection")
+        app.buttons["verdict-yes"].tap()
+        reveal(app.buttons["logReflection"], in: app)
+        app.buttons["logReflection"].tap()
+        XCTAssertTrue(app.buttons["Undo"].waitForExistence(timeout: 5))
+        app.buttons["Undo"].tap()
+        XCTAssertTrue(app.buttons["verdict-partly"].waitForExistence(timeout: 5))
+        app.buttons["verdict-partly"].tap()
+        reveal(app.buttons["logReflection"], in: app)
+        app.buttons["logReflection"].tap()
+        XCTAssertTrue(app.buttons["Dismiss confirmation"].waitForExistence(timeout: 5))
+        app.buttons["Dismiss confirmation"].tap()
+        app.tabBars.buttons["Ledger"].tap()
+        capture("04-ledger")
+        app.textFields["ledgerSearch"].tap()
+        app.textFields["ledgerSearch"].typeText("NoSuchIntentionHere")
+        XCTAssertTrue(app.staticTexts["No matching entries."].waitForExistence(timeout: 5))
+        app.buttons["Clear search"].tap()
+        app.tabBars.buttons["Review"].tap()
+        capture("05-review")
+        app.tabBars.buttons["Settings"].tap()
+        capture("06-settings")
+        app.buttons["exitSample"].tap()
+        XCTAssertTrue(app.buttons["beginSetup"].waitForExistence(timeout: 5))
+        capture("07-welcome")
+    }
+    func testLargeTextReflectionRemainsReachable() {
+        let app = launchSample(extra: ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"])
+        let reflect = app.buttons["reflectNow"]
+        reveal(reflect, in: app)
+        reflect.tap()
+        let yes = app.buttons["verdict-yes"]
+        XCTAssertTrue(yes.waitForExistence(timeout: 5))
+        reveal(yes, in: app)
+        yes.tap()
+        reveal(app.buttons["logReflection"], in: app)
+        capture("08-accessibility-reflection")
+        app.buttons["logReflection"].tap()
+        XCTAssertTrue(app.buttons["Undo"].waitForExistence(timeout: 5))
+    }
+    func testPauseDoesNotLoseTheSampleLedger() {
+        let app = launchSample()
+        app.tabBars.buttons["Settings"].tap()
+        let pause = app.switches["Pause all gates"]
+        XCTAssertTrue(pause.waitForExistence(timeout: 5))
+        pause.tap()
+        app.tabBars.buttons["Today"].tap()
+        XCTAssertTrue(app.staticTexts["Gates are paused"].waitForExistence(timeout: 5))
+        app.buttons["Resume gates"].tap()
+        app.tabBars.buttons["Ledger"].tap()
+        XCTAssertTrue(app.textFields["ledgerSearch"].waitForExistence(timeout: 5))
+    }
+}

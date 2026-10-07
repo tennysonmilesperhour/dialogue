@@ -42,6 +42,7 @@ class MonitorExtension: DeviceActivityMonitor {
         content.title = "How did that visit go?"
         content.body = "Your reflection is ready in dialogue."
         content.sound = .default
+        content.userInfo = ["route": "reflection", "sessionID": session.id.uuidString]
         let request = UNNotificationRequest(
             identifier: "dialogue.debrief.\(session.id.uuidString)",
             content: content,

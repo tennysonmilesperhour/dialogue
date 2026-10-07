@@ -75,7 +75,7 @@ assert_declares_user_defaults() {
     echo "$label: privacy manifest does not declare user defaults access" >&2
     exit 1
   fi
-  if [[ "$declaration" != *CA92.1* ]]; then
+  if [[ "$declaration" != *1C8F.1* ]]; then
     echo "$label: privacy manifest declares no reason for user defaults access" >&2
     exit 1
   fi
@@ -84,7 +84,7 @@ assert_declares_user_defaults() {
 echo "Inspecting the built application"
 assert_equal "$(read_plist "$app/Info.plist" CFBundleIdentifier)" "app.dialogue.ios" "App bundle ID"
 assert_equal "$(read_plist "$app/Info.plist" CFBundleShortVersionString)" "1.0.0" "Marketing version"
-assert_equal "$(read_plist "$app/Info.plist" CFBundleVersion)" "2" "Build version"
+assert_equal "$(read_plist "$app/Info.plist" CFBundleVersion)" "3" "Build version"
 assert_equal "$(read_plist "$app/Info.plist" ITSAppUsesNonExemptEncryption)" "false" "Export compliance"
 assert_equal "$(read_plist "$app/Info.plist" UIDeviceFamily:0)" "1" "Supported device family"
 

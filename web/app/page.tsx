@@ -11,10 +11,9 @@ export default function Home() {
       </p>
 
       <p>
-        You do not open Instagram because you decided to. A cue fires and the
-        hand moves. Blockers answer that with a wall, which you resent and
-        defeat. Trackers answer with a number, which tells you nothing about
-        whose time that was. dialogue asks a better question, twice.
+        Sometimes the hand reaches for an app before a decision catches up.
+        dialogue gives you a moment to name what you came for, then a chance
+        to notice whether it happened.
       </p>
 
       <div className="card" aria-label="A sample gate card">
@@ -34,13 +33,13 @@ export default function Home() {
           <span className="chip honest">Avoiding something</span>
         </div>
         <div className="gate-buttons">
-          <span className="btn primary">Never mind</span>
-          <span className="btn secondary">Enter</span>
+          <span className="btn primary">Begin visit</span>
+          <span className="btn secondary">Never mind</span>
         </div>
       </div>
 
       <p>
-        On the way in, the gate asks why. On the way out, a debrief asks
+        On the way in, the gate asks why. When you finish a visit, a debrief asks
         whether that turned out to be true. Two taps, honest options included.
         Bored is a legal entry. The record that accumulates between those two
         questions is the product.
@@ -95,29 +94,28 @@ export default function Home() {
       <h2>Three things dialogue refuses to do</h2>
       <p>
         <strong>It never blocks.</strong> Enter is always reachable. Friction
-        follows your own match rate: earn an 85% IMS and the gate becomes a
-        whisper.
+        follows your own match rate after enough reflections. You can always
+        continue immediately or pause all gates in Settings.
         <br />
         <strong>It never phones home.</strong> Your reasons and verdicts stay
-        on your device unless you choose to sync them. We cannot even see
-        which apps you picked; Apple designed it that way and we like it.
+        on your device. There is no account or cloud sync in version 1.0.
+        Export a copy whenever you want.
         <br />
-        <strong>It never rents itself to you.</strong> One price, once.{" "}
-        <em>If you stop using dialogue, we should not keep charging you for
-        it.</em>
+        <strong>Version 1.0 is free.</strong> No subscriptions or in-app
+        purchases.
       </p>
 
       <h2>Get the first entry</h2>
       <p>
-        iOS beta opens soon, 50 seats. The waitlist is the queue and nothing
-        else; one address, no marketing drip.
+        Join the iPhone beta waitlist for an invitation when testing opens.
+        We will email you about the beta and launch, with no marketing drip.
       </p>
       <WaitlistForm />
 
       <p style={{ marginTop: 60 }}>
         <span className="stamp">Logged</span>{" "}
         <span className="stamp red" style={{ transform: "rotate(3deg)" }}>
-          Dismissed +1
+          On purpose
         </span>
       </p>
 

@@ -14,10 +14,17 @@ extension Color {
         self.init(red: parts.red, green: parts.green, blue: parts.blue)
     }
 
+    #if canImport(UIKit)
+    public static let paper = Color(uiColor: .paper)
+    public static let ink = Color(uiColor: .ink)
+    public static let ledgerGreen = Color(uiColor: .ledgerGreen)
+    public static let ledgerRed = Color(uiColor: .ledgerRed)
+    #else
     public static let paper = Color(token: DesignTokens.ColorHex.paper)
     public static let ink = Color(token: DesignTokens.ColorHex.ink)
     public static let ledgerGreen = Color(token: DesignTokens.ColorHex.ledgerGreen)
     public static let ledgerRed = Color(token: DesignTokens.ColorHex.ledgerRed)
+    #endif
 }
 #endif
 
@@ -35,9 +42,9 @@ extension UIColor {
         self.init(red: parts.red, green: parts.green, blue: parts.blue, alpha: 1)
     }
 
-    public static var paper: UIColor { UIColor(token: DesignTokens.ColorHex.paper) }
-    public static var ink: UIColor { UIColor(token: DesignTokens.ColorHex.ink) }
-    public static var ledgerGreen: UIColor { UIColor(token: DesignTokens.ColorHex.ledgerGreen) }
-    public static var ledgerRed: UIColor { UIColor(token: DesignTokens.ColorHex.ledgerRed) }
+    public static var paper: UIColor { UIColor(uiColor: .paper) }
+    public static var ink: UIColor { UIColor(uiColor: .ink) }
+    public static var ledgerGreen: UIColor { UIColor(uiColor: .ledgerGreen) }
+    public static var ledgerRed: UIColor { UIColor(uiColor: .ledgerRed) }
 }
 #endif

@@ -161,3 +161,25 @@ migration path still touches.
 *Reverses if:* the lock proves too slow in a shield callback on a real device,
 at which point the extensions write append-only records and the app folds them
 in, which trades promptness for the same safety.
+
+**D019. A release-quality local ledger, with optional friction.**
+2026-10-06. Version 1.0 stays free and local-only. The welcome screen includes
+an in-memory sample so users can understand the product before granting
+Screen Time access. Gates accept custom or unspecified intentions and never
+make a timer or typed word a prerequisite to continuing. Reflection is a
+verdict plus Log, with notes, undo, and later editing. History has search and
+a pending filter; Review uses calendar-based seven-day summaries and excludes
+future entries. CSV/JSON exports omit app tokens and internal monitor IDs.
+Sunday review reminders are opt-in. System dark mode, scalable type, minimum
+touch targets, and reduced-motion-aware feedback are part of the release.
+*Reverses if:* measured accessibility or device testing exposes a better
+interaction; privacy and the always-available continuation remain fixed.
+
+**D020. Correct the required-reason API mapping against Apple's source.**
+2026-10-06. Apple's documentation defines CA92.1 for defaults only accessible
+to the app itself and 1C8F.1 for defaults shared within an App Group. The
+September 29 commit's explanation had these reversed. Every linked target
+now declares 1C8F.1 for the legacy shared-defaults migration. The bounded lock
+uses a monotonic elapsed-time deadline, with 35F9.1 declared for timer use.
+Source: https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacyaccessedapitypes/nsprivacyaccessedapitypereasons
+*Reverses if:* the APIs in the binary or Apple's required reasons change.

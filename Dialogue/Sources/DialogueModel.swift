@@ -6,6 +6,8 @@ import UserNotifications
 
 @MainActor
 final class DialogueModel: ObservableObject {
+    @Published private(set) var isSample = false
+    @Published var selectedTab = 0
     @Published private(set) var state = DialogueState()
     @Published private(set) var authorizationStatus: AuthorizationStatus
     @Published var gateAppID: UUID?
@@ -15,9 +17,38 @@ final class DialogueModel: ObservableObject {
 
     private let screenTime = ScreenTimeCoordinator()
     private var deferredIDs: Set<UUID> = []
+    private var lastLoggedID: UUID?
+    private var previousReflection: SessionRecord?
 
     init() {
         authorizationStatus = AuthorizationCenter.shared.authorizationStatus
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-sample-ledger") {
+            isSample = true
+            state = SampleLedger.make()
+            return
+        }
+        #endif
+        refreshFromSharedState()
+    }
+
+    func exploreSample() {
+        gateAppID = nil
+        debriefSessionID = nil
+        lastLoggedMessage = nil
+        isSample = true
+        state = SampleLedger.make()
+        selectedTab = 0
+    }
+
+    func exitSample() {
+        isSample = false
+        gateAppID = nil
+        debriefSessionID = nil
+        lastLoggedMessage = nil
+        lastLoggedID = nil
+        state = DialogueState()
+        deferredIDs.removeAll()
         refreshFromSharedState()
     }
 
@@ -49,7 +80,8 @@ final class DialogueModel: ObservableObject {
         }
     }
 
-    func finishOnboarding(with apps: [WatchedApp]) {
+    @discardableResult
+    func finishOnboarding(with apps: [WatchedApp]) -> Bool {
         changeState {
             $0.watchedApps = apps
             $0.onboardingCompleted = !apps.isEmpty
@@ -57,7 +89,8 @@ final class DialogueModel: ObservableObject {
         }
     }
 
-    func replaceWatchedApps(_ apps: [WatchedApp]) {
+    @discardableResult
+    func replaceWatchedApps(_ apps: [WatchedApp]) -> Bool {
         let retained = Set(apps.map(\.id))
         var stopped: [String] = []
         if changeState({ state in
@@ -68,11 +101,14 @@ final class DialogueModel: ObservableObject {
             }
             state.watchedApps = apps
         }) {
-            stopped.forEach { screenTime.stopMonitoring(named: $0) }
+            if !isSample { stopped.forEach { screenTime.stopMonitoring(named: $0) } }
+            return true
         }
+        return false
     }
 
     func refreshFromSharedState() {
+        guard !isSample else { return }
         authorizationStatus = AuthorizationCenter.shared.authorizationStatus
         do {
             state = try SharedDialogueStore.update { DialogueShieldController.apply($0) }
@@ -82,6 +118,12 @@ final class DialogueModel: ObservableObject {
 
     func beginSession(reason: String) {
         guard let app = gateApp else { return }
+        let reason = String(reason.trimmingCharacters(in: .whitespacesAndNewlines).prefix(120))
+        guard !reason.isEmpty else { return }
+        guard isSample || hasScreenTimeAuthorization else {
+            errorMessage = "Allow Screen Time access before starting a visit. Your ledger is still available."
+            return
+        }
         errorMessage = nil
         let sessionID = UUID()
         let activityName = DialogueScreenTime.activityPrefix + sessionID.uuidString
@@ -97,6 +139,11 @@ final class DialogueModel: ObservableObject {
                 monitorActivityName: activityName, appDisplayName: app.displayName
             ), at: 0)
         }, applyShields: false) else { return }
+        if isSample {
+            gateAppID = nil
+            selectedTab = 0
+            return
+        }
         stopped.forEach { screenTime.stopMonitoring(named: $0) }
         do {
             _ = try screenTime.beginSession(for: app, sessionID: sessionID)
@@ -124,7 +171,7 @@ final class DialogueModel: ObservableObject {
             state.sessions[index].closedAt = Date()
             state.sessions[index].closeSource = .rearm
         }) {
-            screenTime.stopMonitoring(named: session.monitorActivityName)
+            if !isSample { screenTime.stopMonitoring(named: session.monitorActivityName) }
             debriefSessionID = session.id
         }
     }
@@ -132,15 +179,39 @@ final class DialogueModel: ObservableObject {
     func submitDebrief(verdict: Verdict, note: String?) {
         guard let id = debriefSessionID, verdict != .unlogged else { return }
         let cleaned = String((note ?? "").trimmingCharacters(in: .whitespacesAndNewlines).prefix(2_000))
+        var original: SessionRecord?
         guard changeState({ state in
             guard let index = state.sessions.firstIndex(where: { $0.id == id && $0.closedAt != nil }) else { return }
+            original = state.sessions[index]
             state.sessions[index].verdict = verdict
             state.sessions[index].note = cleaned.isEmpty ? nil : cleaned
             Self.updateTier(for: state.sessions[index].appID, in: &state)
         }) else { return }
-        removeNotification(for: id)
+        if !isSample { removeNotification(for: id) }
+        previousReflection = original
+        lastLoggedID = id
         debriefSessionID = nil
-        lastLoggedMessage = "Logged. One more visit understood."
+        lastLoggedMessage = "Reflection logged"
+    }
+
+    func undoLastReflection() {
+        guard let id = lastLoggedID, let original = previousReflection else { return }
+        if changeState({ state in
+            guard let index = state.sessions.firstIndex(where: { $0.id == id }) else { return }
+            state.sessions[index].verdict = original.verdict
+            state.sessions[index].note = original.note
+            Self.updateTier(for: state.sessions[index].appID, in: &state)
+        }) {
+            lastLoggedID = nil
+            lastLoggedMessage = nil
+            debriefSessionID = id
+        }
+    }
+
+    func openReflection(id: UUID) {
+        guard state.sessions.contains(where: { $0.id == id && $0.closedAt != nil }) else { return }
+        gateAppID = nil
+        debriefSessionID = id
     }
 
     func deferDebrief() {
@@ -160,11 +231,12 @@ final class DialogueModel: ObservableObject {
                 }
             }
         }) {
-            stopped.forEach { screenTime.stopMonitoring(named: $0) }
+            if !isSample { stopped.forEach { screenTime.stopMonitoring(named: $0) } }
         }
     }
 
     func deleteAllData() {
+        if isSample { exitSample(); return }
         do {
             // Stop callbacks before clearing the record and remove lock-screen copies.
             screenTime.stopAllMonitoring()
@@ -213,6 +285,11 @@ final class DialogueModel: ObservableObject {
 
     @discardableResult
     private func changeState(_ change: (inout DialogueState) -> Void, applyShields: Bool = true) -> Bool {
+        if isSample {
+            change(&state)
+            state.normalize()
+            return true
+        }
         do {
             state = try SharedDialogueStore.update { current in
                 change(&current)

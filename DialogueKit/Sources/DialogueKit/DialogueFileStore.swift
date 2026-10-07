@@ -58,14 +58,13 @@ public struct DialogueFileStore: Sendable {
         #endif
         // An extension can be suspended while holding a lock. Bound the wait so
         // callers can surface the storage error and open the gates safely.
-        var attempts = 0
+        let deadline = ContinuousClock.now.advanced(by: .seconds(1))
         while flock(descriptor, LOCK_EX | LOCK_NB) != 0 {
             let failure = errno
             guard failure == EWOULDBLOCK || failure == EINTR else {
                 throw POSIXError(POSIXErrorCode(rawValue: failure) ?? .EIO)
             }
-            guard attempts < 100 else { throw POSIXError(.ETIMEDOUT) }
-            attempts += 1
+            guard ContinuousClock.now < deadline else { throw POSIXError(.ETIMEDOUT) }
             usleep(10_000)
         }
         defer { flock(descriptor, LOCK_UN) }
