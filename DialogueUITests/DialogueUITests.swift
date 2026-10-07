@@ -84,6 +84,12 @@ final class DialogueUITests: XCTestCase {
         app.buttons["logReflection"].tap()
         XCTAssertTrue(app.buttons["Undo"].waitForExistence(timeout: 5))
     }
+    func testDarkAppearanceReview() {
+        let app = launchSample(extra: ["-AppleInterfaceStyle", "Dark"])
+        app.tabBars.buttons["Review"].tap()
+        XCTAssertTrue(app.staticTexts["Your week\nin intentions."].waitForExistence(timeout: 5))
+        capture("09-dark-review")
+    }
     func testPauseDoesNotLoseTheSampleLedger() {
         let app = launchSample()
         app.tabBars.buttons["Settings"].tap()

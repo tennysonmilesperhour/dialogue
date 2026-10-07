@@ -22,7 +22,7 @@ struct LedgerView: View {
                         DialogueHeader(kicker: "Your private record", title: "The ledger")
                         HStack {
                             Image(systemName: "magnifyingglass").accessibilityHidden(true)
-                            TextField("Search apps, intentions, notes", text: $search)
+                            TextField("Search apps, intentions, notes", text: $search, prompt: Text("Search your ledger").foregroundStyle(Color.ink.opacity(0.65)))
                                 .font(.system(.body, design: .serif)).accessibilityIdentifier("ledgerSearch")
                                 .focused($searchFocused).submitLabel(.search)
                                 .onSubmit { searchFocused = false }

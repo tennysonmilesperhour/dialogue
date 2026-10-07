@@ -51,7 +51,7 @@ struct IntentionGateView: View {
                                 .accessibilityAddTraits(selectedReason == reason ? .isSelected : [])
                             }
                         }
-                        TextField("Or write your own", text: $customReason, axis: .vertical)
+                        TextField("Or write your own", text: $customReason, prompt: Text("Or write your own").foregroundStyle(Color.ink.opacity(0.65)), axis: .vertical)
                             .font(.system(.body, design: .serif)).lineLimit(1...3)
                             .padding(14).overlay { Rectangle().stroke(Color.ink.opacity(0.5), lineWidth: 1) }
                             .focused($writing).accessibilityIdentifier("customReason")
@@ -116,7 +116,7 @@ struct DebriefView: View {
                         Text("No right answer. Unlogged visits never lower your score.")
                             .font(.system(.footnote, design: .serif)).foregroundStyle(Color.ink.opacity(0.75))
                     }
-                    TextField("Anything to remember? (optional)", text: $note, axis: .vertical)
+                    TextField("Note (optional)", text: $note, prompt: Text("Note (optional)").foregroundStyle(Color.ink.opacity(0.65)), axis: .vertical)
                         .lineLimit(2...4).font(.system(.body, design: .serif))
                         .padding(14).overlay { Rectangle().stroke(Color.ink.opacity(0.45), lineWidth: 1) }
                         .accessibilityIdentifier("reflectionNote")
