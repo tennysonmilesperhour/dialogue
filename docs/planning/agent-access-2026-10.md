@@ -53,7 +53,8 @@ JSON-LD: WebSite and MobileApplication on `/`, FAQPage on `/support`. The app ha
 ### Open findings for the owner (not changed)
 
 - `web/instrumentation-client.ts` sends anonymous pageviews to PostHog when `NEXT_PUBLIC_POSTHOG_KEY` is set, while the privacy page and `docs/submission/PRIVACY_POLICY.md` say "no analytics cookies, no trackers". Either leave the key unset or disclose anonymous pageview counts in both policies.
-- "iOS beta opens soon, 50 seats" depends on the Family Controls entitlement, which ROADMAP.md records as unanswered since 2026-08-19.
+- Resolved 2026-10-07: beta line now says it opens when Apple approves the entitlement, and a not-affiliated line (FAQ and llms.txt) separates dialogue from Dialogue Health Technologies. Owner approved both.
+- PostHog: the key is set on Vercel (production and development). Owner approved leaving it unset. Removing it is an owner action in Vercel; until then the privacy page should not claim "no trackers".
 
 ### Live setup still needed
 
@@ -90,7 +91,6 @@ Anything outward-facing that is not already a recorded decision (new pages, clai
 - A real domain (IDENTITY.md lists candidates), then update `NEXT_PUBLIC_SITE_URL`.
 - A "how it compares" page, only with claims already in RESEARCH.md that have citations.
 - A short "what the debrief asks" page with the two taps, if searches show that question unanswered.
-- Disambiguation line against Dialogue Health Technologies (needs owner approval).
 - After the beta: aggregate, consented IMS results as open data, with a minimum sample size. Revisit MCP and Dataset markup only then.
 
 ## Outlook

@@ -56,7 +56,10 @@ export const REFUSALS_CLOSER =
 export const WAITLIST_HEADING = "Get the first entry";
 
 export const WAITLIST_TEXT =
-  "iOS beta opens soon, 50 seats. The waitlist is the queue and nothing else; one address, no marketing drip.";
+  "The iOS beta, 50 seats, opens when Apple approves the Screen Time entitlement dialogue needs. The waitlist is the queue and nothing else; one address, no marketing drip.";
+
+export const NOT_AFFILIATED =
+  "dialogue is not affiliated with Dialogue Health Technologies, the Canadian telehealth company, or with any other product called Dialogue.";
 
 export const FAQ: Faq[] = [
   {
@@ -74,6 +77,10 @@ export const FAQ: Faq[] = [
   {
     q: "Why is my session length approximate?",
     a: "iOS does not tell apps exactly when another app closes. dialogue triangulates from the signals it does get and labels estimates honestly instead of faking precision.",
+  },
+  {
+    q: "Is dialogue related to Dialogue Health Technologies?",
+    a: NOT_AFFILIATED,
   },
   {
     q: "What does the subscription add?",

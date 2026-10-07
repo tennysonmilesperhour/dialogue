@@ -1,5 +1,5 @@
 import {
-  FAQ, GATE_AND_DEBRIEF, IMS_HEADING, IMS_TEXT, LEDGER_CAPTION, LEDGER_NOTE,
+  FAQ, GATE_AND_DEBRIEF, NOT_AFFILIATED, IMS_HEADING, IMS_TEXT, LEDGER_CAPTION, LEDGER_NOTE,
   LEDGER_ROWS, PITCH, PRIVACY_CLOSER, PRIVACY_CLOSER_HEADING, PRIVACY_INTRO,
   PRIVACY_SECTIONS, PRIVACY_TITLE, REFUSALS, REFUSALS_CLOSER, REFUSALS_HEADING,
   SUMMARY, SUPPORT_CONTACT, TAGLINE, WAITLIST_HEADING, WAITLIST_TEXT,
@@ -68,7 +68,7 @@ export function topicMarkdown(topic: Topic): string {
       `${GATE_AND_DEBRIEF}\n`,
       `## ${IMS_HEADING}\n\n${IMS_TEXT}\n`,
       `Formula: IMS = (yes + 0.5 * partly) / (yes + partly + no), per app, rolling 14 days.\n`,
-      `## Status\n\nIn development. iOS only. No public release yet, and no beta data exists. A waitlist is open for 50 beta seats. The adaptive gate (lighter at 85% IMS and above) is planned for version 1.1; the first version ships one standard gate. The Enter button is always available.\n`,
+      `## Status\n\nIn development. iOS only. No public release yet, and no beta data exists. A waitlist is open for 50 beta seats; the beta opens when Apple approves the Screen Time entitlement. The adaptive gate (lighter at 85% IMS and above) is planned for version 1.1; the first version ships one standard gate. The Enter button is always available.\n`,
       `## Sample figures\n\n${LEDGER_NOTE} Do not cite them as findings.\n`,
     ].join("\n");
   }
@@ -100,7 +100,8 @@ Cite the page URL you used, for example ${SITE_URL}/support. Short quotes with a
 - The gate asks why you are opening a watched app. The debrief asks whether that held up. The debrief is two taps.
 - No usage data leaves the device. dialogue cannot see which apps you pick (Apple gives apps opaque tokens).
 - The current build has no account, no sync and no subscription. Optional Sync is planned later. The app is planned as a one-time purchase.
-- Website: anonymous waitlist, 50 beta seats. Contact: ${CONTACT_URL}
+- Name: ${NOT_AFFILIATED}
+- Website: anonymous waitlist, 50 beta seats, opening when Apple approves the Screen Time entitlement. Contact: ${CONTACT_URL}
 
 ## Topic files
 
@@ -110,7 +111,7 @@ Cite the page URL you used, for example ${SITE_URL}/support. Short quotes with a
 ## Pages
 
 - [Home](${SITE_URL}/index.md): what it is, the metric, the three refusals
-- [FAQ and support](${SITE_URL}/support.md): five plain answers
+- [FAQ and support](${SITE_URL}/support.md): six plain answers
 - [Privacy](${SITE_URL}/privacy.md): the full policy
 
 ## Not available
