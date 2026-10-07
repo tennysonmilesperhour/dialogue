@@ -1,5 +1,6 @@
 import XCTest
 
+@MainActor
 final class DialogueUITests: XCTestCase {
     private func launchSample(extra: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
@@ -9,9 +10,15 @@ final class DialogueUITests: XCTestCase {
         return app
     }
     private func reveal(_ element: XCUIElement, in app: XCUIApplication) {
-        for _ in 0..<9 {
+        if element.isHittable { return }
+        // A newly inserted active visit can sit above the preserved scroll position.
+        for _ in 0..<3 {
+            app.swipeDown()
             if element.isHittable { return }
+        }
+        for _ in 0..<9 {
             app.swipeUp()
+            if element.isHittable { return }
         }
         XCTAssertTrue(element.isHittable)
     }
