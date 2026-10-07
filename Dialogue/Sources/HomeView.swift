@@ -20,8 +20,9 @@ struct HomeView: View {
                 .font(.system(.caption, design: .monospaced, weight: .semibold))
                 .padding(.horizontal, 20)
                 .frame(minHeight: 44)
-                .background(Color.ink)
-                .foregroundStyle(Color.paper)
+                // Keep the status-bar region dark in both appearances.
+                .background(Color(token: DesignTokens.ColorHex.ink))
+                .foregroundStyle(Color(token: DesignTokens.ColorHex.paper))
             }
             Group {
                 if model.state.onboardingCompleted {
