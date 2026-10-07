@@ -10,17 +10,25 @@ final class DialogueUITests: XCTestCase {
         return app
     }
     private func reveal(_ element: XCUIElement, in app: XCUIApplication) {
-        if element.isHittable { return }
-        // A newly inserted active visit can sit above the preserved scroll position.
-        for _ in 0..<3 {
-            app.swipeDown()
-            if element.isHittable { return }
+        let scroll = app.scrollViews.firstMatch
+        for _ in 0..<16 {
+            let viewport = scroll.exists ? scroll.frame : app.frame
+            let top = viewport.minY + 12
+            let bottom = min(viewport.maxY, app.tabBars.firstMatch.exists ? app.tabBars.firstMatch.frame.minY : app.frame.maxY - 24) - 16
+            if element.exists {
+                let frame = element.frame
+                // isHittable alone can include controls covered by the floating tab bar.
+                if element.isHittable && frame.minY >= top && frame.maxY <= bottom { return }
+                if frame.minY < top {
+                    scroll.swipeDown()
+                } else {
+                    scroll.swipeUp()
+                }
+            } else {
+                scroll.swipeUp()
+            }
         }
-        for _ in 0..<9 {
-            app.swipeUp()
-            if element.isHittable { return }
-        }
-        XCTAssertTrue(element.isHittable)
+        XCTFail("Could not bring the complete control into the visible content area")
     }
     private func capture(_ name: String) {
         let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
@@ -85,7 +93,7 @@ final class DialogueUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Undo"].waitForExistence(timeout: 5))
     }
     func testDarkAppearanceReview() {
-        let app = launchSample(extra: ["-AppleInterfaceStyle", "Dark"])
+        let app = launchSample(extra: ["-test-dark-appearance"])
         app.tabBars.buttons["Review"].tap()
         XCTAssertTrue(app.staticTexts["Your week\nin intentions."].waitForExistence(timeout: 5))
         capture("09-dark-review")
