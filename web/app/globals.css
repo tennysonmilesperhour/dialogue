@@ -80,7 +80,7 @@ a {
 }
 
 .reminder {
-  font-style: italic;
+  font-style: normal;
   color: var(--red);
 }
 
