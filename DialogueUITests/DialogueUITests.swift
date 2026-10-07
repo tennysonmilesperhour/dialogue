@@ -76,6 +76,14 @@ final class DialogueUITests: XCTestCase {
         capture("06-settings")
         app.buttons["exitSample"].tap()
         XCTAssertTrue(app.buttons["beginSetup"].waitForExistence(timeout: 5))
+        // Unsigned CI runners have no App Group container. Verify the fail-open
+        // message, acknowledge it, and then capture the permission-free welcome.
+        let storageAlert = app.alerts["A note from dialogue"]
+        if storageAlert.waitForExistence(timeout: 1) {
+            XCTAssertTrue(storageAlert.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "Gates are open while storage is unavailable")).firstMatch.exists)
+            storageAlert.buttons["OK"].tap()
+        }
+        XCTAssertTrue(app.buttons["beginSetup"].isHittable)
         capture("07-welcome")
     }
     func testLargeTextReflectionRemainsReachable() {
