@@ -35,10 +35,37 @@ Apple has approved distribution or that Screen Time works on a real device.
 
 ## Verification record
 
-Results for the final candidate are recorded below after the checks complete.
+Verified October 7, 2026:
+
+- All 29 DialogueKit tests pass, including concurrent writers, bounded locking,
+  recovery, seven-day calculations, and safe exports.
+- All application and extension targets build with the device SDK, and the
+  physical-device prototype builds.
+- The full release verification script passes: bundle identifiers, version,
+  iPhone-only device family, icon, all four embedded extensions, privacy
+  manifests, entitlements, encryption declaration, web build, and dependency audit.
+- The website production build and TypeScript checks pass. Fonts are bundled
+  under their OFL licenses, removing a network dependency during builds.
+- Public home, support, and privacy routes return HTTP 200. Support/privacy
+  show morphiclabsdata@gmail.com, and invalid waitlist emails return HTTP 400.
+- All four iPhone interface tests pass on the first attempt, with zero failures:
+  intention/reflection/undo/search, maximum Dynamic Type, dark review, and
+  pause/resume. The sample entries are fictional. The unsigned-runner storage
+  recovery alert is explicitly acknowledged before the welcome capture.
+  Screenshots are preserved in the `dialogue-interface-results` CI artifact.
+
+The final code revision 7b3fc59 passed CI:
+https://github.com/tennysonmilesperhour/dialogue/actions/runs/37581459562
+
+The full release-bundle audit passed at 77d0039:
+https://github.com/tennysonmilesperhour/dialogue/actions/runs/37578680214/job/112653701821
+Subsequent changes affect website typography and the UI-test harness, including
+an appearance override compiled only in DEBUG. The shipping native behavior
+and release configuration are unchanged. The signed archive and physical
+acceptance gates below are separate from these checks.
+
 Use `swift test --package-path DialogueKit`, `scripts/verify_ui.sh`, and
-`scripts/verify_release.sh` to reproduce them. The UI results include actual
-app screenshots with fictional sample entries.
+`scripts/verify_release.sh` to reproduce the checks.
 
 ## Remaining release gates
 
@@ -57,10 +84,15 @@ app screenshots with fictional sample entries.
 4. **App Store Connect completion.** Verify the app record, final privacy and
    age-rating answers, screenshots, review contact, availability, and current
    agreements. The app is free and has no IAPs; monetization enrollment is not
-   a prerequisite for this version. Apple dashboard state was not verified.
-5. **Publish and verify public pages.** Deploy the reviewed website update,
-   confirm the support/privacy routes and contact, and test the production
-   waitlist without adding unsolicited addresses.
+   a prerequisite for this version. App Store Connect was signed out when
+   checked, so Apple dashboard state could not be verified.
+
+## Public website
+
+Published and checked at https://dialogue-five.vercel.app, including `/support`
+and `/privacy`. The waitlist validation test did not add an email address.
+The successful registration path still needs a controlled, consenting tester
+before beta invitations are sent.
 
 Do not mark the app ready to submit until those gates have evidence from the
 same final candidate. Do not replace physical results with simulator checks.
