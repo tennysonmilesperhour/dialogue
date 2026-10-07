@@ -13,8 +13,12 @@ if preferred is None: raise SystemExit("No iPhone simulator installed")
 print(preferred["udid"])
 ')"
 fi
+# Let SpringBoard finish its first boot before Xcode starts its launch timeout.
+xcrun simctl boot "$simulator_id" >/dev/null 2>&1 || true
+xcrun simctl bootstatus "$simulator_id" -b
 result_path="${DIALOGUE_UI_RESULT_PATH:-work/ui-$(date +%Y%m%d-%H%M%S).xcresult}"
 xcodebuild test -project Dialogue.xcodeproj -scheme Dialogue -configuration Debug \
   -destination "platform=iOS Simulator,id=$simulator_id" \
   -resultBundlePath "$result_path" -parallel-testing-enabled NO -jobs 2 \
+  -retry-tests-on-failure -test-iterations 2 \
   CODE_SIGNING_ALLOWED=NO

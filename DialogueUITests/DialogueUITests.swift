@@ -19,11 +19,12 @@ final class DialogueUITests: XCTestCase {
                 let frame = element.frame
                 // isHittable alone can include controls covered by the floating tab bar.
                 if element.isHittable && frame.minY >= top && frame.maxY <= bottom { return }
-                if frame.minY < top {
-                    scroll.swipeDown()
-                } else {
-                    scroll.swipeUp()
-                }
+                let center = (top + bottom) / 2
+                let distance = max(-180, min(180, frame.midY - center))
+                let origin = app.coordinate(withNormalizedOffset: .zero)
+                let start = origin.withOffset(CGVector(dx: viewport.midX, dy: center))
+                let end = origin.withOffset(CGVector(dx: viewport.midX, dy: center - distance))
+                start.press(forDuration: 0.05, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.15)
             } else {
                 scroll.swipeUp()
             }
