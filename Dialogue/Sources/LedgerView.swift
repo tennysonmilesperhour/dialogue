@@ -5,6 +5,7 @@ struct LedgerView: View {
     @ObservedObject var model: DialogueModel
     @State private var search = ""
     @State private var onlyPending = false
+    @FocusState private var searchFocused: Bool
 
     private var entries: [SessionRecord] {
         model.state.sessions.filter { session in
@@ -23,8 +24,10 @@ struct LedgerView: View {
                             Image(systemName: "magnifyingglass").accessibilityHidden(true)
                             TextField("Search apps, intentions, notes", text: $search)
                                 .font(.system(.body, design: .serif)).accessibilityIdentifier("ledgerSearch")
+                                .focused($searchFocused).submitLabel(.search)
+                                .onSubmit { searchFocused = false }
                             if !search.isEmpty {
-                                Button { search = "" } label: { Image(systemName: "xmark.circle.fill") }
+                                Button { search = ""; searchFocused = false } label: { Image(systemName: "xmark.circle.fill") }
                                     .frame(width: 44, height: 44).accessibilityLabel("Clear search")
                             }
                         }.padding(12).frame(minHeight: 48)
@@ -75,7 +78,14 @@ struct LedgerView: View {
                     }.padding(.vertical, 24)
                 }.scrollDismissesKeyboard(.interactively).refreshable { model.refreshFromSharedState() }
             }.toolbar(.hidden, for: .navigationBar)
+                .toolbar {
+                    ToolbarItemGroup(placement: .keyboard) {
+                        Spacer()
+                        Button("Done") { searchFocused = false }
+                    }
+                }
         }
+        .onChange(of: model.selectedTab) { _, _ in searchFocused = false }
     }
     private func appName(_ session: SessionRecord) -> some View {
         Text(model.appName(for: session)).font(.system(.title3, design: .serif, weight: .semibold))
