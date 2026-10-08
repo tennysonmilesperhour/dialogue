@@ -1,4 +1,5 @@
 import Darwin
+import Dispatch
 import Foundation
 
 /// A separate lock file survives atomic replacement of the ledger. Every process
@@ -58,14 +59,15 @@ public struct DialogueFileStore: Sendable {
         #endif
         // An extension can be suspended while holding a lock. Bound the wait so
         // callers can surface the storage error and open the gates safely.
-        var attempts = 0
+        let timeout = DispatchTime.now().uptimeNanoseconds + 1_000_000_000
         while flock(descriptor, LOCK_EX | LOCK_NB) != 0 {
             let failure = errno
             guard failure == EWOULDBLOCK || failure == EINTR else {
                 throw POSIXError(POSIXErrorCode(rawValue: failure) ?? .EIO)
             }
-            guard attempts < 100 else { throw POSIXError(.ETIMEDOUT) }
-            attempts += 1
+            guard DispatchTime.now().uptimeNanoseconds < timeout else {
+                throw POSIXError(.ETIMEDOUT)
+            }
             usleep(10_000)
         }
         defer { flock(descriptor, LOCK_UN) }

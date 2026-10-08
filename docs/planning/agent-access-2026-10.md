@@ -102,3 +102,4 @@ Anything outward-facing that is not already a recorded decision (new pages, clai
 ## Review log
 
 - 2026-10-07: layer built. Accuracy pass fixed five items (above), two open findings raised. Traffic log not yet live, awaiting migration and secrets.
+- 2026-10-08: reran failed CI once. The lock timing test failed again, confirming that attempt-count timing stretched under runner load. Replaced it with a monotonic one second deadline.
