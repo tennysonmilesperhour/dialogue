@@ -1,4 +1,10 @@
-export const metadata = { title: "dialogue support" };
+import { openGraphFor } from "../../lib/site";
+
+export const metadata = {
+  title: "dialogue support",
+  alternates: { canonical: "/support" },
+  openGraph: openGraphFor("/support"),
+};
 
 export default function Support() {
   return (
@@ -22,7 +28,7 @@ export default function Support() {
       <p>Settings offers CSV and JSON exports. These include your written entries, not Apple&apos;s app tokens. Delete all dialogue data clears entries, selections, gates, and reminders. Export first if you want a copy. To delete a website waitlist address, email us from that address.</p>
       <h2>Is there a subscription?</h2>
       <p>Version 1.0 is free and local-only. It has no account, subscription, or cloud sync.</p>
-      <footer><a href="/">Home</a><a href="/privacy">Privacy</a></footer>
+      <footer><a href="/">Home</a><a href="/privacy">Privacy</a><a href="https://tennysontaggart.com">by Tennyson Taggart</a></footer>
     </main>
   );
 }
