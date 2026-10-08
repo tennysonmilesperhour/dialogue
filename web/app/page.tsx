@@ -1,8 +1,45 @@
+import type { Metadata } from "next";
 import WaitlistForm from "./waitlist-form";
+import JsonLd from "./json-ld";
+import {
+  GATE_AND_DEBRIEF, IMS_HEADING, IMS_TEXT, LEDGER_CAPTION, LEDGER_NOTE,
+  LEDGER_ROWS, PITCH, REFUSALS, REFUSALS_HEADING, SUMMARY,
+  WAITLIST_HEADING, WAITLIST_TEXT,
+} from "@/lib/content";
+import { SITE_URL } from "@/lib/site";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/", types: { "text/markdown": "/index.md" } },
+};
 
 export default function Home() {
   return (
     <main>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "WebSite",
+              "@id": `${SITE_URL}/#site`,
+              name: "dialogue",
+              url: SITE_URL,
+              description: SUMMARY,
+              inLanguage: "en",
+            },
+            {
+              "@type": "MobileApplication",
+              "@id": `${SITE_URL}/#app`,
+              name: "dialogue",
+              description: SUMMARY,
+              operatingSystem: "iOS 17 or later",
+              applicationCategory: "HealthApplication",
+              url: SITE_URL,
+              subjectOf: { "@id": `${SITE_URL}/#site` },
+            },
+          ],
+        }}
+      />
       <p className="kicker">an iOS app, in the works</p>
       <h1>dialogue</h1>
       <p style={{ fontSize: 21 }}>
@@ -10,11 +47,7 @@ export default function Home() {
         <strong>dialogue tells you whether you meant it.</strong>
       </p>
 
-      <p>
-        Sometimes the hand reaches for an app before a decision catches up.
-        dialogue gives you a moment to name what you came for, then a chance
-        to notice whether it happened.
-      </p>
+      <p>{PITCH}</p>
 
       <div className="card" aria-label="A sample gate card">
         <div className="app-line">
@@ -38,23 +71,13 @@ export default function Home() {
         </div>
       </div>
 
-      <p>
-        On the way in, the gate asks why. When you finish a visit, a debrief asks
-        whether that turned out to be true. Two taps, honest options included.
-        Bored is a legal entry. The record that accumulates between those two
-        questions is the product.
-      </p>
+      <p>{GATE_AND_DEBRIEF}</p>
 
-      <h2>The one number that matters</h2>
-      <p>
-        <span className="mono">Intention Match Score</span>: the percentage of
-        sessions where what you said going in held up on the way out. Minutes
-        cannot tell forty minutes helping a friend from twelve minutes of
-        dread-scrolling. IMS can.
-      </p>
+      <h2>{IMS_HEADING}</h2>
+      <p>{IMS_TEXT}</p>
 
       <table className="ledger">
-        <caption>A week in the ledger (sample)</caption>
+        <caption>{LEDGER_CAPTION}</caption>
         <thead>
           <tr>
             <th>Stated reason</th>
@@ -63,53 +86,30 @@ export default function Home() {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Reply</td>
-            <td className="num">3 min</td>
-            <td className="num">92%</td>
-          </tr>
-          <tr>
-            <td>Look up</td>
-            <td className="num">4 min</td>
-            <td className="num">81%</td>
-          </tr>
-          <tr>
-            <td>Bored</td>
-            <td className="num">22 min</td>
-            <td className="num">34%</td>
-          </tr>
-          <tr>
-            <td>Avoiding something</td>
-            <td className="num">17 min</td>
-            <td className="num">28%</td>
-          </tr>
+          {LEDGER_ROWS.map((r) => (
+            <tr key={r.reason}>
+              <td>{r.reason}</td>
+              <td className="num">{r.avg}</td>
+              <td className="num">{r.matched}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
 
+      <p>{LEDGER_NOTE}</p>
+
+      <h2>{REFUSALS_HEADING}</h2>
       <p>
-        Numbers like these do the persuading. No streaks that punish, no
-        shame graphs, no minutes wasted counter.
+        {REFUSALS.map((r, i) => (
+          <span key={r.lead}>
+            <strong>{r.lead}</strong> {r.text}
+            {i < REFUSALS.length - 1 ? <br /> : null}
+          </span>
+        ))}
       </p>
 
-      <h2>Three things dialogue refuses to do</h2>
-      <p>
-        <strong>It never blocks.</strong> Enter is always reachable. Friction
-        follows your own match rate after enough reflections. You can always
-        continue immediately or pause all gates in Settings.
-        <br />
-        <strong>It never phones home.</strong> Your reasons and verdicts stay
-        on your device. There is no account or cloud sync in version 1.0.
-        Export a copy whenever you want.
-        <br />
-        <strong>Version 1.0 is free.</strong> No subscriptions or in-app
-        purchases.
-      </p>
-
-      <h2>Get the first entry</h2>
-      <p>
-        Join the iPhone beta waitlist for an invitation when testing opens.
-        We will email you about the beta and launch, with no marketing drip.
-      </p>
+      <h2>{WAITLIST_HEADING}</h2>
+      <p>{WAITLIST_TEXT}</p>
       <WaitlistForm />
 
       <p style={{ marginTop: 60 }}>

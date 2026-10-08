@@ -184,7 +184,26 @@ uses a monotonic elapsed-time deadline, with 35F9.1 declared for timer use.
 Source: https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacyaccessedapitypes/nsprivacyaccessedapitypereasons
 *Reverses if:* the APIs in the binary or Apple's required reasons change.
 
-**D021. Canonical and social metadata use the Vercel URL until a domain is bought.**
+**D021. The marketing site keeps an agent-access layer and a bot-only traffic log.**
+2026-10-07. The site now serves llms.txt, markdown twins of its three pages,
+Content Signals in robots.txt and structured data, all built from one content
+module so the pages and the machine-readable copies cannot drift. Plan and
+review steps are in `docs/planning/agent-access-2026-10.md`.
+
+The traffic log records visits from known crawlers, assistants and tools only:
+agent name, kind, path, a user agent trimmed to 300 characters, and a time. It
+never runs for browsers, stores no IP address and sets no cookie, and the
+privacy page says it exists. It sits outside the app's rule about usage data
+because it describes bots, not people, and the ledger and the app are untouched.
+Rows are advisory, since a user agent can be faked. Reads are service role only.
+
+Deliberately not built: an MCP server, open datasets and an api-catalog. There
+is no beta data, and nothing about any user's sessions may be published.
+Review is monthly and light, first Wednesday.
+*Reverses if:* the log ever needs a person-level field to be useful, in which
+case it is dropped instead.
+
+**D022. Canonical and social metadata use the Vercel URL until a domain is bought.**
 2026-10-08. IDENTITY.md already records that the obvious domains are taken and
 the site lives at https://dialogue-five.vercel.app. The marketing pages now
 publish that origin as the canonical URL, Open Graph URL, robots host, and

@@ -20,3 +20,6 @@ Updated October 6, 2026. The complete public policy is maintained in
   replay, automatic click capture, person profiles, or persistent browser IDs.
   Page and browser information may be sent. This does not run in the native app.
 - Support and privacy/deletion contact: morphiclabsdata@gmail.com.
+- The website keeps a short log of visits from crawlers and AI agents (agent
+  name, page, time). Web browsers are never logged and the log holds no
+  personal data.

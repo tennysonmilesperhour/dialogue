@@ -24,6 +24,8 @@ web/                   Next.js marketing site + waitlist
 docs/                  strategy docs and submission paperwork
 ```
 
+The agent-access layer (llms.txt, markdown twins, bot log, monthly review) is planned and logged in `docs/planning/agent-access-2026-10.md`. Page copy for the site lives in `web/lib/content.ts`.
+
 The execution plan and its gates live in `docs/PLAN.md`. Log every decision in `docs/DECISIONS.md`, append-only.
 
 CI runs five jobs on every pull request: copy lint (the voice rules above,

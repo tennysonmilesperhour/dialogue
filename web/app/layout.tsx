@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { openGraphFor, shareImage, siteDescription, siteUrl } from "../lib/site";
+import { TAGLINE } from "@/lib/content";
+import { openGraphFor, shareImage, SITE_URL } from "@/lib/site";
 
 const display = localFont({
   src: [
@@ -28,13 +29,13 @@ const serif = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: "dialogue",
-  description: siteDescription,
+  description: TAGLINE,
   alternates: { canonical: "/" },
   openGraph: {
     title: "dialogue",
-    description: siteDescription,
+    description: TAGLINE,
     ...openGraphFor("/"),
   },
   twitter: {

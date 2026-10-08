@@ -1,5 +1,9 @@
-// Public origin until a custom domain is bought. See docs/IDENTITY.md.
-export const siteUrl = "https://dialogue-five.vercel.app";
+// Until a real domain is bought (docs/IDENTITY.md), the site lives on Vercel.
+export const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL || "https://dialogue-five.vercel.app"
+).replace(/\/$/, "");
+
+export const siteUrl = SITE_URL;
 
 export const siteDescription =
   "Every screen time app tells you how long. dialogue tells you whether you meant it. A ledger of intention for the apps you open.";
@@ -8,10 +12,9 @@ export const shareImage = {
   url: "/og.png",
   width: 1200,
   height: 630,
-  alt: "dialogue. Every screen time app tells you how long. dialogue tells you whether you meant it.",
+  alt: "dialogue, a ledger of intention",
 };
 
-// A page-level openGraph object replaces the layout's, so each page carries the image.
 export function openGraphFor(path: string) {
   return {
     url: path,
@@ -21,3 +24,7 @@ export function openGraphFor(path: string) {
     images: [shareImage],
   };
 }
+
+// Shown on pages and used in the markdown twins. The monthly agent review
+// bumps it only when the content was actually re-checked.
+export const LAST_REVIEWED = "2026-10-08";
