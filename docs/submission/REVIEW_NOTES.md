@@ -1,42 +1,47 @@
 # App Review notes
 
-Paste the content below into the Review Notes field for build 2.
+dialogue: intention ledger is a free, local-only tool for an adult's own
+attention. It uses individual Family Controls authorization. It does not
+monitor children or anyone else's device. No account or purchase is required.
 
----
+## Try the interface without granting permission
 
-dialogue is a personal digital wellbeing tool for the account holder's own
-iPhone. It is not a parental control app and cannot monitor anyone else.
+On the welcome screen, choose Explore a sample ledger. The clearly marked
+sample contains fictional entries held only in memory. It supports the real
+intention, reflection, history, review, and export interfaces. Exit sample
+returns to the user's untouched ledger. Sample mode does not apply shields,
+start monitoring, or schedule notifications. It is available to every user.
 
-Three implementation details may help review:
+## Verify the Screen Time integration on an iPhone
 
-1. dialogue never permanently locks an app. The shield is a reflective gate.
-   "Never mind" closes the attempted visit. "Choose a reason" opens dialogue
-   so the user can name an intention and begin the visit. All gates can also
-   be paused in Settings.
+1. From the welcome screen choose Set up my first app.
+2. Allow Screen Time access, choose an individual app, name it, and save.
+3. Open that app. Choose a reason on the shield opens dialogue on iOS 26.5+.
+   Earlier iOS uses a notification; manually opening dialogue also works.
+4. Choose or write an intention, then tap Begin visit. The suggested pause
+   is optional, and Begin visit works even without a reason. Switch back to
+   the selected app; it is now unshielded.
+5. Open dialogue and tap End visit and reflect. Select a verdict, then Log
+   reflection. Alternatively, the soft-budget callback closes the visit and
+   schedules a generic reflection notification, if notifications are allowed.
+6. Check the updated ledger and score. Undo restores the previous answer;
+   Edit reflection in the ledger permits a later correction.
+7. Pause all gates in Settings to open every selected app.
 
-2. No data is collected. App selections are opaque Screen Time tokens. The
-   user's labels, reasons, verdicts, and notes remain in the local App Group.
-   The app has no account, advertising, analytics SDK, purchase SDK, or Sync.
+## Limits and privacy
 
-3. Screen Time authorization is required for the core function. The app
-   requests FamilyControls authorization for the individual account during
-   onboarding because presenting and removing the gate requires it.
+Screen Time callback timing is controlled by iOS. Elapsed visit lengths can
+include time away from the app and are labeled approximate. No exact app-close
+detection is claimed. The Screen Time report is displayed separately.
 
-## Demo script
+The native app has no network or analytics SDK, account, subscription, or
+cloud sync. Application tokens, user labels, and written entries remain in a
+protected App Group. Optional notifications contain no app label, intention,
+or note. Optional CSV/JSON export writes only the user's entries to their
+chosen destination, excluding opaque tokens and internal monitor identifiers.
 
-1. Complete onboarding and grant Screen Time authorization.
-2. Pick any individual app in the picker, give it a short label and optional
-   reminder, then choose a soft budget.
-3. Open the picked app. On the shield, tap "Choose a reason." On iOS versions
-   before 26.5, tap the immediate notification or open dialogue manually.
-4. In dialogue, choose a reason, wait for the brief settle timer, and tap the
-   button to begin the visit. Return to the selected app; it is now available.
-5. To complete the loop immediately, return to dialogue and tap "End visit
-   and reflect" on Today. Choose Yes, Partly, or No. The entry appears in the
-   Ledger and updates the Intention Match Score.
-6. Review shows Screen Time in watched apps, average duration and match rate
-   by reason. Settings includes pause, watched-app editing, privacy links, and
-   complete local data deletion.
+Settings offers Delete all dialogue data, which clears the local record,
+selected apps, shields, monitoring, and notifications. The user separately
+manages device backups and previously exported copies.
 
-The complete build is free and has no sign-in, demo account, paywall, in-app
-purchase, or subscription.
+Support and privacy contact: morphiclabsdata@gmail.com.

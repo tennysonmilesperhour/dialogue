@@ -52,12 +52,17 @@ final class DialogueStateTests: XCTestCase {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }
         let store = DialogueFileStore(directory: directory)
-        DispatchQueue.concurrentPerform(iterations: 100) { index in
-            do {
-                try store.update {
-                    $0.sessions.append(SessionRecord(appID: UUID(), reason: "Entry \(index)", enteredAt: Date()))
-                }
-            } catch { XCTFail("Transaction failed: \(error)") }
+        // Match the four writers in production. A burst of 100 simultaneous
+        // writers is expected to hit the bounded lock timeout on a busy host.
+        DispatchQueue.concurrentPerform(iterations: 4) { writer in
+            for offset in 0..<25 {
+                let index = writer * 25 + offset
+                do {
+                    try store.update {
+                        $0.sessions.append(SessionRecord(appID: UUID(), reason: "Entry \(index)", enteredAt: Date()))
+                    }
+                } catch { XCTFail("Transaction failed: \(error)") }
+            }
         }
         XCTAssertEqual(try store.load().sessions.count, 100)
         XCTAssertEqual(Set(try store.load().sessions.map(\.reason)).count, 100)

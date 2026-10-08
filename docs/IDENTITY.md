@@ -42,6 +42,8 @@ Rules: no exclamation points. No emoji in product copy. No second-person accusat
 
 **Direction locked:** the heavier analog v1, not the sleek iOS-native pass. The ink weight is what makes it not look like every other app in the category, and it sets the design for the Shield screens.
 
+Headings and hero emphasis use upright type, including all website hero and section headings. The native interface follows system light/dark appearance and Dynamic Type, with reduced-motion-aware feedback.
+
 ## The Shield screen is the product
 
 Most users will see the gate card far more than the app itself. It is the first impression, the daily impression, and the screenshot people share. Design it first, design it best, and never let it grow past one card of content.

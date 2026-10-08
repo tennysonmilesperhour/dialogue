@@ -1,24 +1,29 @@
 import type { Metadata } from "next";
-import { Fraunces, IBM_Plex_Mono, IBM_Plex_Serif } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const display = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-display",
-  weight: ["400", "600"],
+const display = localFont({
+  src: [
+    { path: "./fonts/Fraunces-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/Fraunces-600-normal.woff2", weight: "600", style: "normal" },
+  ],
+  variable: "--font-display", display: "swap",
 });
-
-const mono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  weight: ["400", "500"],
+const mono = localFont({
+  src: [
+    { path: "./fonts/IBM-Plex-Mono-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/IBM-Plex-Mono-500-normal.woff2", weight: "500", style: "normal" },
+  ],
+  variable: "--font-mono", display: "swap",
 });
-
-const serif = IBM_Plex_Serif({
-  subsets: ["latin"],
-  variable: "--font-serif",
-  weight: ["400", "500"],
-  style: ["normal", "italic"],
+const serif = localFont({
+  src: [
+    { path: "./fonts/IBM-Plex-Serif-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/IBM-Plex-Serif-500-normal.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/IBM-Plex-Serif-400-italic.woff2", weight: "400", style: "italic" },
+    { path: "./fonts/IBM-Plex-Serif-500-italic.woff2", weight: "500", style: "italic" },
+  ],
+  variable: "--font-serif", display: "swap",
 });
 
 export const metadata: Metadata = {
