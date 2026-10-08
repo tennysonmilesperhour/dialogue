@@ -14,6 +14,7 @@ if (token) {
     capture_pageview: true,
     capture_pageleave: false,
     disable_session_recording: true,
+    capture_exceptions: true,
     before_send: (event) => {
       if (!event) return null;
       event.properties = { ...event.properties, app: "dialogue-marketing" };
