@@ -104,3 +104,4 @@ Anything outward-facing that is not already a recorded decision (new pages, clai
 
 - 2026-10-08: merged main (PR 17) into the branch, which also carried the lock-timing fix for the DialogueKit test. Content module rebuilt on main's copy, decision renumbered D021.
 - 2026-10-07: layer built. Accuracy pass fixed five items (above), two open findings raised. Traffic log not yet live, awaiting migration and secrets.
+- 2026-10-08: reran failed CI once. The lock timing test failed again, confirming that attempt-count timing stretched under runner load. Replaced it with a monotonic one second deadline.
