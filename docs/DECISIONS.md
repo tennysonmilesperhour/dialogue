@@ -183,3 +183,13 @@ now declares 1C8F.1 for the legacy shared-defaults migration. The bounded lock
 uses a monotonic elapsed-time deadline, with 35F9.1 declared for timer use.
 Source: https://developer.apple.com/documentation/bundleresources/app-privacy-configuration/nsprivacyaccessedapitypes/nsprivacyaccessedapitypereasons
 *Reverses if:* the APIs in the binary or Apple's required reasons change.
+
+**D021. Canonical and social metadata use the Vercel URL until a domain is bought.**
+2026-10-08. IDENTITY.md already records that the obvious domains are taken and
+the site lives at https://dialogue-five.vercel.app. The marketing pages now
+publish that origin as the canonical URL, Open Graph URL, robots host, and
+sitemap origin. A custom domain would give shared links and search results a
+stable name. Pointing the tags at a domain this deployment does not serve
+would split the record.
+*Reverses if:* a domain is purchased and DNS points at this deployment, at
+which point the origin constant in web/lib/site.ts moves with it.

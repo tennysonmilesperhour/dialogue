@@ -1,4 +1,10 @@
-export const metadata = { title: "dialogue privacy" };
+import { openGraphFor } from "../../lib/site";
+
+export const metadata = {
+  title: "dialogue privacy",
+  alternates: { canonical: "/privacy" },
+  openGraph: openGraphFor("/privacy"),
+};
 
 export default function Privacy() {
   return (
@@ -18,7 +24,7 @@ export default function Privacy() {
       <p>The website can use PostHog to measure page views when analytics is configured. This is separate from the native app. It does not record sessions, capture clicks automatically, create person profiles, or persist an analytics identifier in cookies or local storage. Page-view events can include page and browser information. We do not send your ledger or waitlist email to PostHog.</p>
       <h2>Questions and deletion requests</h2>
       <p>Email <a href="mailto:morphiclabsdata@gmail.com">morphiclabsdata@gmail.com</a>. We use information you include in a support message to respond to your request. You do not need to share your ledger for routine support.</p>
-      <footer><a href="/">Home</a><a href="/support">Support</a></footer>
+      <footer><a href="/">Home</a><a href="/support">Support</a><a href="https://tennysontaggart.com">by Tennyson Taggart</a></footer>
     </main>
   );
 }

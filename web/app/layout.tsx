@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { openGraphFor, shareImage, siteDescription, siteUrl } from "../lib/site";
 
 const display = localFont({
   src: [
@@ -27,9 +28,19 @@ const serif = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "dialogue",
-  description:
-    "Every screen time app tells you how long. dialogue tells you whether you meant it.",
+  description: siteDescription,
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "dialogue",
+    description: siteDescription,
+    ...openGraphFor("/"),
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: [shareImage],
+  },
 };
 
 export default function RootLayout({
