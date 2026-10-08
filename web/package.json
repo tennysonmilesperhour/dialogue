@@ -7,20 +7,20 @@
     "start": "next start"
   },
   "dependencies": {
-    "@supabase/supabase-js": "2.115.0",
+    "@supabase/supabase-js": "2.117.2",
     "next": "^16.4.0",
     "posthog-js": "^1.438.1",
-    "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
-    "@types/react": "19.2.18",
-    "@types/react-dom": "19.2.7",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
     "typescript": "^5.7.0"
   },
   "overrides": {
-    "@types/react": "19.2.18",
-    "@types/react-dom": "19.2.7"
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0"
   }
 }
