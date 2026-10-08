@@ -123,6 +123,7 @@ export default function Home() {
         <a href="/privacy">Privacy</a>
         <a href="/support">Support</a>
         <span>dialogue, in progress, {new Date().getFullYear()}</span>
+        <a href="https://tennysontaggart.com">by Tennyson Taggart</a>
       </footer>
     </main>
   );

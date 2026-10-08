@@ -202,3 +202,13 @@ is no beta data, and nothing about any user's sessions may be published.
 Review is monthly and light, first Wednesday.
 *Reverses if:* the log ever needs a person-level field to be useful, in which
 case it is dropped instead.
+
+**D022. Canonical and social metadata use the Vercel URL until a domain is bought.**
+2026-10-08. IDENTITY.md already records that the obvious domains are taken and
+the site lives at https://dialogue-five.vercel.app. The marketing pages now
+publish that origin as the canonical URL, Open Graph URL, robots host, and
+sitemap origin. A custom domain would give shared links and search results a
+stable name. Pointing the tags at a domain this deployment does not serve
+would split the record.
+*Reverses if:* a domain is purchased and DNS points at this deployment, at
+which point the origin constant in web/lib/site.ts moves with it.

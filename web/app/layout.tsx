@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { TAGLINE } from "@/lib/content";
-import { SITE_URL } from "@/lib/site";
+import { openGraphFor, shareImage, SITE_URL } from "@/lib/site";
 
 const display = localFont({
   src: [
@@ -32,6 +32,16 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "dialogue",
   description: TAGLINE,
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "dialogue",
+    description: TAGLINE,
+    ...openGraphFor("/"),
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: [shareImage],
+  },
 };
 
 export default function RootLayout({

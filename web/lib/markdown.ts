@@ -136,5 +136,6 @@ Disallow: /api/
 Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 Sitemap: ${SITE_URL}/sitemap.xml
+Host: ${SITE_URL}
 `;
 }

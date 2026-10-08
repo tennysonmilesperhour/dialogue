@@ -3,11 +3,13 @@ import {
   PRIVACY_CLOSER_AFTER_EMAIL, PRIVACY_CLOSER_BEFORE_EMAIL, PRIVACY_CLOSER_HEADING,
   PRIVACY_INTRO, PRIVACY_SECTIONS, PRIVACY_TITLE, PRIVACY_UPDATED, SUPPORT_EMAIL,
 } from "@/lib/content";
+import { openGraphFor } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "dialogue privacy",
   description: "What stays on your device, what the site stores, and what dialogue never does.",
   alternates: { canonical: "/privacy", types: { "text/markdown": "/privacy.md" } },
+  openGraph: openGraphFor("/privacy"),
 };
 
 export default function Privacy() {

@@ -3,12 +3,13 @@ import JsonLd from "../json-ld";
 import {
   FAQ, SUPPORT_EMAIL, SUPPORT_INTRO_AFTER_EMAIL, SUPPORT_INTRO_BEFORE_EMAIL,
 } from "@/lib/content";
-import { LAST_REVIEWED } from "@/lib/site";
+import { LAST_REVIEWED, openGraphFor } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "dialogue support",
   description: "Plain answers about the gate, the debrief, and what dialogue can and cannot see.",
   alternates: { canonical: "/support", types: { "text/markdown": "/support.md" } },
+  openGraph: openGraphFor("/support"),
 };
 
 export default function Support() {
