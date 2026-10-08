@@ -81,3 +81,12 @@ smaller iPhone or another installed iOS version. The suite covers intention,
 reflection, undo, history search, pause/resume, and accessibility text sizing.
 The sample entries are fictional. Simulator tests cannot verify Screen Time
 shielding, extension callback timing, or Apple entitlement approval.
+
+## Baseline checklist
+
+[ ] private repo + main protected + CI   [x] dependabot + lockfile
+[ ] advisors clean (or exceptions noted)  [ ] backups/PITR confirmed
+[ ] PostHog + exceptions on               [ ] uptime incl. checkout URL
+[ ] privacy / terms / contact (+refund/shipping/disclaimers if selling)
+[ ] support@ email works                  [ ] domain auto-renew on
+[ ] revenue lands in business account     [ ] sales tax configured (physical goods)
