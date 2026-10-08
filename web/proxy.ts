@@ -2,7 +2,7 @@ import { NextResponse, type NextFetchEvent, type NextRequest } from "next/server
 import { classify } from "@/lib/agents";
 
 // Logs visits from known bots and tools only. Never runs for browsers, never
-// stores an IP address, never blocks or slows a response (D020).
+// stores an IP address, never blocks or slows a response (D021).
 export function proxy(request: NextRequest, event: NextFetchEvent) {
   const ua = request.headers.get("user-agent") || "";
   const hit = ua ? classify(ua) : null;

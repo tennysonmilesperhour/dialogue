@@ -70,6 +70,22 @@ jobs:
           -destination 'generic/platform=iOS'
           CODE_SIGNING_ALLOWED=NO
 
+  interface:
+    name: iPhone interface tests
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Exercise the sample product and accessibility layouts
+        run: scripts/verify_ui.sh
+      - name: Preserve screenshots and test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: dialogue-interface-results
+          path: work/*.xcresult
+
   release-readiness:
     name: Full release verification
     if: github.event_name == 'workflow_dispatch'
@@ -105,7 +121,7 @@ jobs:
     # Without them the job reports why and does nothing, so the absence of
     # credentials never reads as a broken pipeline.
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [copy-lint, web, xcode, dialoguekit]
+    needs: [copy-lint, web, xcode, dialoguekit, interface]
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v7

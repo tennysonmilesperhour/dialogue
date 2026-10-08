@@ -29,9 +29,8 @@ export default function WaitlistForm() {
 
   if (state === "done") {
     return (
-      <p className="form-note ok">
-        Logged. You are on the list. We will write when there is something
-        worth opening.
+      <p className="form-note ok" role="status">
+        You are on the list. We will email you when beta testing opens.
       </p>
     );
   }
@@ -40,6 +39,7 @@ export default function WaitlistForm() {
     <form className="waitlist-form" onSubmit={submit}>
       <input
         type="email"
+        autoComplete="email"
         maxLength={320}
         required
         placeholder="you@example.com"
@@ -52,7 +52,7 @@ export default function WaitlistForm() {
         {state === "working" ? "Logging" : "Join the waitlist"}
       </button>
       {state === "error" && (
-        <p className="form-note err">
+        <p className="form-note err" role="alert">
           The waitlist is temporarily unavailable. Try again later.
         </p>
       )}

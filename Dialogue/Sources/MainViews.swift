@@ -1,495 +1,198 @@
 import DialogueKit
-import DeviceActivity
-import ManagedSettings
 import SwiftUI
 
 struct MainTabs: View {
     @ObservedObject var model: DialogueModel
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        TabView {
-            TodayView(model: model)
-                .tabItem { Label("Today", systemImage: "book.closed") }
-            LedgerView(model: model)
-                .tabItem { Label("Ledger", systemImage: "list.bullet.rectangle") }
-            WeeklyReviewView(model: model)
-                .tabItem { Label("Review", systemImage: "chart.bar") }
-            SettingsView(model: model)
-                .tabItem { Label("Settings", systemImage: "slider.horizontal.3") }
+        TabView(selection: $model.selectedTab) {
+            TodayView(model: model).tabItem { Label("Today", systemImage: "book.closed") }.tag(0)
+            LedgerView(model: model).tabItem { Label("Ledger", systemImage: "list.bullet.rectangle") }.tag(1)
+            WeeklyReviewView(model: model).tabItem { Label("Review", systemImage: "chart.bar.xaxis") }.tag(2)
+            SettingsView(model: model).tabItem { Label("Settings", systemImage: "slider.horizontal.3") }.tag(3)
         }
+        .safeAreaInset(edge: .top, spacing: 0) {
+            if let message = model.lastLoggedMessage {
+                HStack(spacing: 12) {
+                    Image(systemName: "checkmark.seal.fill").foregroundStyle(Color.ledgerGreen)
+                        .rotationEffect(.degrees(reduceMotion ? 0 : -8)).accessibilityHidden(true)
+                    Text(message).font(.system(.subheadline, design: .serif))
+                    Spacer(minLength: 0)
+                    Button("Undo") { model.undoLastReflection() }.frame(minHeight: 44)
+                    Button { model.lastLoggedMessage = nil } label: { Image(systemName: "xmark") }
+                        .frame(width: 44, height: 44).accessibilityLabel("Dismiss confirmation")
+                }
+                .padding(.leading, 20).background(Color.paper)
+                .overlay(alignment: .bottom) { Rule() }
+                .transition(.opacity)
+                .accessibilityIdentifier("loggedConfirmation")
+            }
+        }
+        .sensoryFeedback(.success, trigger: model.lastLoggedMessage)
+        .animation(reduceMotion ? nil : .easeOut(duration: 0.2), value: model.lastLoggedMessage)
     }
 }
 
 struct TodayView: View {
     @ObservedObject var model: DialogueModel
+    @State private var showingGuide = false
+    @State private var editingApps = false
+    @ScaledMetric(relativeTo: .largeTitle) private var scoreSize = 72
 
     var body: some View {
         NavigationStack {
             LedgerPage {
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
-                        DialogueHeader(kicker: "Today", title: "Your intention ledger")
+                    VStack(alignment: .leading, spacing: 26) {
+                        HStack(alignment: .firstTextBaseline) {
+                            Text("dialogue").font(.system(.title2, design: .serif, weight: .semibold))
+                            Spacer()
+                            Text(Date(), format: .dateTime.month(.abbreviated).day())
+                                .font(.system(.caption, design: .monospaced)).textCase(.uppercase)
+                        }
+                        Rule()
                         if model.state.isPaused {
                             LedgerCard {
-                                Text("Gates are paused. Your apps are open.")
-                                Button("Resume gates") { model.setPaused(false) }
-                                    .buttonStyle(.bordered)
-                            }
-                        }
-                        if !model.hasScreenTimeAuthorization {
-                            LedgerCard {
-                                Text("Screen Time access needs to be restored for your gates to work.")
-                                Button("Restore Screen Time access") { Task { await model.requestAuthorization() } }
-                                    .buttonStyle(.bordered)
-                            }
-                        }
-                        if let message = model.lastLoggedMessage {
-                            Label(message, systemImage: "checkmark.seal")
-                                .font(.system(.body, design: .serif))
-                                .foregroundStyle(Color.ledgerGreen)
-                        }
-                        scoreCard
-                        if let active = model.activeSession {
-                            activeSessionCard(active)
-                        }
-                        if let pending = pendingSession {
-                            pendingDebriefCard(pending)
-                        }
-                        startCard
-                        perAppScores
-                    }
-                    .padding(.vertical, 22)
-                }
-                .refreshable { model.refreshFromSharedState() }
-            }
-            .navigationTitle("")
-        }
-    }
-
-    private var scoreCard: some View {
-        LedgerCard {
-            VStack(alignment: .leading, spacing: 12) {
-                Text("INTENTION MATCH")
-                    .font(.system(.caption, design: .monospaced, weight: .semibold))
-                Text(scoreText(model.state.sessions))
-                    .font(.system(.largeTitle, design: .monospaced, weight: .semibold))
-                    .monospacedDigit()
-                    .foregroundStyle(scoreColor(model.state.sessions))
-                Text("Last \(IMS.windowDays) days · \(IMS.loggedCount(sessions: model.state.sessions)) reflections")
-                    .font(.system(.caption, design: .monospaced))
-                Text(model.state.sessions.isEmpty
-                     ? "Start one visit below. After you reflect, your first match score appears here."
-                     : "Yes counts in full, Partly counts half. Unlogged visits do not lower your score.")
-                    .font(.system(.body, design: .serif))
-            }
-        }
-    }
-
-    private func activeSessionCard(_ session: SessionRecord) -> some View {
-        LedgerCard {
-            VStack(alignment: .leading, spacing: 10) {
-                Text("ACTIVE VISIT")
-                    .font(.system(.caption, design: .monospaced, weight: .semibold))
-                    .foregroundStyle(Color.ledgerGreen)
-                Text(model.appName(for: session))
-                    .font(.system(.title2, design: .serif, weight: .semibold))
-                Text("Intention: \(session.reason)")
-                    .font(.system(.body, design: .serif))
-                Text("Switch back to the app. dialogue will re-arm at your soft budget.")
-                    .font(.system(.footnote, design: .monospaced))
-                    .foregroundStyle(Color.ink.opacity(0.65))
-                Button("End visit and reflect") { model.endActiveSession() }
-                    .buttonStyle(.bordered)
-            }
-        }
-    }
-
-    private func pendingDebriefCard(_ session: SessionRecord) -> some View {
-        LedgerCard {
-            VStack(alignment: .leading, spacing: 10) {
-                Text("\(model.state.pendingDebriefs.count) OPEN REFLECTIONS")
-                    .font(.system(.caption, design: .monospaced, weight: .semibold))
-                    .foregroundStyle(Color.ledgerRed)
-                Text("Did your \(model.appName(for: session)) visit match \(session.reason.lowercased())?")
-                    .font(.system(.title3, design: .serif))
-                Button("Reflect now") { model.debriefSessionID = session.id }
-                    .buttonStyle(.bordered)
-            }
-        }
-    }
-
-    private var startCard: some View {
-        LedgerCard {
-            VStack(alignment: .leading, spacing: 12) {
-                Text("START WITH AN INTENTION")
-                    .font(.system(.caption, design: .monospaced, weight: .semibold))
-                Text("You can also open any watched app. Its shield will send you here.")
-                    .font(.system(.body, design: .serif))
-                if model.state.watchedApps.isEmpty {
-                    Text("Choose an app in Settings to start a new visit. Your previous entries remain in the ledger.")
-                }
-                ForEach(model.state.watchedApps) { app in
-                    Button {
-                        model.gateAppID = app.id
-                    } label: {
-                        HStack {
-                            Text(app.displayName)
-                            Spacer()
-                            Image(systemName: "arrow.right")
-                        }
-                    }
-                    .font(.system(.body, design: .monospaced))
-                    .foregroundStyle(Color.ink)
-                    .padding(.vertical, 5)
-                }
-            }
-        }
-    }
-
-    private var perAppScores: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("BY APP")
-                .font(.system(.caption, design: .monospaced, weight: .semibold))
-            ForEach(model.state.watchedApps) { app in
-                let sessions = model.state.sessions.filter { $0.appID == app.id }
-                HStack {
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text(app.displayName)
-                            .font(.system(.body, design: .serif, weight: .semibold))
-                        Text("\(IMS.loggedCount(sessions: sessions)) logged · \(app.gateTier.rawValue) gate")
-                            .font(.system(.caption, design: .monospaced))
-                            .foregroundStyle(Color.ink.opacity(0.6))
-                    }
-                    Spacer()
-                    Text(scoreText(sessions))
-                        .font(.system(.title3, design: .monospaced, weight: .semibold))
-                }
-                .padding(.vertical, 10)
-                .overlay(alignment: .bottom) { Rectangle().fill(Color.ink.opacity(0.25)).frame(height: 1) }
-            }
-        }
-    }
-
-    private var pendingSession: SessionRecord? {
-        model.state.pendingDebriefs.first
-    }
-}
-
-struct LedgerView: View {
-    @ObservedObject var model: DialogueModel
-
-    var body: some View {
-        NavigationStack {
-            LedgerPage {
-                Group {
-                    if model.state.sessions.isEmpty {
-                        ContentUnavailableView(
-                            "No entries yet",
-                            systemImage: "book.closed",
-                            description: Text("Your first intentional app visit will appear here.")
-                        )
-                    } else {
-                        ScrollView {
-                            LazyVStack(alignment: .leading, spacing: 0) {
-                                DialogueHeader(kicker: "History", title: "The ledger")
-                                    .padding(.vertical, 22)
-                                ForEach(model.state.sessions.sorted { $0.enteredAt > $1.enteredAt }) { session in
-                                    sessionRow(session)
+                                VStack(alignment: .leading, spacing: 12) {
+                                    Label("Gates are paused", systemImage: "pause.circle")
+                                    Text("Your apps are open. Your ledger stays here.").font(.system(.body, design: .serif))
+                                    Button("Resume gates") { model.setPaused(false) }.frame(minHeight: 44)
                                 }
                             }
                         }
-                        .refreshable { model.refreshFromSharedState() }
-                    }
+                        if !model.hasScreenTimeAuthorization && !model.isSample { permissionCard }
+                        if let active = model.activeSession { activeSessionCard(active) }
+                        if let pending = model.state.pendingDebriefs.first { pendingCard(pending) }
+                        scoreCard
+                        startCard
+                        if !model.state.watchedApps.isEmpty { perAppScores }
+                        Button { showingGuide = true } label: {
+                            Label("How dialogue works", systemImage: "questionmark.circle")
+                                .font(.system(.body, design: .serif)).frame(minHeight: 48)
+                        }
+                    }.padding(.vertical, 22)
+                }.refreshable { model.refreshFromSharedState() }
+            }.toolbar(.hidden, for: .navigationBar)
+        }
+        .sheet(isPresented: $showingGuide) { GuideView() }
+        .sheet(isPresented: $editingApps) { WatchedAppsEditor(model: model, isOnboarding: false) }
+    }
+
+    private var scoreCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            SectionLabel(text: "Your intention match")
+            HStack(alignment: .firstTextBaseline, spacing: 3) {
+                Text(IMS.score(sessions: model.state.sessions).map { String(Int(($0 * 100).rounded())) } ?? "—") // copy-lint: allow
+                    .font(.system(size: scoreSize, weight: .regular, design: .serif)).monospacedDigit()
+                    .contentTransition(.numericText())
+                if IMS.score(sessions: model.state.sessions) != nil {
+                    Text("%").font(.system(.title, design: .serif)).foregroundStyle(Color.ledgerGreen)
                 }
-            }
-            .navigationTitle("")
+            }.accessibilityElement(children: .ignore)
+                .accessibilityLabel("Intention match, \(scoreText(model.state.sessions))")
+            Text("14 DAYS · \(IMS.loggedCount(sessions: model.state.sessions)) REFLECTIONS")
+                .font(.system(.caption, design: .monospaced)).foregroundStyle(Color.ink.opacity(0.75))
+            Text(IMS.loggedCount(sessions: model.state.sessions) == 0
+                 ? "Your first reflection starts the picture. One visit is enough to begin."
+                 : "A record of what held up, with room for what did not.")
+                .font(.system(.title3, design: .serif)).lineSpacing(3)
+            Button("What goes into this number?") { showingGuide = true }
+                .font(.system(.footnote, design: .serif)).frame(minHeight: 44)
+            Rule()
         }
     }
-
-    private func sessionRow(_ session: SessionRecord) -> some View {
-        VStack(alignment: .leading, spacing: 7) {
-            HStack(alignment: .firstTextBaseline) {
-                Text(model.appName(for: session))
-                    .font(.system(.title3, design: .serif, weight: .semibold))
-                Spacer()
-                Text(session.enteredAt, format: .dateTime.month(.abbreviated).day().hour().minute())
-                    .font(.system(.caption, design: .monospaced))
-            }
-            HStack {
-                Text(session.reason)
-                    .font(.system(.body, design: .serif))
-                Spacer()
-                Text(verdictLabel(session.verdict))
-                    .font(.system(.caption, design: .monospaced, weight: .semibold))
-                    .foregroundStyle(verdictColor(session.verdict))
-            }
-            Text(durationText(session))
-                .font(.system(.caption, design: .monospaced))
-                .foregroundStyle(Color.ink.opacity(0.62))
-            if session.closedAt != nil && session.verdict == .unlogged {
-                Button("Reflect on this visit") { model.debriefSessionID = session.id }
-                    .buttonStyle(.bordered)
-                    .accessibilityLabel("Reflect on \(model.appName(for: session)), \(session.reason)")
-            }
-            if let note = session.note, !note.isEmpty {
-                Text(note)
-                    .font(.system(.body, design: .serif))
-                    .italic()
-            }
-        }
-        .padding(.vertical, 15)
-        .overlay(alignment: .bottom) { Rectangle().fill(Color.ink).frame(height: 1) }
-    }
-}
-
-struct WeeklyReviewView: View {
-    @ObservedObject var model: DialogueModel
-
-    private var recent: [SessionRecord] {
-        let cutoff = Date().addingTimeInterval(-7 * 86_400)
-        return model.state.sessions.filter { $0.enteredAt >= cutoff }
-    }
-
-    var body: some View {
-        NavigationStack {
-            LedgerPage {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
-                        DialogueHeader(kicker: "Seven days", title: "Weekly review")
-                        reviewSummary
-                        usageReport
-                        reasonTable
-                        patternPrompt
-                    }
-                    .padding(.vertical, 22)
-                }
-            }
-            .navigationTitle("")
-        }
-    }
-
-    private var reviewSummary: some View {
-        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-            miniMetric("VISITS", "\(recent.count)")
-            miniMetric("MATCH", scoreText(recent))
-            miniMetric("WALKED AWAY", "\(recentDismissals)")
-            miniMetric("UNLOGGED", "\(recent.filter { $0.closedAt != nil && $0.verdict == .unlogged }.count)")
-        }
-    }
-
-    private var usageReport: some View {
+    private var permissionCard: some View {
         LedgerCard {
-            VStack(alignment: .leading, spacing: 8) {
-                Text("TIME IN WATCHED APPS")
-                    .font(.system(.caption, design: .monospaced, weight: .semibold))
-                DeviceActivityReport(
-                    DeviceActivityReport.Context(rawValue: "Total activity"),
-                    filter: usageFilter
-                )
-                .frame(height: 62)
+            VStack(alignment: .leading, spacing: 10) {
+                SectionLabel(text: "Reconnect your gates")
+                Text("Screen Time access is off. Your saved entries are still here.").font(.system(.body, design: .serif))
+                Button("Allow Screen Time") { Task { await model.requestAuthorization() } }.frame(minHeight: 44)
             }
         }
     }
-
-    private var usageFilter: DeviceActivityFilter {
-        let start = Calendar.current.date(byAdding: .day, value: -7, to: Date()) ?? Date()
-        let tokens: Set<ApplicationToken> = Set(model.state.watchedApps.compactMap {
-            ScreenTimeTokenCodec.decode($0.applicationTokenData)
-        })
-        return DeviceActivityFilter(
-            segment: .daily(during: DateInterval(start: start, end: Date())),
-            applications: tokens
-        )
-    }
-
-    private var reasonTable: some View {
+    private func activeSessionCard(_ session: SessionRecord) -> some View {
         LedgerCard {
             VStack(alignment: .leading, spacing: 12) {
-                Text("REASONS")
-                    .font(.system(.caption, design: .monospaced, weight: .semibold))
-                if reasonSummaries.isEmpty {
-                    Text("Complete a visit to see which intentions recur.")
-                        .font(.system(.body, design: .serif))
-                } else {
-                    Text("Visit lengths are approximate elapsed time, including time away from the app.")
-                        .font(.system(.caption, design: .serif))
-                    HStack {
-                        Text("Reason")
-                        Spacer()
-                        Text("Avg")
-                            .frame(width: 48, alignment: .trailing)
-                        Text("Match")
-                            .frame(width: 60, alignment: .trailing)
-                    }
-                    .font(.system(.caption, design: .monospaced, weight: .semibold))
-                    ForEach(reasonSummaries) { item in
-                        HStack {
-                            Text(item.reason).font(.system(.body, design: .serif))
-                            Spacer()
-                            Text(item.averageMinutes.map { "\($0)m" } ?? "Open")
-                                .frame(width: 48, alignment: .trailing)
-                            Text(item.match)
-                                .frame(width: 60, alignment: .trailing)
-                        }
-                        .font(.system(.body, design: .monospaced))
-                        .padding(.vertical, 5)
-                    }
-                }
+                Label("VISIT IN PROGRESS", systemImage: "circle.inset.filled")
+                    .font(.system(.caption, design: .monospaced)).foregroundStyle(Color.ledgerGreen)
+                Text(model.appName(for: session)).font(.system(.title2, design: .serif))
+                Text(session.reason).font(.system(.body, design: .serif))
+                Text("Switch back to the app. Reflect here when you finish, or when your reminder arrives.")
+                    .font(.system(.footnote, design: .serif))
+                Text(session.enteredAt, style: .timer).font(.system(.title3, design: .monospaced))
+                    .accessibilityLabel("Elapsed time since this visit began")
+                Button("End visit and reflect") { model.endActiveSession() }
+                    .buttonStyle(LedgerButtonStyle()).accessibilityIdentifier("endVisit")
             }
         }
     }
-
-    private var patternPrompt: some View {
+    private func pendingCard(_ session: SessionRecord) -> some View {
         LedgerCard {
-            VStack(alignment: .leading, spacing: 8) {
-                Text("A QUESTION FOR NEXT WEEK")
-                    .font(.system(.caption, design: .monospaced, weight: .semibold))
-                    .foregroundStyle(Color.ledgerRed)
-                Text(promptText)
+            VStack(alignment: .leading, spacing: 12) {
+                SectionLabel(text: "A moment to look back")
+                Text("You came to \(session.reason.lowercased()). How did it go?")
                     .font(.system(.title3, design: .serif))
-                    .italic()
+                HStack {
+                    Text(model.appName(for: session)).font(.system(.caption, design: .monospaced))
+                    Spacer()
+                    Text("\(model.state.pendingDebriefs.count) to reflect on").font(.system(.caption, design: .serif))
+                }
+                Button("Reflect on this visit") { model.openReflection(id: session.id) }
+                    .buttonStyle(LedgerButtonStyle()).accessibilityIdentifier("reflectNow")
             }
         }
     }
-
-    private func miniMetric(_ label: String, _ value: String) -> some View {
-        VStack(alignment: .leading, spacing: 5) {
-            Text(label).font(.system(.caption2, design: .monospaced))
-            Text(value).font(.system(.title2, design: .monospaced, weight: .semibold)).monospacedDigit()
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(10)
-        .overlay { Rectangle().stroke(Color.ink, lineWidth: 1) }
-    }
-
-    private var reasonSummaries: [ReasonSummary] {
-        let grouped = Dictionary(grouping: recent, by: \.reason)
-        return grouped.map { reason, sessions in
-            let durations = sessions.compactMap { session -> Int? in
-                guard let closedAt = session.closedAt else { return nil }
-                return max(1, Int(closedAt.timeIntervalSince(session.enteredAt) / 60))
-            }
-            let average = durations.isEmpty ? nil : durations.reduce(0, +) / durations.count
-            return ReasonSummary(
-                reason: reason,
-                count: sessions.count,
-                averageMinutes: average,
-                match: scoreText(sessions)
-            )
-        }
-        .sorted { $0.count == $1.count ? $0.reason < $1.reason : $0.count > $1.count }
-    }
-
-    private var recentDismissals: Int {
-        let cutoff = Date().addingTimeInterval(-7 * 86_400)
-        return model.state.dismissals.filter { $0.occurredAt >= cutoff }.count
-    }
-
-    private var promptText: String {
-        guard let top = reasonSummaries.first else {
-            return "Which app visit would be worth naming before it begins?"
-        }
-        return "\(top.reason) appeared most often. Did those visits do what you hoped?"
-    }
-}
-
-private struct ReasonSummary: Identifiable {
-    var id: String { reason }
-    let reason: String
-    let count: Int
-    let averageMinutes: Int?
-    let match: String
-}
-
-struct SettingsView: View {
-    @ObservedObject var model: DialogueModel
-    @State private var editingApps = false
-    @State private var confirmingDelete = false
-
-    var body: some View {
-        NavigationStack {
-            LedgerPage {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
-                        DialogueHeader(kicker: "On device", title: "Settings")
-                        LedgerCard {
-                            Toggle("Pause all gates", isOn: Binding(
-                                get: { model.state.isPaused },
-                                set: { model.setPaused($0) }
-                            ))
-                            .font(.system(.body, design: .monospaced))
-                            Text(model.state.isPaused ? "All watched apps are open." : "Your watched apps are gated.")
-                                .font(.system(.caption, design: .serif))
-                                .foregroundStyle(Color.ink.opacity(0.65))
-                        }
-                        Button("Edit watched apps") { editingApps = true }
-                            .buttonStyle(LedgerButtonStyle())
-                        LedgerCard {
-                            VStack(alignment: .leading, spacing: 12) {
-                                Text("PRIVACY")
-                                    .font(.system(.caption, design: .monospaced, weight: .semibold))
-                                Text("Your watched apps, intentions, notes, and scores stay in the app group on this iPhone. dialogue has no account and sends no analytics.")
-                                    .font(.system(.body, design: .serif))
-                                Text("The ledger keeps your latest 1,000 visits and 1,000 walk-aways on this iPhone.")
-                                    .font(.system(.caption, design: .serif))
-                                Link("Read the privacy policy", destination: URL(string: "https://dialogue-five.vercel.app/privacy")!)
-                                Link("Email support", destination: URL(string: "mailto:morphiclabsdata@gmail.com")!)
-                                Link("Support guide", destination: URL(string: "https://dialogue-five.vercel.app/support")!)
+    private var startCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            SectionLabel(text: "Begin on purpose")
+            if model.state.watchedApps.isEmpty {
+                Text("Choose an app for your next visit. Your previous entries stay in the ledger.")
+                    .font(.system(.body, design: .serif))
+                Button("Choose an app") { editingApps = true }.buttonStyle(LedgerButtonStyle())
+            } else {
+                ForEach(model.state.watchedApps) { app in
+                    Button { model.gateAppID = app.id } label: {
+                        HStack(spacing: 12) {
+                            Text(String(app.displayName.prefix(1)).uppercased())
+                                .font(.system(.title3, design: .serif)).frame(width: 42, height: 42)
+                                .overlay { Rectangle().stroke(Color.ink.opacity(0.4), lineWidth: 1) }.accessibilityHidden(true)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(app.displayName).font(.system(.title3, design: .serif))
+                                Text("\(app.softBudgetSeconds / 60) min reminder")
+                                    .font(.system(.caption, design: .monospaced)).foregroundStyle(Color.ink.opacity(0.7))
                             }
-                        }
-                        Button("Delete all dialogue data", role: .destructive) {
-                            confirmingDelete = true
-                        }
-                        .font(.system(.body, design: .monospaced))
-                        .frame(maxWidth: .infinity)
-                    }
-                    .padding(.vertical, 22)
+                            Spacer(minLength: 4)
+                            Image(systemName: "arrow.up.right").accessibilityHidden(true)
+                        }.padding(.vertical, 8).contentShape(Rectangle())
+                    }.foregroundStyle(Color.ink).accessibilityLabel("Begin visit to \(app.displayName)")
+                    Rule()
                 }
             }
-            .navigationTitle("")
         }
-        .sheet(isPresented: $editingApps) {
-            WatchedAppsEditor(model: model, isOnboarding: false)
-        }
-        .confirmationDialog(
-            "Delete every watched app and ledger entry?",
-            isPresented: $confirmingDelete,
-            titleVisibility: .visible
-        ) {
-            Button("Delete all data", role: .destructive) { model.deleteAllData() }
-            Button("Cancel", role: .cancel) {}
+    }
+    private var perAppScores: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            SectionLabel(text: "The last fourteen days")
+            ForEach(model.state.watchedApps) { app in
+                let entries = model.state.sessions.filter { $0.appID == app.id }
+                HStack(alignment: .firstTextBaseline) {
+                    Text(app.displayName).font(.system(.body, design: .serif))
+                    Spacer()
+                    Text(scoreText(entries)).font(.system(.body, design: .monospaced)).monospacedDigit()
+                }.accessibilityElement(children: .combine)
+            }
         }
     }
 }
 
-private func scoreText(_ sessions: [SessionRecord]) -> String {
-    IMS.score(sessions: sessions).map(IMS.displayString) ?? "No data"
+func scoreText(_ sessions: [SessionRecord]) -> String {
+    IMS.score(sessions: sessions).map(IMS.displayString) ?? "Not yet"
 }
-
-private func scoreColor(_ sessions: [SessionRecord]) -> Color {
-    guard let score = IMS.score(sessions: sessions) else { return .ink }
-    return score >= 0.7 ? .ledgerGreen : .ledgerRed
+func verdictLabel(_ verdict: Verdict) -> String {
+    switch verdict { case .yes: return "Matched"; case .partly: return "Partly"; case .no: return "Did not match"; case .unlogged: return "To reflect on" }
 }
-
-private func verdictLabel(_ verdict: Verdict) -> String {
-    switch verdict {
-    case .yes: return "YES"
-    case .partly: return "PARTLY"
-    case .no: return "NO"
-    case .unlogged: return "UNLOGGED"
-    }
-}
-
-private func verdictColor(_ verdict: Verdict) -> Color {
-    switch verdict {
-    case .yes: return .ledgerGreen
-    case .partly, .unlogged: return .ink
-    case .no: return .ledgerRed
-    }
-}
-
-private func durationText(_ session: SessionRecord) -> String {
-    guard let closedAt = session.closedAt else { return "In progress" }
-    let minutes = max(1, Int(closedAt.timeIntervalSince(session.enteredAt) / 60))
-    return "Approx. \(minutes) min elapsed"
+func durationText(_ session: SessionRecord) -> String {
+    guard let end = session.closedAt else { return "In progress" }
+    return "About \(max(1, Int(end.timeIntervalSince(session.enteredAt) / 60))) min elapsed"
 }

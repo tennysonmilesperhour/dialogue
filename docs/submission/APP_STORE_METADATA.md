@@ -1,380 +1,107 @@
-# App Store Connect metadata
+# App Store submission metadata
 
-*Everything App Store Connect asks for, drafted and ready to paste. Section 1
-is the store listing, 2 the name question, 3 the ratings and privacy answers,
-4 the commercial scope, 5 the screenshots, 6 the build-side settings, 7 the
-open items and who they are blocked on.*
+Release candidate: 1.0.0 (3). These are prepared values, not a claim that the
+App Store Connect fields or screenshots have been submitted.
 
-Companion files: REVIEW_NOTES.md (the Review Notes field), PRIVACY_POLICY.md
-(the policy the privacy URL serves), ENTITLEMENT_REQUEST.md (Family Controls).
+## Listing
 
----
+- Name: dialogue: intention ledger
+- Subtitle: Did you mean to open that?
+- Primary category: Health & Fitness
+- Secondary category: Productivity
+- Price: Free
+- In-app purchases: None
+- Release: Manual
+- Support email: morphiclabsdata@gmail.com
+- Support URL: https://dialogue-five.vercel.app/support
+- Privacy URL: https://dialogue-five.vercel.app/privacy
+- Marketing URL: https://dialogue-five.vercel.app
+- Keywords: screen time,intention,habit,focus,mindful,scrolling,doomscroll,journal,attention,phone,wellbeing
+- Copyright: 2026 Tennyson Taggart (confirm the legal seller in App Store Connect)
 
-## 1. Store listing
+## Promotional text
 
-**Name (30 char limit)**
-```
-dialogue
-```
-Fallback, if taken: `dialogue: intention ledger` (26). See section 2.
+Name the intention. Notice what happened. A private ledger for opening your
+apps a little more on purpose. Free, with no account or subscription.
 
-**Subtitle (30 char limit)**
-```
+## Description
+
 Did you mean to open that?
-```
-26 characters. Locked in IDENTITY.md, do not test alternatives before launch.
-
-**Primary category:** Health & Fitness
-**Secondary category:** Productivity
-
-Health & Fitness is deliberate. Productivity as primary reads as a utility and
-loses the wellbeing browse traffic. Never file under Parental Control or
-Education; the entitlement story and the review notes both say this is a
-personal tool, and the category should not contradict them.
-
-**Promotional text (170 char limit, editable without review)**
-```
-The gate asks why you are opening it. The debrief asks whether that held up.
-Between the two questions, a record of what your attention was actually for.
-```
-
-**Description (4000 char limit)**
-```
-Every screen time app tells you how long. dialogue tells you whether you
-meant it.
-
-Sometimes a cue fires and the hand moves before a decision catches up.
-Blockers answer that with a wall. Trackers answer with a number. Neither can
-tell time spent helping a friend from time lost to an aimless scroll.
-
-dialogue asks a better question, and it asks twice.
-
-THE GATE
-Choose the apps you want to watch and give each one a reminder. When you open
-a watched app, a card asks whether the visit is on purpose. Walk away, or
-open dialogue and name the reason that is true right now. Honest answers are
-the point.
-
-THE DEBRIEF
-At your chosen soft budget, dialogue re-arms the gate and asks whether the
-visit matched your intention. Yes, Partly, or No. Add an optional note, or
-answer in one tap.
-
-THE LEDGER
-Between those two questions a private record accumulates. Your Intention
-Match Score summarizes the last fourteen days, overall and per app. The
-weekly review shows Screen Time in watched apps, recurring reasons, average
-visit length, and match rate.
-
-No streaks that punish. No shame graph. No minutes-wasted counter.
-
-WHAT DIALOGUE WILL NOT DO
-
-It never locks you out permanently. Every gate includes a way to begin an
-intentional visit, and all gates can be paused in Settings.
-
-It never phones home. Your watched apps, reasons, verdicts, and notes stay in
-the app group on your iPhone. dialogue has no account, ads, profiling, or
-third-party analytics.
-
-It never asks you to manage anyone else's device. dialogue is a personal tool
-for the account holder's own iPhone.
-
-dialogue requires Screen Time authorization to present its gate. Session
-lengths are approximate because iOS delivers Screen Time events on its own
-schedule.
-
-Privacy policy: https://dialogue-five.vercel.app/privacy
-```
-
-Build 2 is free and has no in-app purchases or subscriptions. Add commercial
-terms only when a later binary actually includes the matching products.
-
-**Keywords (100 char limit, comma separated, no spaces after commas)**
-```
-screen time,intention,habit,focus,mindful,scrolling,doomscroll,journal,attention,phone,wellbeing
-```
-96 characters. Words already in the name and subtitle are indexed separately,
-so none of them are repeated here. Deliberately absent: block, blocker,
-parental, restrict. Wrong intent, wrong audience, and they invite the review
-assumption the notes exist to defuse.
-
-**What's New (version 1.0)**
-```
-First release. The gate, the debrief, and the ledger that accumulates between
-them.
-```
-
-**URLs**
-
-Live and serving as of 2026-08-19. Use these values today.
-
-| Field | Value |
-|---|---|
-| Marketing URL | `https://dialogue-five.vercel.app` |
-| Support URL | `https://dialogue-five.vercel.app/support` |
-| Privacy Policy URL | `https://dialogue-five.vercel.app/privacy` |
-
-Support and privacy URLs are required before external TestFlight, not just
-before submission. All three return 200. This unblocks the week 5 Beta App
-Review dependency.
-
-These are interim. `dialogue.app` was the placeholder in earlier drafts and is
-not ours: registered 2024-04-28, Cloudflare nameservers, redacted registrant.
-Do not put it in App Store Connect. When a domain is secured, point it at the
-same Vercel project and replace all three rows here plus the privacy policy
-line in the description block above.
-
-**Copyright:** `2026 <account holder or registered entity>`
-**Content rights:** contains no third-party content.
-**Version release:** Manually release this version. The launch decision waits
-on the beta checkpoint (PLAN.md 2.2), and the approval date is not the launch
-date.
-
----
-
-## 2. The name question
-
-App Store Connect enforces exact-string uniqueness across the store in the
-primary language, and enforces nothing about trademarks. Two separate risks,
-two separate answers.
-
-**What a search of the US store surfaced (2026-08-18):** several live apps
-lead with the word, including Dialogue AAC (Prentke Romich), Dialogue Health
-(Dialogue Technologies Inc), and Dialogue: Your Chats Live On. None of them
-appears to hold the bare string `dialogue`, so the name may well be free. The
-search was not exhaustive, and the App Store and USPTO endpoints that would
-settle it are unreachable from this environment.
-
-**The authoritative test costs two minutes:** create the App Store Connect
-record and type the name. It is accepted or it is not, immediately. Do that
-in week 0, calmly, rather than discovering it under submission pressure.
-
-**The trademark question is the real one, and it is not settled by
-availability.** Dialogue Health Technologies operates a health and wellness
-platform with a live US App Store presence, and dialogue's primary category
-is Health & Fitness. Same word, adjacent space, same category shelf. That
-combination is what draws a claim, not the app name field.
-
-Recommendation:
-
-1. Claim `dialogue` in App Store Connect if it is free. Reserving it costs
-   nothing and keeps the option open.
-2. Ship under `dialogue: intention ledger` unless a real clearance search
-   comes back clean. The qualified name loses nothing: the wordmark carries
-   the brand, the subtitle carries the pitch, and search ranking comes from
-   the keyword field. It also distinguishes the listing from a telehealth
-   product, which is worth doing regardless.
-3. Do not commission brand assets, buy ads, or print anything until a
-   trademark attorney has run a proper class 9 and class 44 search. This is
-   an hour of a lawyer's time and it is the cheapest insurance in the plan.
-
-Domain strategy lives in IDENTITY.md. Short version after the 2026-08-19
-check: `dialogue.app` and every other obvious candidate is already registered
-to someone else, so the site runs on the Vercel URL until a domain is bought.
-
----
-
-## 3. Ratings and privacy answers
-
-### Age rating questionnaire
-
-Every content question answers None or No. dialogue contains no violence, no
-sexual content, no profanity, no substances, no gambling, no contests, and no
-horror themes. Also:
-
-| Question | Answer |
-|---|---|
-| Unrestricted web access | No |
-| User generated content | No |
-| Messaging or chat | No |
-| Contests | No |
-| In-app purchases | No |
-| Age assurance | Not applicable |
-
-Expected result 4+. Apple has revised this questionnaire more than once
-recently, so answer it live rather than trusting this table, and re-check the
-computed rating after submitting the answers.
-
-### App Privacy nutrition label
-
-The label must match the privacy manifest and the actual behavior. It is
-audited against the binary, and it is a common cause of rejection when the
-two drift.
-
-**Current build, 2026-09-04:** select **Data Not Collected** and **Tracking:
-No**. The app has no account, Sync, analytics, or purchase SDK. The website
-waitlist is outside the app and does not belong on the app privacy label.
-
-The table below is the later Sync build target. Do not use these answers until
-those features and SDKs are present in the submitted binary.
-
-**Tracking: No.** No data is used to track across apps or websites, no ad
-network SDK ships, and no ATT prompt is needed.
-
-| Data type | Collected | Linked to identity | Purpose | When |
-|---|---|---|---|---|
-| Contact Info, Email Address | Yes | Yes | App Functionality | Only with a Sync account |
-| Identifiers, User ID | Yes | Yes | App Functionality | Only with a Sync account |
-| User Content, Other | Yes | Yes | App Functionality | Only with a Sync account, the user's own written entries |
-| Usage Data, Product Interaction | Yes | No | Analytics | Anonymous aggregate signals through TelemetryDeck |
-| Purchases, Purchase History | Yes | No | App Functionality | Purchase validation through RevenueCat |
-
-Explicitly not collected: location, contacts, health and fitness, financial
-info, browsing history, search history, sensitive info, photos, audio,
-device ID, and crash or performance data (MetricKit reports go to Apple, not
-to us, so nothing is declared under Diagnostics).
-
-Two things worth stating plainly in case the answers are ever questioned. The
-watched app selections are opaque `ApplicationToken` values. The user's own
-local labels and ledger never leave the device. The waitlist email address
-collected by the marketing site is not app data and does not belong on this
-label.
-
-### Privacy manifest
-
-`PrivacyInfo.xcprivacy` in the app and in every extension target:
-
-- `NSPrivacyTracking`: false
-- `NSPrivacyTrackingDomains`: empty
-- `NSPrivacyCollectedDataTypes`: empty in the current build
-- `NSPrivacyAccessedAPITypes`: UserDefaults (CA92.1) in the main app. Add only
-  the approved reasons used by code that actually ships.
-
-If third-party SDKs are added later, keep their manifests and the App Privacy
-answers aligned with the binary.
-
-### Export compliance
-
-`ITSAppUsesNonExemptEncryption = NO` in the Info.plist of all five targets.
-Standard HTTPS is exempt and dialogue adds no custom cryptography. Setting it
-in only the app target and missing the extensions is a known way to stall an
-upload.
-
----
-
-## 4. Commercial scope
-
-Version 1.0 is free and includes the complete local-first product. It has no
-in-app purchases, subscriptions, paywall, account, or restore flow. The
-product definitions below are planning notes for a later binary and must not
-be created or attached to build 2.
-
-### Non-consumable
-
-| Field | Value |
-|---|---|
-| Product ID | `app.dialogue.ios.unlock` |
-| Reference name | dialogue full ledger unlock |
-| Type | Non-consumable |
-| Display name | dialogue, the full ledger |
-| Price | 24.99 USD |
-
-Description:
-```
-Unlimited apps, full history, review, export.
-```
-
-### Subscription group
-
-Group reference name `dialogue Sync`, display name `dialogue Sync`. One group,
-two durations, so a subscriber can move between them without a second
-purchase.
-
-| Field | Monthly | Annual |
-|---|---|---|
-| Product ID | `app.dialogue.ios.sync.monthly` | `app.dialogue.ios.sync.annual` |
-| Reference name | dialogue Sync monthly | dialogue Sync annual |
-| Duration | 1 month | 1 year |
-| Price | 1.99 USD | 14.99 USD |
-| Display name | dialogue Sync | dialogue Sync, yearly |
-
-Description, both:
-```
-Sync, backup, web review, and deep patterns.
-```
-
-No introductory offer and no free trial. A trial that auto-converts is the
-single most-complained-about mechanic in this category (MONETIZATION.md), and
-refusing it is a positioning asset, not a missed conversion.
-
-### Paywall requirements
-
-The paywall screen must show, without scrolling: the product name, the price,
-the billing term for each subscription option, a restore purchases control, a
-link to the privacy policy, and a link to the terms of use. Cancellation
-guidance belongs in the first screen of settings, not buried.
-
-Each IAP needs a review screenshot of that paywall and a one-line review note.
-Submit all three with the build.
-
----
-
-## 5. Screenshots
-
-Order is fixed by IDENTITY.md and it is a ranking decision, not a design one.
-The first two are what a browsing user actually sees.
-
-1. **The gate card.** The hook and the most-shared artifact in the product.
-2. **The debrief with the stamp landing.** The moment nobody else in the
-   category has.
-3. **The weekly review with the reason cost table.** The proof.
-4. **Home, the app rows with their scores.**
-5. **The adaptive gate explainer.** Friction as consequence, not constant.
-
-Sizes: produce the 6.9 inch iPhone set at 1320 by 2868 pixels from the iPhone
-17 Pro Max simulator. App Store Connect accepts one to ten screenshots and
-scales the highest-resolution set to smaller iPhones. No iPad set is needed
-while V1 is iPhone only. Confirm the accepted sizes in App Store Connect at
-upload because Apple revises them periodically.
-
-Caption discipline: burned-in captions are allowed and useful, but they follow
-the voice rules like every other string. No exclamation points, no emoji, no
-em dashes, and no shame framing. Numbers do the persuading here too.
-
----
-
-## 6. App Review Information
-
-- **Sign-in required:** No. The complete product runs locally with no account.
-- **Demo account:** not needed.
-- **Contact:** account holder name, phone, and email.
-- **Notes:** paste REVIEW_NOTES.md verbatim. It preempts the three assumptions
-  reviewers make about this category (that it blocks, that it is parental
-  control, that usage data is collected) and includes the demo script.
-- **Attachment:** none required.
-
----
-
-## 7. Open items
-
-Blocked on the account holder, in the portal:
-
-- [x] Create the App Store Connect record as `dialogue: intention ledger`.
-- [ ] Trademark clearance with an attorney before any brand spend (section 2).
-- [ ] Secure the domain, then replace the three URLs in section 1. Deferred by
-      the account holder on 2026-08-19; the live Vercel URLs stand in and are
-      sufficient for TestFlight and submission in the meantime.
-- [ ] Small Business Program application before a future paid version.
-
-Done since this list was written:
-
-- [x] Marketing, support, and privacy URLs live and returning 200 (section 1)
-- [x] All five bundle IDs and the `group.app.dialogue` App Group registered
-      (D017)
-- [x] Family Controls (Distribution) requested, 2026-08-19 (D016)
-
-Blocked on the build:
-
-- [x] No IAP products are required for the free 1.0 binary.
-- [ ] Capture screenshots from the build 2 screens (section 5).
-- [x] Privacy manifests included in all five built targets.
-- [x] Export compliance key included in all five built targets.
-- [x] App icon included at 1024 by 1024 pixels without transparency.
-
-Current upload requirement, verified 2026-09-04: submissions must be built
-with Xcode 26 or later and an iOS 26 SDK. `scripts/verify_release.sh` enforces
-that floor and inspects the device-SDK release bundle.
-
-Not blocked, done here: sections 1, 2, 3, 4, and 6 are drafted and reviewed
-against the voice rules. Nothing in this file needs to wait on the prototype.
+
+dialogue gives you a moment to name what you came for, then a chance to notice
+whether it happened. The record stays on your iPhone.
+
+BEFORE A VISIT
+Choose the apps you want to watch. When you open one, a gate asks what brings
+you there. Choose a reason or write your own. Bored and Avoiding something
+are welcome answers. The suggested pause is optional, and you can always
+continue or pause every gate in Settings.
+
+AFTER A VISIT
+Did it match your intention? Choose Yes, Partly, or No, then Log reflection.
+Add a note if there is something to remember. Later keeps the reflection in
+your ledger. Edit an answer whenever you need to.
+
+OVER TIME
+Your Intention Match Score summarizes the past fourteen days. Yes counts in
+full, Partly counts half, and unlogged visits never lower your score. Browse
+and search your ledger. Review seven days of visits, reflections, recurring
+intentions, and approximate visit lengths. A weekly question helps you decide
+what you want from the next visit.
+
+YOURS TO KEEP
+Export your written entries as CSV or JSON. Delete your local data from
+Settings. Your app choices, intentions, and notes stay on your device. No
+account, ads, native-app analytics, or cloud sync. Version 1.0 is free, with
+no in-app purchases or subscriptions.
+
+START SMALL
+Explore an interactive fictional sample before granting permission. Start
+with one app, change your choices later, and enable reflection or weekly
+reminders only if you want them. Light and dark appearance, Dynamic Type,
+and labeled controls support different ways of using your iPhone.
+
+dialogue requires Screen Time authorization for app gates and is intended
+for the account holder's own iPhone. iOS controls callback timing; visit
+lengths are approximate and can include time away from the app.
+
+Privacy: https://dialogue-five.vercel.app/privacy
+Support: morphiclabsdata@gmail.com
+
+## What's new
+
+First release. Intentions, reflections, a searchable private ledger, weekly
+reviews, optional reminders, and exports.
+
+## App Privacy and rating
+
+The native binary collects no data: Data Not Collected; Tracking: No.
+Website analytics and waitlist capture are separate from the native binary.
+Reconfirm these answers against the final uploaded build and Apple's live
+questionnaire. There is no messaging, unrestricted browser, social feed,
+account, advertising, purchase, or subscription in this version.
+
+Do not guess the final age rating. Complete the current questionnaire in
+App Store Connect. Do not claim Accessibility Nutrition Labels until the
+corresponding complete-device acceptance checks pass.
+
+## Screenshots
+
+Use real app renders with fictional ledger data, never a real user's entries.
+Capture the 6.9-inch iPhone portrait set at 1320 × 2868. Suggested order:
+
+1. Intention: What brings you here?
+2. Reflection: Was it what you came for?
+3. Weekly review: Your week in intentions.
+4. Today: Your intention match.
+5. Ledger: A private record you can learn from.
+
+The sample is a public product feature and is visibly labeled. Simulator
+screenshots do not demonstrate that the real Screen Time shield works.
+Re-capture from the final candidate after device acceptance.
+
+## Review contact
+
+Use the account holder's actual name and phone in the private review contact
+fields. Use morphiclabsdata@gmail.com for support and privacy contacts. No
+reviewer login is required. Paste REVIEW_NOTES.md into the notes field.

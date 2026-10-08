@@ -8,12 +8,12 @@ class ShieldConfigurationExtension: ShieldConfigurationDataSource {
         let watchedApp = application.token.flatMap(findWatchedApp)
         let title = watchedApp.map { "dialogue · \($0.displayName)" } ?? "dialogue"
         let reminder = watchedApp?.reminderLine.trimmingCharacters(in: .whitespacesAndNewlines)
-        let subtitle = reminder?.isEmpty == false ? reminder! : "Was this on purpose?"
+        let subtitle = reminder?.isEmpty == false ? reminder! : "What brings you here?"
 
         return ShieldConfiguration(
             backgroundBlurStyle: nil,
             backgroundColor: .paper,
-            icon: nil,
+            icon: UIImage(systemName: "book.closed"),
             title: ShieldConfiguration.Label(text: title, color: .ink),
             subtitle: ShieldConfiguration.Label(text: subtitle, color: .ledgerRed),
             primaryButtonLabel: ShieldConfiguration.Label(text: "Never mind", color: .paper),
@@ -49,9 +49,9 @@ class ShieldConfigurationExtension: ShieldConfigurationDataSource {
         ShieldConfiguration(
             backgroundBlurStyle: nil,
             backgroundColor: .paper,
-            icon: nil,
+            icon: UIImage(systemName: "book.closed"),
             title: ShieldConfiguration.Label(text: "dialogue", color: .ink),
-            subtitle: ShieldConfiguration.Label(text: "Was this on purpose?", color: .ledgerRed),
+            subtitle: ShieldConfiguration.Label(text: "What brings you here?", color: .ledgerRed),
             primaryButtonLabel: ShieldConfiguration.Label(text: "Never mind", color: .paper),
             primaryButtonBackgroundColor: .ink,
             secondaryButtonLabel: ShieldConfiguration.Label(text: "Choose a reason", color: .ink)

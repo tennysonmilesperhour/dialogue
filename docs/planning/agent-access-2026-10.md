@@ -13,7 +13,7 @@ Let AI assistants, AI crawlers and automation find, read, trust and cite the dia
 
 ## Decisions
 
-- D020 in `docs/DECISIONS.md`: the bot log, what it stores, why browsers are never logged.
+- D021 in `docs/DECISIONS.md`: the bot log, what it stores, why browsers are never logged.
 - Review cadence is monthly (light), first Wednesday: Action 16:20 UTC, routine session 16:55 UTC.
 - Pricing figures are not published on the site. MONETIZATION.md says the price is still under test.
 - Sample ledger numbers on the home page stay, but are labelled as a design sample everywhere, including the markdown twin and llms.txt, so no assistant quotes them as findings.

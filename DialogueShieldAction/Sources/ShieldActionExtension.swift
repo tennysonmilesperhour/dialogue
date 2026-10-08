@@ -67,6 +67,7 @@ class ShieldActionExtension: ShieldActionDelegate {
         content.title = "Choose your reason"
         content.body = "Open dialogue to begin this intentional visit."
         content.sound = .default
+        content.userInfo = ["route": "gate"]
         let request = UNNotificationRequest(
             identifier: "dialogue.open-gate",
             content: content,

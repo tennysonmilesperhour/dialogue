@@ -1,4 +1,4 @@
--- Traffic log for known bots and tools (D020). People's browsers are never
+-- Traffic log for known bots and tools (D021). People's browsers are never
 -- logged: the web proxy only calls this for user agents on its bot list.
 -- Rows hold an agent name, a page path, a trimmed user agent and a time.
 -- No IP address, no cookie, no identifier of any person.
