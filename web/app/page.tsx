@@ -3,7 +3,7 @@ import WaitlistForm from "./waitlist-form";
 import JsonLd from "./json-ld";
 import {
   GATE_AND_DEBRIEF, IMS_HEADING, IMS_TEXT, LEDGER_CAPTION, LEDGER_NOTE,
-  LEDGER_ROWS, PITCH, REFUSALS, REFUSALS_CLOSER, REFUSALS_HEADING, SUMMARY,
+  LEDGER_ROWS, PITCH, REFUSALS, REFUSALS_HEADING, SUMMARY,
   WAITLIST_HEADING, WAITLIST_TEXT,
 } from "@/lib/content";
 import { SITE_URL } from "@/lib/site";
@@ -66,8 +66,8 @@ export default function Home() {
           <span className="chip honest">Avoiding something</span>
         </div>
         <div className="gate-buttons">
-          <span className="btn primary">Never mind</span>
-          <span className="btn secondary">Enter</span>
+          <span className="btn primary">Begin visit</span>
+          <span className="btn secondary">Never mind</span>
         </div>
       </div>
 
@@ -105,8 +105,7 @@ export default function Home() {
             <strong>{r.lead}</strong> {r.text}
             {i < REFUSALS.length - 1 ? <br /> : null}
           </span>
-        ))}{" "}
-        <em>{REFUSALS_CLOSER}</em>
+        ))}
       </p>
 
       <h2>{WAITLIST_HEADING}</h2>
@@ -116,7 +115,7 @@ export default function Home() {
       <p style={{ marginTop: 60 }}>
         <span className="stamp">Logged</span>{" "}
         <span className="stamp red" style={{ transform: "rotate(3deg)" }}>
-          Dismissed +1
+          On purpose
         </span>
       </p>
 

@@ -2,7 +2,11 @@
 
 An iOS app that wraps each session in a watched app with a two-sided ritual: a gate that asks why you are opening it, and a debrief that asks whether that turned out to be true. It never blocks. The record between those two questions is the product.
 
-Status: the local-first product loop is implemented across all five app targets. Onboarding, watched app setup, the intention gate, session monitoring, debrief, ledger, IMS, weekly review, and settings are ready for physical-device validation.
+Status: release candidate 1.0.0 (3). The complete local-first app is implemented,
+including a fictional sample, onboarding, app gates, reflection with undo/editing,
+searchable history, weekly review, exports, and optional reminders. Actual
+submission remains gated on Apple distribution provisioning and physical-device
+acceptance. See `docs/submission/LAUNCH_READINESS.md`.
 
 ## Layout
 
@@ -68,3 +72,12 @@ device prototype remain external checks. See
 The waitlist uses the active Vibe Check project `xyhbuqsxglfjbounogdz`, table `dialogue_waitlist`. Set `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` on the Vercel `dialogue` project; `.env.example` is in `web/`. The browser posts to `/api/waitlist`; the server's public key can insert emails but cannot read or alter the list. New and duplicate emails receive the same response.
 
 Migration `20260907180455_shared_vibe_backend.sql` is deployed. The shared database has migrations from multiple apps; do not reset it or overwrite its history from this repository. The old project `ptwxbkzulstocpfhufea` remains paused, and historical waitlist entries have not been recovered or imported. The iOS ledger remains on device.
+
+## Interface verification
+
+`scripts/verify_ui.sh` runs the iPhone interaction tests and preserves real
+screenshots in an `.xcresult` bundle. Override `DIALOGUE_SIMULATOR_ID` to test a
+smaller iPhone or another installed iOS version. The suite covers intention,
+reflection, undo, history search, pause/resume, and accessibility text sizing.
+The sample entries are fictional. Simulator tests cannot verify Screen Time
+shielding, extension callback timing, or Apple entitlement approval.

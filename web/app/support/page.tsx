@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import JsonLd from "../json-ld";
-import { FAQ, SUPPORT_CONTACT } from "@/lib/content";
-import { CONTACT_URL, LAST_REVIEWED } from "@/lib/site";
+import {
+  FAQ, SUPPORT_EMAIL, SUPPORT_INTRO_AFTER_EMAIL, SUPPORT_INTRO_BEFORE_EMAIL,
+} from "@/lib/content";
+import { LAST_REVIEWED } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "dialogue support",
@@ -24,9 +26,14 @@ export default function Support() {
           })),
         }}
       />
-      <p className="kicker">support</p>
-      <h1>Questions, answered plainly</h1>
+      <p className="kicker">dialogue support</p>
+      <h1>A little help.</h1>
       <p className="kicker">last reviewed {LAST_REVIEWED}</p>
+      <p>
+        {SUPPORT_INTRO_BEFORE_EMAIL}
+        <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
+        {SUPPORT_INTRO_AFTER_EMAIL}
+      </p>
 
       {FAQ.map((f) => (
         <section key={f.q}>
@@ -34,12 +41,6 @@ export default function Support() {
           <p>{f.a}</p>
         </section>
       ))}
-
-      <h2>Contact</h2>
-      <p>
-        <a href={CONTACT_URL}>Open a support request on GitHub</a>
-        {SUPPORT_CONTACT.replace("Open a support request on GitHub", "")}
-      </p>
 
       <footer>
         <a href="/">Home</a>

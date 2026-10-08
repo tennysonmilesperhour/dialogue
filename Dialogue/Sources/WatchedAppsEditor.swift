@@ -6,6 +6,7 @@ import SwiftUI
 struct WatchedAppsEditor: View {
     @ObservedObject var model: DialogueModel
     let isOnboarding: Bool
+    var onCancel: (() -> Void)?
 
     @Environment(\.dismiss) private var dismiss
     @State private var apps: [WatchedApp]
@@ -13,9 +14,10 @@ struct WatchedAppsEditor: View {
     @State private var pickerIsPresented = false
     @State private var selectionNote: String?
 
-    init(model: DialogueModel, isOnboarding: Bool) {
+    init(model: DialogueModel, isOnboarding: Bool, onCancel: (() -> Void)? = nil) {
         self.model = model
         self.isOnboarding = isOnboarding
+        self.onCancel = onCancel
         let existing = model.state.watchedApps
         _apps = State(initialValue: existing)
         var initialSelection = FamilyActivitySelection()
@@ -41,7 +43,7 @@ struct WatchedAppsEditor: View {
 
                         if isOnboarding || !model.hasScreenTimeAuthorization { permission }
 
-                        selectionSection
+                        if model.hasScreenTimeAuthorization { selectionSection }
 
                         if !apps.isEmpty {
                             configurationSection
@@ -72,7 +74,9 @@ struct WatchedAppsEditor: View {
             .navigationTitle(isOnboarding ? "" : "Watched apps")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                if !isOnboarding {
+                if isOnboarding {
+                    ToolbarItem(placement: .cancellationAction) { Button("Back") { onCancel?() } }
+                } else {
                     ToolbarItem(placement: .cancellationAction) {
                         Button("Cancel") { dismiss() }
                     }
@@ -118,7 +122,7 @@ struct WatchedAppsEditor: View {
             VStack(alignment: .leading, spacing: 10) {
                 Text(isOnboarding ? "2  CHOOSE APPS" : "CHOOSE APPS")
                     .font(.system(.caption, design: .monospaced, weight: .semibold))
-                Text("Pick at least one individual app. Categories and websites are not used in this version.")
+                Text("Start with one app you often open without thinking. You can add more later. Choose individual apps rather than categories.")
                     .font(.system(.body, design: .serif))
                 Button(apps.isEmpty ? "Choose apps" : "Change selection") {
                     pickerIsPresented = true
@@ -140,12 +144,16 @@ struct WatchedAppsEditor: View {
                             Label(token)
                                 .font(.system(.headline, design: .serif))
                         }
-                        TextField("What do you call this app?", text: $app.displayName)
+                        TextField("App name", text: $app.displayName)
+                            .accessibilityLabel("Name for this app")
                             .textInputAutocapitalization(.words)
                             .textFieldStyle(.roundedBorder)
                         TextField("Reminder, such as: Message one person", text: $app.reminderLine)
+                            .accessibilityLabel("Personal reminder, optional")
                             .textFieldStyle(.roundedBorder)
-                        Picker("Soft budget", selection: $app.softBudgetSeconds) {
+                        Text("A reminder to reflect after about this much app use. iOS may deliver it later.")
+                            .font(.system(.caption, design: .serif))
+                        Picker("Reflect after", selection: $app.softBudgetSeconds) {
                             Text("5 minutes").tag(5 * 60)
                             Text("10 minutes").tag(10 * 60)
                             Text("15 minutes").tag(15 * 60)
@@ -193,26 +201,13 @@ struct WatchedAppsEditor: View {
     private func save() {
         var cleaned = apps
         for index in cleaned.indices {
-            cleaned[index].displayName = cleaned[index].displayName.trimmingCharacters(in: .whitespacesAndNewlines)
-            cleaned[index].reminderLine = cleaned[index].reminderLine.trimmingCharacters(in: .whitespacesAndNewlines)
+            cleaned[index].displayName = String(cleaned[index].displayName.trimmingCharacters(in: .whitespacesAndNewlines).prefix(50))
+            cleaned[index].reminderLine = String(cleaned[index].reminderLine.trimmingCharacters(in: .whitespacesAndNewlines).prefix(160))
         }
         if isOnboarding {
             model.finishOnboarding(with: cleaned)
-            Task { await model.requestNotifications() }
         } else {
-            model.replaceWatchedApps(cleaned)
-            dismiss()
+            if model.replaceWatchedApps(cleaned) { dismiss() }
         }
-    }
-}
-
-struct LedgerButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.system(.body, design: .monospaced, weight: .semibold))
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 13)
-            .foregroundStyle(Color.paper)
-            .background(configuration.isPressed ? Color.ink.opacity(0.72) : Color.ink)
     }
 }

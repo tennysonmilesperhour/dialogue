@@ -1,65 +1,25 @@
-# dialogue privacy policy
+# Privacy policy source
 
-Effective date: September 4, 2026.
+Updated October 6, 2026. The complete public policy is maintained in
+`web/app/privacy/page.tsx`; keep this summary and App Store answers aligned.
 
-## The short version
-
-dialogue is a ledger you keep with yourself. Your reasons, verdicts, and
-notes live on your device. We cannot see which apps you watch. We do not
-collect usage data. We do not run ads, sell data, or profile you. The current
-app has no account or cloud Sync feature, so nothing leaves your phone.
-
-## What dialogue stores on your device
-
-- The apps you chose to watch, as opaque system tokens. Apple designed these
-  tokens so that dialogue cannot learn which apps they are. The names you see
-  in dialogue are labels you typed yourself.
-- Your reasons, verdicts, notes, reminder lines, and settings.
-- Session records dialogue derives on your device (approximate start, end,
-  and length).
-
-All of this stays in the app's private storage. It is included in your normal
-device backups under Apple's standard backup protections.
-
-## What the current app collects
-
-Nothing. The current build sends no analytics, identifiers, ledger entries, or
-usage data to us.
-
-## Accounts and Sync
-
-The current build has no account system and no cloud Sync feature. If either
-is added later, this policy and the App Store privacy label will be updated
-before that version is released.
-
-## Website waitlist
-
-The marketing website stores the email address you submit to its waitlist.
-The address is used only for beta and launch notices. The website has no
-analytics cookies or trackers. Use the support page to request deletion.
-
-The website also keeps a short log of visits from crawlers and AI agents (the
-agent name, the page and the time). Web browsers are never logged, and the log
-holds no personal data.
-
-## What we will never do
-
-- Sell or share your data with anyone.
-- Collect app usage data for advertising or profiling.
-- Add advertising SDKs to the app.
-- Read your ledger. It is yours.
-
-## Children
-
-dialogue is for adults managing their own devices. It is not directed at
-children and has no parental control features.
-
-## Contact
-
-Questions and deletion requests can be sent through the support page at
-https://dialogue-five.vercel.app/support.
-
-## Changes
-
-If this policy changes, the app will say so plainly before the change takes
-effect, and the diff will be public in this repository.
+- The native app collects no data and contains no analytics SDK, accounts,
+  advertising, or cloud sync.
+- Selected-app tokens, user labels, intentions, reflections, and notes are
+  stored in the protected App Group on the iPhone, with normal device backups.
+- Retention is the latest 1,000 visits and 1,000 walk-aways.
+- Notifications disclose no app name, intention, or note on the lock screen.
+- The fictional sample ledger is in memory and does not alter real entries.
+- CSV and JSON exports contain written entries, never app tokens. The user
+  chooses their destination and manages exported copies separately.
+- In-app deletion clears local entries, selections, shields, and notifications.
+  Device backups and previously exported copies are managed separately.
+- Website waitlist email addresses are stored through Supabase for beta and
+  launch contact. Vercel hosts the website.
+- When configured, PostHog measures website page views. It does not use session
+  replay, automatic click capture, person profiles, or persistent browser IDs.
+  Page and browser information may be sent. This does not run in the native app.
+- Support and privacy/deletion contact: morphiclabsdata@gmail.com.
+- The website keeps a short log of visits from crawlers and AI agents (agent
+  name, page, time). Web browsers are never logged and the log holds no
+  personal data.

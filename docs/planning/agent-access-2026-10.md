@@ -13,9 +13,9 @@ Let AI assistants, AI crawlers and automation find, read, trust and cite the dia
 
 ## Decisions
 
-- D020 in `docs/DECISIONS.md`: the bot log, what it stores, why browsers are never logged.
+- D021 in `docs/DECISIONS.md`: the bot log, what it stores, why browsers are never logged.
 - Review cadence is monthly (light), first Wednesday: Action 16:20 UTC, routine session 16:55 UTC.
-- Pricing figures are not published on the site. MONETIZATION.md says the price is still under test.
+- The site says version 1.0 is free (copy from main). MONETIZATION.md still describes a paid model, which now disagrees with the site.
 - Sample ledger numbers on the home page stay, but are labelled as a design sample everywhere, including the markdown twin and llms.txt, so no assistant quotes them as findings.
 - Domain is `https://dialogue-five.vercel.app` until a real one is bought (IDENTITY.md). All absolute URLs come from `web/lib/site.ts` (`NEXT_PUBLIC_SITE_URL` overrides).
 
@@ -42,19 +42,20 @@ Copy and structured data, one source: `web/lib/content.ts`.
 
 JSON-LD: WebSite and MobileApplication on `/`, FAQPage on `/support`. The app has no offer or price in the markup on purpose.
 
-### Accuracy fixes made (2026-10-07)
+### Accuracy pass (2026-10-07, redone 2026-10-08 after main rewrote the copy)
 
-- Home said reasons stay on device "unless you choose to sync them". The current build has no sync or account. Now says so.
-- Home said "One price, once" while MONETIZATION.md plans an optional Sync subscription. Now: one price for the app, optional Sync planned as a separate later add-on.
-- Home and FAQ described the adaptive gate (85% IMS whisper) as live. ARCHITECTURE.md and D004 ship a static standard gate in V1 and turn adaptation on in V1.1. Now marked planned for 1.1.
-- Home defined IMS without Partly at half credit, the 14 day window, or the per-app scope. Now matches ARCHITECTURE.md.
-- The sample ledger table was captioned "sample" only. Now "illustrative sample, not measured data" plus a note.
+First pass found the home page claiming sync, "one price, once", a not-yet-live adaptive gate, and a loose IMS definition, plus an unlabelled sample table. PR 17 (main) then rewrote the site copy: version 1.0 is free and local-only, the adaptive gate is in the app (`GateTier.next` in `Dialogue/Sources/DialogueModel.swift`), and the privacy page now discloses PostHog and the support email. The content module was rebuilt on that copy and rechecked against the code. What remains from this layer:
 
-### Open findings for the owner (not changed)
+- IMS text states Partly at half credit, the 14 day window and per-app scope, matching ARCHITECTURE.md and the support FAQ.
+- The sample ledger is captioned "illustrative sample, not measured data" on the page, in the markdown twin and in llms.txt.
+- Beta line says it opens when Apple approves the Screen Time entitlement. Owner approved.
+- FAQ and llms.txt say dialogue is not affiliated with Dialogue Health Technologies. Owner approved.
+- Privacy page gained an "Automated visitors" section for the bot log. docs/submission/PRIVACY_POLICY.md has the matching line.
 
-- `web/instrumentation-client.ts` sends anonymous pageviews to PostHog when `NEXT_PUBLIC_POSTHOG_KEY` is set, while the privacy page and `docs/submission/PRIVACY_POLICY.md` say "no analytics cookies, no trackers". Either leave the key unset or disclose anonymous pageview counts in both policies.
-- Resolved 2026-10-07: beta line now says it opens when Apple approves the entitlement, and a not-affiliated line (FAQ and llms.txt) separates dialogue from Dialogue Health Technologies. Owner approved both.
-- PostHog: the key is set on Vercel (production and development). Owner approved leaving it unset. Removing it is an owner action in Vercel; until then the privacy page should not claim "no trackers".
+### Open findings for the owner
+
+- PostHog: the privacy page now discloses it, so the earlier contradiction is gone. The owner still chose to leave the key unset. The key is set on Vercel (production and development). Deleting it is an owner action in Vercel.
+- `docs/ARCHITECTURE.md` and `docs/ROADMAP.md` still say the adaptive gate ships in V1.1, but the app already applies tiers. Update them or the app.
 
 ### Live setup still needed
 
@@ -101,4 +102,5 @@ Anything outward-facing that is not already a recorded decision (new pages, clai
 
 ## Review log
 
+- 2026-10-08: merged main (PR 17) into the branch, which also carried the lock-timing fix for the DialogueKit test. Content module rebuilt on main's copy, decision renumbered D021.
 - 2026-10-07: layer built. Accuracy pass fixed five items (above), two open findings raised. Traffic log not yet live, awaiting migration and secrets.

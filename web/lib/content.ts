@@ -3,22 +3,24 @@
 
 export type Faq = { q: string; a: string };
 
+export const SUPPORT_EMAIL = "morphiclabsdata@gmail.com";
+
 export const TAGLINE =
   "Every screen time app tells you how long. dialogue tells you whether you meant it.";
 
 export const SUMMARY =
-  "dialogue is an iOS app, in development, that wraps each session in a watched app with two questions. On the way in, a gate asks why you are opening it. On the way out, a debrief asks whether that turned out to be true. It never blocks, and no usage data leaves the device.";
+  "dialogue is an iPhone app, in development, that wraps each visit to a watched app with two questions. On the way in, a gate asks why you are opening it. When you finish, a debrief asks whether that turned out to be true. It never blocks, and no usage data leaves the device.";
 
 export const PITCH =
-  "You do not open Instagram because you decided to. A cue fires and the hand moves. Blockers answer that with a wall, which you resent and defeat. Trackers answer with a number, which tells you nothing about whose time that was. dialogue asks a better question, twice.";
+  "Sometimes the hand reaches for an app before a decision catches up. dialogue gives you a moment to name what you came for, then a chance to notice whether it happened.";
 
 export const GATE_AND_DEBRIEF =
-  "On the way in, the gate asks why. On the way out, a debrief asks whether that turned out to be true. Two taps, honest options included. Bored is a legal entry. The record that accumulates between those two questions is the product.";
+  "On the way in, the gate asks why. When you finish a visit, a debrief asks whether that turned out to be true. Two taps, honest options included. Bored is a legal entry. The record that accumulates between those two questions is the product.";
 
 export const IMS_HEADING = "The one number that matters";
 
 export const IMS_TEXT =
-  "Intention Match Score (IMS): the percentage of sessions where what you said going in held up on the way out, per app, over a rolling 14 days. A Yes counts in full, a Partly counts half, and sessions you did not log are left out rather than counted against you. Minutes cannot tell forty minutes helping a friend from twelve minutes of dread-scrolling. IMS can.";
+  "Intention Match Score (IMS): the percentage of visits where what you said going in held up on the way out, per app, over a rolling 14 days. A Yes counts in full, a Partly counts half, and visits you did not log are left out rather than counted against you. Minutes cannot tell forty minutes helping a friend from twelve minutes of dread-scrolling. IMS can.";
 
 export const LEDGER_CAPTION =
   "A week in the ledger (illustrative sample, not measured data)";
@@ -38,92 +40,106 @@ export const REFUSALS_HEADING = "Three things dialogue refuses to do";
 export const REFUSALS: { lead: string; text: string }[] = [
   {
     lead: "It never blocks.",
-    text: "Enter is always reachable. In the planned adaptive gate (version 1.1), friction follows your own match rate: earn an 85% IMS and the gate becomes a whisper.",
+    text: "Enter is always reachable. Friction follows your own match rate after enough reflections. You can always continue immediately or pause all gates in Settings.",
   },
   {
     lead: "It never phones home.",
-    text: "Your reasons and verdicts stay on your device. The current build has no account and no sync. We cannot even see which apps you picked; Apple designed it that way and we like it.",
+    text: "Your reasons and verdicts stay on your device. There is no account or cloud sync in version 1.0. Export a copy whenever you want.",
   },
   {
-    lead: "It never rents itself to you.",
-    text: "The app is one price, once. Optional Sync is planned as a separate later add-on, and nothing in the core app depends on it.",
+    lead: "Version 1.0 is free.",
+    text: "No subscriptions or in-app purchases.",
   },
 ];
-
-export const REFUSALS_CLOSER =
-  "If you stop using dialogue, we should not keep charging you for it.";
 
 export const WAITLIST_HEADING = "Get the first entry";
 
 export const WAITLIST_TEXT =
-  "The iOS beta, 50 seats, opens when Apple approves the Screen Time entitlement dialogue needs. The waitlist is the queue and nothing else; one address, no marketing drip.";
+  "Join the iPhone beta waitlist for an invitation when testing opens. The beta opens when Apple approves the Screen Time entitlement dialogue needs. We will email you about the beta and launch, with no marketing drip.";
 
 export const NOT_AFFILIATED =
   "dialogue is not affiliated with Dialogue Health Technologies, the Canadian telehealth company, or with any other product called Dialogue.";
 
+export const SUPPORT_INTRO_AFTER_EMAIL =
+  ". Include your iPhone model and iOS version when reporting a problem. You do not need to send private ledger entries.";
+
+export const SUPPORT_INTRO_BEFORE_EMAIL =
+  "Questions about your ledger, app gates, or deleting your waitlist address? Email ";
+
 export const FAQ: Faq[] = [
   {
-    q: "What is dialogue?",
-    a: "A ledger for your attention. When you open a watched app, dialogue asks why. When you leave, it asks whether that held up. The record is the product.",
+    q: "How do I start?",
+    a: "Explore the sample ledger first, or choose Set up my first app. Allow Screen Time access, choose an individual app, give it a name, and set a reflection reminder. You can change these choices in Settings.",
   },
   {
-    q: "Does dialogue block apps?",
-    a: "No. Never. The Enter path is always available. In the planned adaptive gate (version 1.1), how light or deliberate the gate is will follow your own match rate, and Enter stays reachable at every level.",
+    q: "How do gates work?",
+    a: "Opening a watched app shows a gate. Choose a reason to open dialogue, name your intention, then tap Begin visit and switch back to the app. The pause is optional. Begin visit works even without a reason. Pause all gates in Settings whenever you want.",
   },
   {
-    q: "Why can dialogue not see my app names?",
-    a: "Apple's Screen Time system hands apps opaque tokens instead of names, by design. The names in your ledger are the labels you wrote during setup.",
+    q: "The gate does not open dialogue",
+    a: "On older iOS versions, tap the notification or open dialogue manually. Your intention screen will be waiting. If a gate is stuck, open dialogue and pause all gates. You can also remove dialogue's Screen Time access in iPhone Settings.",
   },
   {
-    q: "Why is my session length approximate?",
-    a: "iOS does not tell apps exactly when another app closes. dialogue triangulates from the signals it does get and labels estimates honestly instead of faking precision.",
+    q: "When do I reflect?",
+    a: "Tap End visit and reflect in Today, or wait for your Screen Time reminder. Choose Yes, Partly, or No, then Log reflection. Later keeps an unfinished reflection in the ledger. You can edit a reflection if you change your mind.",
+  },
+  {
+    q: "Why are visit lengths approximate?",
+    a: "iOS does not report exactly when another app closes, and Screen Time callbacks can arrive late. Visit lengths include time spent away from the app. The Screen Time total in Review measures usage separately.",
+  },
+  {
+    q: "What does the match score mean?",
+    a: "Over the last 14 days, Yes counts as one and Partly as half. No counts as zero. We divide that total by the number of reflected visits. Unlogged visits are excluded.",
+  },
+  {
+    q: "Can I keep a copy or delete everything?",
+    a: "Settings offers CSV and JSON exports. These include your written entries, not Apple's app tokens. Delete all dialogue data clears entries, selections, gates, and reminders. Export first if you want a copy. To delete a website waitlist address, email us from that address.",
+  },
+  {
+    q: "Is there a subscription?",
+    a: "Version 1.0 is free and local-only. It has no account, subscription, or cloud sync.",
   },
   {
     q: "Is dialogue related to Dialogue Health Technologies?",
     a: NOT_AFFILIATED,
   },
-  {
-    q: "What does the subscription add?",
-    a: "The current build has no subscription. Optional Sync is planned for a later version, after the local ledger has been tested in public.",
-  },
 ];
 
-export const PRIVACY_TITLE = "The short version";
+export const PRIVACY_UPDATED = "October 8, 2026";
+export const PRIVACY_TITLE = "Your ledger is yours.";
 
 export const PRIVACY_INTRO =
-  "dialogue is a ledger you keep with yourself. Your reasons, verdicts, and notes live on your device. We cannot see which apps you watch. We do not collect usage data. We do not run ads, sell data, or profile you. If you never create an account, nothing leaves your phone.";
+  "dialogue 1.0 keeps your selected apps, intentions, reflections, notes, and scores on your iPhone. The native app sends no analytics or ledger data to us. There are no accounts, ads, or cloud sync.";
 
 export const PRIVACY_SECTIONS: { heading: string; text: string }[] = [
   {
     heading: "On your device",
-    text: "The apps you choose are opaque system tokens; Apple designed them so dialogue cannot learn which apps they are. The names in your ledger are labels you typed yourself. Your entries stay in the app's private storage, covered by your normal device backups.",
+    text: "Apple gives dialogue opaque tokens for selected apps. Labels in your ledger are names you enter. The app and its Screen Time extensions share protected local storage. The ledger keeps up to 1,000 visits and 1,000 walk-aways and may be included in your normal device backups.",
   },
   {
-    heading: "From the app",
-    text: "The current build sends no analytics, identifiers, ledger entries, or usage data to us. If you do not join the website waitlist, we receive nothing from you.",
+    heading: "Your choices",
+    text: "Notifications are optional. Lock-screen reminders do not contain app names, intentions, or notes. The sample ledger is fictional and stays in memory. CSV and JSON exports contain your written entries and are saved only to a destination you choose.",
   },
   {
-    heading: "Accounts and Sync",
-    text: "The current build has no account system and no cloud Sync feature. If either is added later, this policy and the App Store privacy label will be updated before that version is released.",
+    heading: "Delete your data",
+    text: "In the app, open Settings and choose Delete all dialogue data. This clears your local ledger, selected apps, gates, and scheduled notifications. Copies you previously exported and device backups are managed separately by you. Screen Time permission can be removed in iPhone Settings.",
   },
   {
-    heading: "This waitlist",
-    text: "The only thing this site stores about people is the email address you give it, used to tell you about the beta and the launch. No analytics cookies, no trackers. Write to us and we will remove your address the same day.",
+    heading: "The website waitlist",
+    text: "If you join the waitlist, we store your email address through Supabase to contact you about the beta and launch. The website is hosted by Vercel; hosting services process network information needed to deliver and protect the site. To remove a waitlist address, email us from that address.",
+  },
+  {
+    heading: "Website analytics",
+    text: "The website can use PostHog to measure page views when analytics is configured. This is separate from the native app. It does not record sessions, capture clicks automatically, create person profiles, or persist an analytics identifier in cookies or local storage. Page-view events can include page and browser information. We do not send your ledger or waitlist email to PostHog.",
   },
   {
     heading: "Automated visitors",
-    text: "The site keeps a short log of visits from crawlers and AI agents: the agent name, the page, and the time. Web browsers are never logged, and the log holds no personal data.",
-  },
-  {
-    heading: "Never",
-    text: "No selling or sharing data. No usage data collected for advertising or profiling. No ad SDKs. We do not read your ledger. It is yours.",
+    text: "The website keeps a short log of visits from crawlers and AI agents: the agent name, the page, and the time. Web browsers are never logged, and the log holds no personal data.",
   },
 ];
 
 export const PRIVACY_CLOSER_HEADING = "Questions and deletion requests";
 
-export const PRIVACY_CLOSER =
-  "Use the support page to contact us. Waitlist deletion requests are handled manually and confirmed when complete.";
-
-export const SUPPORT_CONTACT =
-  "Open a support request on GitHub. Requests are public, so do not include private ledger entries or other personal information.";
+export const PRIVACY_CLOSER_BEFORE_EMAIL = "Email ";
+export const PRIVACY_CLOSER_AFTER_EMAIL =
+  ". We use information you include in a support message to respond to your request. You do not need to share your ledger for routine support.";

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import {
-  PRIVACY_CLOSER_HEADING, PRIVACY_INTRO, PRIVACY_SECTIONS, PRIVACY_TITLE,
+  PRIVACY_CLOSER_AFTER_EMAIL, PRIVACY_CLOSER_BEFORE_EMAIL, PRIVACY_CLOSER_HEADING,
+  PRIVACY_INTRO, PRIVACY_SECTIONS, PRIVACY_TITLE, PRIVACY_UPDATED, SUPPORT_EMAIL,
 } from "@/lib/content";
-import { LAST_REVIEWED } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "dialogue privacy",
@@ -13,9 +13,8 @@ export const metadata: Metadata = {
 export default function Privacy() {
   return (
     <main>
-      <p className="kicker">privacy</p>
+      <p className="kicker">privacy · updated {PRIVACY_UPDATED}</p>
       <h1>{PRIVACY_TITLE}</h1>
-      <p className="kicker">last reviewed {LAST_REVIEWED}</p>
       <p>{PRIVACY_INTRO}</p>
 
       {PRIVACY_SECTIONS.map((s) => (
@@ -27,8 +26,9 @@ export default function Privacy() {
 
       <h2>{PRIVACY_CLOSER_HEADING}</h2>
       <p>
-        Use the <a href="/support">support page</a> to contact us. Waitlist
-        deletion requests are handled manually and confirmed when complete.
+        {PRIVACY_CLOSER_BEFORE_EMAIL}
+        <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
+        {PRIVACY_CLOSER_AFTER_EMAIL}
       </p>
 
       <footer>

@@ -1,10 +1,12 @@
 import {
-  FAQ, GATE_AND_DEBRIEF, NOT_AFFILIATED, IMS_HEADING, IMS_TEXT, LEDGER_CAPTION, LEDGER_NOTE,
-  LEDGER_ROWS, PITCH, PRIVACY_CLOSER, PRIVACY_CLOSER_HEADING, PRIVACY_INTRO,
-  PRIVACY_SECTIONS, PRIVACY_TITLE, REFUSALS, REFUSALS_CLOSER, REFUSALS_HEADING,
-  SUMMARY, SUPPORT_CONTACT, TAGLINE, WAITLIST_HEADING, WAITLIST_TEXT,
+  FAQ, GATE_AND_DEBRIEF, IMS_HEADING, IMS_TEXT, LEDGER_CAPTION, LEDGER_NOTE,
+  LEDGER_ROWS, NOT_AFFILIATED, PITCH, PRIVACY_CLOSER_AFTER_EMAIL,
+  PRIVACY_CLOSER_BEFORE_EMAIL, PRIVACY_CLOSER_HEADING, PRIVACY_INTRO,
+  PRIVACY_SECTIONS, PRIVACY_TITLE, PRIVACY_UPDATED, REFUSALS, REFUSALS_HEADING,
+  SUMMARY, SUPPORT_EMAIL, SUPPORT_INTRO_AFTER_EMAIL, SUPPORT_INTRO_BEFORE_EMAIL,
+  TAGLINE, WAITLIST_HEADING, WAITLIST_TEXT,
 } from "./content";
-import { CONTACT_URL, LAST_REVIEWED, SITE_URL } from "./site";
+import { LAST_REVIEWED, SITE_URL } from "./site";
 
 export type PageSlug = "index" | "support" | "privacy";
 export const PAGE_SLUGS: PageSlug[] = ["index", "support", "privacy"];
@@ -29,7 +31,7 @@ function home(): string {
     `${GATE_AND_DEBRIEF}\n`,
     `## ${IMS_HEADING}\n\n${IMS_TEXT}\n`,
     `**${LEDGER_CAPTION}**\n\n| Stated reason | Avg session | Matched |\n|---|---:|---:|\n${rows}\n\n${LEDGER_NOTE}\n`,
-    `## ${REFUSALS_HEADING}\n\n${REFUSALS.map((r) => `- **${r.lead}** ${r.text}`).join("\n")}\n\n${REFUSALS_CLOSER}\n`,
+    `## ${REFUSALS_HEADING}\n\n${REFUSALS.map((r) => `- **${r.lead}** ${r.text}`).join("\n")}\n`,
     `## ${WAITLIST_HEADING}\n\n${WAITLIST_TEXT}\n`,
     `More: [FAQ](${SITE_URL}/support), [Privacy](${SITE_URL}/privacy), [llms.txt](${SITE_URL}/llms.txt)\n`,
   ].join("\n");
@@ -37,18 +39,19 @@ function home(): string {
 
 function support(): string {
   return [
-    header("dialogue support: questions, answered plainly", "support"),
+    header("dialogue support: a little help", "support"),
+    `${SUPPORT_INTRO_BEFORE_EMAIL}${SUPPORT_EMAIL}${SUPPORT_INTRO_AFTER_EMAIL}\n`,
     ...FAQ.map((f) => `## ${f.q}\n\n${f.a}\n`),
-    `## Contact\n\n${SUPPORT_CONTACT}\n\n${CONTACT_URL}\n`,
   ].join("\n");
 }
 
 function privacy(): string {
   return [
-    header(`dialogue privacy: ${PRIVACY_TITLE.toLowerCase()}`, "privacy"),
+    header("dialogue privacy", "privacy"),
+    `Updated ${PRIVACY_UPDATED}\n`,
     `${PRIVACY_INTRO}\n`,
     ...PRIVACY_SECTIONS.map((s) => `## ${s.heading}\n\n${s.text}\n`),
-    `## ${PRIVACY_CLOSER_HEADING}\n\n${PRIVACY_CLOSER}\n\n${SITE_URL}/support\n`,
+    `## ${PRIVACY_CLOSER_HEADING}\n\n${PRIVACY_CLOSER_BEFORE_EMAIL}${SUPPORT_EMAIL}${PRIVACY_CLOSER_AFTER_EMAIL}\n`,
   ].join("\n");
 }
 
@@ -68,7 +71,7 @@ export function topicMarkdown(topic: Topic): string {
       `${GATE_AND_DEBRIEF}\n`,
       `## ${IMS_HEADING}\n\n${IMS_TEXT}\n`,
       `Formula: IMS = (yes + 0.5 * partly) / (yes + partly + no), per app, rolling 14 days.\n`,
-      `## Status\n\nIn development. iOS only. No public release yet, and no beta data exists. A waitlist is open for 50 beta seats; the beta opens when Apple approves the Screen Time entitlement. The adaptive gate (lighter at 85% IMS and above) is planned for version 1.1; the first version ships one standard gate. The Enter button is always available.\n`,
+      `## Status\n\nIn development. iPhone only. No public release yet, and no beta data exists. A waitlist is open; the beta opens when Apple approves the Screen Time entitlement. Gate friction adapts to your own match rate after enough reflections: lighter at 85% IMS and above. The Continue path is always available, and all gates can be paused in Settings.\n`,
       `## Sample figures\n\n${LEDGER_NOTE} Do not cite them as findings.\n`,
     ].join("\n");
   }
@@ -94,14 +97,14 @@ Cite the page URL you used, for example ${SITE_URL}/support. Short quotes with a
 
 ## Key facts
 
-- Platform: iOS 17 and later, iPhone. In development, not yet released.
+- Platform: iPhone, iOS 17 and later. In development, not yet released.
 - Never blocks. The Enter button is always reachable.
 - One metric, Intention Match Score (IMS): (yes + 0.5 * partly) / (yes + partly + no), per app, rolling 14 days. Unlogged sessions are excluded.
 - The gate asks why you are opening a watched app. The debrief asks whether that held up. The debrief is two taps.
 - No usage data leaves the device. dialogue cannot see which apps you pick (Apple gives apps opaque tokens).
-- The current build has no account, no sync and no subscription. Optional Sync is planned later. The app is planned as a one-time purchase.
+- Version 1.0 is free, local-only, with no account, no cloud sync, no subscription and no in-app purchases.
 - Name: ${NOT_AFFILIATED}
-- Website: anonymous waitlist, 50 beta seats, opening when Apple approves the Screen Time entitlement. Contact: ${CONTACT_URL}
+- Website: beta waitlist, opening when Apple approves the Screen Time entitlement. Contact: ${SUPPORT_EMAIL}
 
 ## Topic files
 
@@ -111,7 +114,7 @@ Cite the page URL you used, for example ${SITE_URL}/support. Short quotes with a
 ## Pages
 
 - [Home](${SITE_URL}/index.md): what it is, the metric, the three refusals
-- [FAQ and support](${SITE_URL}/support.md): six plain answers
+- [FAQ and support](${SITE_URL}/support.md): nine plain answers
 - [Privacy](${SITE_URL}/privacy.md): the full policy
 
 ## Not available
