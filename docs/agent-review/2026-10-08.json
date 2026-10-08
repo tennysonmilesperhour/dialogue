@@ -1,0 +1,112 @@
+{
+  "date": "2026-10-08",
+  "site": "https://dialogue-five.vercel.app",
+  "live_checks": [
+    {
+      "path": "/llms.txt",
+      "ok": false,
+      "problems": [
+        "status 404",
+        "content-type text/html; charset=utf-8"
+      ],
+      "bytes": 8165
+    },
+    {
+      "path": "/llms/how-it-works.md",
+      "ok": false,
+      "problems": [
+        "status 404",
+        "content-type text/html; charset=utf-8",
+        "missing canonical Link header"
+      ],
+      "bytes": 8165
+    },
+    {
+      "path": "/llms/privacy-stance.md",
+      "ok": false,
+      "problems": [
+        "status 404",
+        "content-type text/html; charset=utf-8",
+        "missing canonical Link header"
+      ],
+      "bytes": 8165
+    },
+    {
+      "path": "/index.md",
+      "ok": false,
+      "problems": [
+        "status 404",
+        "content-type text/html; charset=utf-8",
+        "missing canonical Link header"
+      ],
+      "bytes": 8165
+    },
+    {
+      "path": "/support.md",
+      "ok": false,
+      "problems": [
+        "status 404",
+        "content-type text/html; charset=utf-8",
+        "missing canonical Link header"
+      ],
+      "bytes": 8165
+    },
+    {
+      "path": "/privacy.md",
+      "ok": false,
+      "problems": [
+        "status 404",
+        "content-type text/html; charset=utf-8",
+        "missing canonical Link header"
+      ],
+      "bytes": 8165
+    },
+    {
+      "path": "/robots.txt",
+      "ok": false,
+      "problems": [
+        "status 404",
+        "content-type text/html; charset=utf-8",
+        "missing Content-Signal"
+      ],
+      "bytes": 8165
+    },
+    {
+      "path": "/sitemap.xml",
+      "ok": false,
+      "problems": [
+        "status 404",
+        "content-type text/html; charset=utf-8"
+      ],
+      "bytes": 8165
+    },
+    {
+      "path": "/",
+      "ok": false,
+      "problems": [
+        "no markdown alternate link"
+      ],
+      "bytes": 17033
+    },
+    {
+      "path": "/support",
+      "ok": false,
+      "problems": [
+        "no markdown alternate link"
+      ],
+      "bytes": 14092
+    },
+    {
+      "path": "/privacy",
+      "ok": false,
+      "problems": [
+        "no markdown alternate link"
+      ],
+      "bytes": 13644
+    }
+  ],
+  "live_checks_ok": false,
+  "traffic": {
+    "status": "skipped, SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are not set"
+  }
+}
