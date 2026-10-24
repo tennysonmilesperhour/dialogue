@@ -212,3 +212,7 @@ stable name. Pointing the tags at a domain this deployment does not serve
 would split the record.
 *Reverses if:* a domain is purchased and DNS points at this deployment, at
 which point the origin constant in web/lib/site.ts moves with it.
+
+### 2026-10-24: Safer website dependency installs
+
+Use npm 12.2.1, a seven-day minimum age for new dependency resolutions, and disabled dependency install scripts in CI and Vercel. Pin CI to the patched Node 24.22.1 runtime.
