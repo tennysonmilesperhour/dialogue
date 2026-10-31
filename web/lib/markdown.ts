@@ -71,7 +71,7 @@ export function topicMarkdown(topic: Topic): string {
       `${GATE_AND_DEBRIEF}\n`,
       `## ${IMS_HEADING}\n\n${IMS_TEXT}\n`,
       `Formula: IMS = (yes + 0.5 * partly) / (yes + partly + no), per app, rolling 14 days.\n`,
-      `## Status\n\nIn development. iPhone only. No public release yet, and no beta data exists. A waitlist is open; the beta opens when Apple approves the Screen Time entitlement. Gate friction adapts to your own match rate after enough reflections: lighter at 85% IMS and above. The Continue path is always available, and all gates can be paused in Settings.\n`,
+      `## Status\n\nIn development. iPhone only. No public release yet, and no beta data exists. A waitlist is open; the beta opens when Apple approves the Screen Time entitlement. Gate friction adapts to your own match rate, per app, after 12 reflections: no suggested pause at 85% IMS and above, 3 seconds from 60 to 84%, and 8 seconds below 60%. It changes at most once every 72 hours. The pause is a suggestion, not a lock: Begin visit works at once at every level, and all gates can be paused in Settings.\n`,
       `## Sample figures\n\n${LEDGER_NOTE} Do not cite them as findings.\n`,
     ].join("\n");
   }
