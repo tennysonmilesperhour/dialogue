@@ -6,6 +6,8 @@ Section 2 is the review, what should change in the existing docs and why. Sectio
 
 ## 1. Where things stand
 
+*Written 2026-08-05, before any code. Kept as the starting point; the checkboxes in section 3 and 4 and `docs/submission/LAUNCH_READINESS.md` say where things are now.*
+
 - The repo is documentation only. No Xcode project, no web app, no CI.
 - The strategy docs are in good shape. The two flagged unknowns (close detection, entitlement latency) are the right two, and the refuse-to-build list will save weeks.
 - The gaps concentrate in three places: iOS API mechanics the architecture is optimistic about, App Store compliance work that appears nowhere in the roadmap, and a scheduling conflict between the beta and the submission date.
@@ -131,7 +133,7 @@ Everything in ROADMAP.md weeks 2 to 4, plus:
 
 Everything in ROADMAP.md week 5, plus:
 
-- [ ] Privacy and support pages live
+- [x] Privacy and support pages live. `/privacy` and `/support` on the Vercel site, checked 2026-10-07
 - [ ] External TestFlight build submitted to Beta App Review
 - [ ] Recruiting posts drafted for the channels listed in ROADMAP.md
 
@@ -146,14 +148,17 @@ Everything in ROADMAP.md week 5, plus:
 
 Everything in ROADMAP.md weeks 7 to 10, plus:
 
-- [ ] In-app account deletion, complete server-side wipe
-- [ ] Sign in with Apple as the only login
-- [ ] Supabase RLS verified per table
 - [ ] EU DSA trader verification started (or US-first decision logged)
-- [ ] Paywall shows price, term, privacy policy, EULA
-- [ ] Shareable reason-cost card (the launch asset, built in-app)
+- [ ] Shareable reason-cost card (the launch asset, built in-app). Not built: the weekly review shows the reason table but has no share action
 
-**Exit gate:** purchase, restore, and account deletion all pass in sandbox; the paywall passes a self-review against the subscription guidelines.
+Deferred past 1.0 by D019 (version 1.0 is free and local-only, with no account, purchase or sync), so these wait for the version that adds Sync:
+
+- In-app account deletion, complete server-side wipe
+- Sign in with Apple as the only login
+- Supabase RLS verified per table
+- Paywall shows price, term, privacy policy, EULA
+
+**Exit gate:** purchase, restore, and account deletion all pass in sandbox; the paywall passes a self-review against the subscription guidelines. Not applicable to 1.0, which has no purchase or account; it returns with Sync.
 
 ### Phase 6: submission (week 11)
 
@@ -174,24 +179,26 @@ privacy label answers, the IAP definitions, and the screenshot spec, live in
 - [ ] All five entitlements show Distribution in the portal
 - [ ] Every provisioning profile regenerated after that, then a clean archive (a main app on Distribution with one extension still on Development is the classic silent killer, per ROADMAP.md)
 - [ ] Shield extension memory profiled under the ceiling on the oldest supported device
-- [ ] Privacy manifests present, app and SDKs
-- [ ] Export compliance key set in every target
+- [x] Privacy manifests present, app and SDKs. All five targets carry one and the app links no third-party SDK; `scripts/verify_release.sh` checks them
+- [x] Export compliance key set in every target. `ITSAppUsesNonExemptEncryption: false` for all five in `project.yml`
 
 **App Store Connect**
 - [ ] Name resolved, subtitle "Did you mean to open that?", category Health & Fitness, secondary Productivity
-- [ ] IAPs attached to the build: one-time unlock, Sync monthly, Sync annual
-- [ ] App Privacy label matches reality: nothing linked to identity on free tier; account data listed only for Sync
+- IAPs attached to the build. Retired for 1.0: free, no IAPs (D019)
+- [ ] App Privacy label matches reality: nothing linked to identity. 1.0 has no account, so no account data to list; prepared answers in `docs/submission/APP_STORE_METADATA.md`
 - [ ] Age rating questionnaire completed
 - [ ] Screenshots in the current required sizes, order per IDENTITY.md: gate, debrief with stamp, weekly review, home, adaptive gate explainer
 - [ ] Privacy policy and support URLs set
 - [ ] Manual release selected
 
 **Review notes**
-- [ ] Personal digital wellbeing tool for the account holder's own device, not parental control
-- [ ] The app never blocks; Enter is always available (state it plainly, reviewers assume blockers)
-- [ ] No advertising, no profiling; nothing leaves the device except user-authored entries under an optional account
-- [ ] Step-by-step demo script: grant Screen Time authorization, pick one app, trigger the gate, enter, close, complete the debrief
-- [ ] Note that Screen Time authorization is required for core function
+*Drafted in `docs/submission/REVIEW_NOTES.md`; the boxes mean the text exists, not that it has been submitted.*
+
+- [x] Personal digital wellbeing tool for the account holder's own device, not parental control
+- [ ] The app never blocks; Enter is always available (state it plainly, reviewers assume blockers). The draft implies it (the pause is optional, Begin visit always works, gates can be paused) but never says it in one plain sentence
+- [ ] No advertising, no profiling; nothing leaves the device (1.0 has no account, so not even user-authored entries). The draft covers the second half (no network or analytics SDK, entries stay in the App Group) but does not say "no advertising, no profiling"
+- [x] Step-by-step demo script: grant Screen Time authorization, pick one app, trigger the gate, enter, close, complete the debrief
+- [ ] Note that Screen Time authorization is required for core function. Not stated yet
 
 **Contingency**
 - [ ] Budget two to three review cycles; keep launch content decoupled from the approval date

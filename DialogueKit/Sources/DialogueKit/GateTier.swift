@@ -1,8 +1,9 @@
 import Foundation
 
 /// Friction as consequence, not constant. High IMS earns a lighter gate.
-/// V1 ships static standard; the adaptive engine turns on in V1.1, but the
-/// rules live here from day one so the app and extensions never drift.
+/// The adaptive tiers ship in 1.0: the app calls `next` whenever a reflection
+/// is logged or edited. The rules live here so the app and extensions never
+/// drift. The tier only sets the suggested pause; nothing is ever locked.
 public enum GateTier: String, Codable, Sendable, CaseIterable {
     case whisper
     case standard

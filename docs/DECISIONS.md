@@ -216,3 +216,17 @@ which point the origin constant in web/lib/site.ts moves with it.
 ### 2026-10-24: Safer website dependency installs
 
 Use npm 12.2.1, a seven-day minimum age for new dependency resolutions, and disabled dependency install scripts in CI and Vercel. Pin CI to the patched Node 24.22.1 runtime.
+
+**D023. The adaptive gate ships in 1.0, as a suggested pause only.**
+2026-10-31. Records what the code already does. D004 deferred adaptation to
+V1.1 behind a static standard tier, but the September build wired
+`GateTier.next` into every logged or edited reflection, so each watched app's
+tier already moves after 12 reflections, at most once per 72 hours. Under D019
+the tier changes only the length of an optional countdown (0, 3 or 8 seconds);
+Begin visit works at once, and the deliberate tier's typed word is not built.
+ARCHITECTURE.md and ROADMAP.md now say this instead of V1.1. The thresholds
+are the design values, uncalibrated, and the explanation lives in Settings
+rather than in a notice at the moment of change.
+*Reverses if:* device testing or the beta shows tier changes confuse people or
+the uncalibrated thresholds misfire, at which point every app holds standard
+until calibration data exists.

@@ -97,11 +97,16 @@ Unlogged sessions are excluded from the numerator and denominator, never counted
 |---|---|---|
 | 85%+ | whisper | Reason chips only, no delay |
 | 60 to 85% | standard | Chips + reminder line + 3s settle |
-| below 60% | deliberate | Chips + reminder + type one word + 8s delay |
+| below 60% | deliberate | Chips + reminder + 8s delay |
 
 Rules: minimum 12 logged sessions before tier moves off standard. Tier changes at most once per 72 hours to prevent thrash. The app always explains the change in plain language. Access is never revoked at any tier.
 
-**Ship static standard tier in V1.** Adaptation turns on in V1.1 once real IMS distributions exist to calibrate against.
+**The adaptive gate ships in version 1.0.** Earlier drafts held V1 to a static standard tier and turned adaptation on in V1.1. The code moved ahead of that plan: `GateTier.next` in DialogueKit applies the thresholds and both guard rails, and `DialogueModel.updateTier` runs it for an app every time a reflection is logged or edited. What the tiers do in 1.0:
+
+- The tier sets the suggested pause on the gate (0, 3 or 8 seconds). The pause is a countdown, never a lock: Begin visit works at once at every tier (D019).
+- The "type one word" step for deliberate is not built. D019 rules out a typed word as a prerequisite to continuing, so `GateTier.requiresTypedWord` exists in DialogueKit and nothing in the app reads it.
+- The rule is explained in plain language in Settings ("A lighter pause over time"). There is no per-change notice when an app's tier moves, so the "always explains the change" rule above is met by that standing explanation, not by a message at the moment of change.
+- The thresholds are the design values, not calibrated ones. Recalibrating them against real IMS distributions is beta work, once a beta exists.
 
 ## Privacy posture
 
