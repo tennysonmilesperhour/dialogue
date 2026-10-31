@@ -31,22 +31,26 @@ Two things gate everything and both must start on day one:
 
 ## Weeks 2 to 4, core build
 
-- [ ] Onboarding: authorization, FamilyActivityPicker, per-app naming (tokens expose no display name), reminder line, chip setup, soft budgets
-- [ ] Gate: shield config + shield action + the reason path the week 1 verdict picked
-- [ ] Debrief: verdict, stat line, note, stamp animation
-- [ ] Home: app rows with IMS, never-mind streak
-- [ ] `DialogueKit`: IMS math, SwiftData models, design tokens
-- [ ] Extensions write to a lightweight app group store; main app ingests into SwiftData
+*Checked against the code 2026-10-31. Built means it compiles and passes CI; none of it has run on a physical iPhone yet (PLAN.md phase 1).*
+
+- [x] Onboarding: authorization, FamilyActivityPicker, per-app naming (tokens expose no display name), reminder line, soft budgets ("Reflect after", 5 to 30 minutes). `WatchedAppsEditor.swift`. Chip setup shipped as a fixed default set plus a write-your-own field on the gate, not a per-app chip editor
+- [x] Gate: shield config + shield action + reason path. Built without the week 1 verdict: "Choose a reason" opens dialogue through `.openParentalControlsApp` on iOS 26.5 and posts a notification below that. Unmeasured on a device (PLAN.md phase 1)
+- [x] Debrief: verdict, duration line, note, defer, undo
+- [ ] Debrief stamp animation. Not built: the debrief has a selection haptic only, while IDENTITY.md's screenshot order still expects a stamp
+- [x] Home: app rows with IMS over the last fourteen days (`TodayView` in `MainViews.swift`)
+- [ ] Never-mind streak on home. Not built: dismissals are recorded in the ledger but no streak is shown
+- [x] `DialogueKit`: IMS math, models, design tokens. The models are Codable structs in a JSON ledger, not SwiftData (D019)
+- [x] Extensions write to a shared App Group store; the main app reads it. Shipped as one locked JSON file with a single writer at a time, not SwiftData (D019)
 - [x] Privacy manifest (`PrivacyInfo.xcprivacy`) across all targets
-- [ ] DialogueKit unit tests (IMS math, tier rules) and copy lint (em dashes, exclamation points, emoji) in CI
-- [ ] Local-only. No Supabase yet.
+- [x] DialogueKit unit tests (IMS math, tier rules) and copy lint (em dashes, exclamation points, emoji) in CI
+- [x] Local-only. The app has no Supabase or other network SDK; Supabase serves only the website waitlist
 
 ## Week 5, review layer
 
-- [ ] Weekly review screen: IMS trend, reason cost table, one rule-based pattern
-- [ ] Sunday evening local notification
+- [x] Weekly review screen: match rate against the previous seven days, a reason table with visits and average minutes, and one prompt built from the most frequent reason (`WeeklyReviewView.swift`)
+- [x] Sunday evening local notification. Opt-in, Sundays at 6 pm local time
 - [ ] TelemetryDeck instrumentation on the four beta metrics (debrief completion, dismissal rate, retention, IMS trend)
-- [ ] Privacy policy and support pages live (required for external TestFlight, not just the App Store)
+- [x] Privacy policy and support pages live (required for external TestFlight, not just the App Store). `/privacy` and `/support` on the Vercel site, checked 2026-10-07
 - [ ] External build submitted to Beta App Review (budget a few days, more for Screen Time apps)
 
 ## Week 6, beta
@@ -58,12 +62,15 @@ Two things gate everything and both must start on day one:
 
 ## Weeks 7 to 10, monetize and polish (parallel with beta)
 
-- [ ] StoreKit 2 + RevenueCat, one-time IAP + optional Sync subscription
-- [ ] Supabase sync for the Sync tier, row-level security verified per table
-- [ ] Sign in with Apple as the only login
-- [ ] In-app account deletion with full server-side wipe (required once Sync creates accounts)
-- [ ] Paywall after first debrief, with the "pay once" line, plus price, term, privacy policy, and EULA links
-- [ ] Next.js marketing site on Vercel
+- [x] Next.js marketing site on Vercel
+
+Deferred past 1.0 by D019 (version 1.0 is free and local-only, with no account, purchase or sync). Kept as the plan for a later version, not open work for this one:
+
+- StoreKit 2 + RevenueCat, one-time IAP + optional Sync subscription
+- Supabase sync for the Sync tier, row-level security verified per table
+- Sign in with Apple as the only login
+- In-app account deletion with full server-side wipe (required once Sync creates accounts)
+- Paywall after first debrief, with the "pay once" line, plus price, term, privacy policy, and EULA links
 - [ ] App Privacy nutrition label (accurate, minimal; policy and support pages went live in week 5)
 - [ ] EU DSA trader verification started, or a deliberate US-first launch logged in DECISIONS.md
 
@@ -73,8 +80,8 @@ Two things gate everything and both must start on day one:
 - [ ] Screenshots: gate, debrief with stamp, weekly review, home, adaptive gate
 - [ ] Review notes: state plainly that this is a personal digital-wellbeing tool for the account holder's own device, that no data is collected for advertising, and that the app never blocks access
 - [ ] Category: Health & Fitness, secondary Productivity
-- [ ] Attach all IAPs to the build (one-time unlock, Sync monthly, Sync annual)
-- [ ] Export compliance key (`ITSAppUsesNonExemptEncryption = NO`) in every target
+- Attach all IAPs to the build. Retired for 1.0: the app is free with no IAPs (D019)
+- [x] Export compliance key (`ITSAppUsesNonExemptEncryption = NO`) in every target. Set for all five targets in `project.yml` and checked by `scripts/verify_release.sh`
 - [ ] Submit with **manual release**, so approval can sit until the beta checkpoint confirms
 - [ ] Budget 2 to 3 review cycles. Screen Time apps get extra scrutiny.
 
@@ -97,7 +104,7 @@ Launch week is an event; distribution is a system. The two shareable artifacts (
 
 ## Post-launch
 
-**V1.1 (month 2):** adaptive gate turns on, calibrated against real IMS data. Time-of-day patterns.
+**V1.1 (month 2):** recalibrate the adaptive gate thresholds against real IMS data (the gate itself already ships in 1.0, D023). Time-of-day patterns.
 **V1.2 (month 4):** iPad, widgets, Shortcuts actions, ledger export.
 **V2 (month 6+):** Android, evaluated only if iOS retention past day 30 holds.
 
