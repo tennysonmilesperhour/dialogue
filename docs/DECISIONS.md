@@ -230,3 +230,11 @@ rather than in a notice at the moment of change.
 *Reverses if:* device testing or the beta shows tier changes confuse people or
 the uncalibrated thresholds misfire, at which point every app holds standard
 until calibration data exists.
+
+### 2026-11-10: Patch the website framework without a native release
+
+Raise the website's Next.js minimum to 16.4.5 for Aikido issue 56084156,
+retaining the seven-day dependency-age rule and disabled install scripts.
+No native source, signing configuration, database or product copy changes.
+Before merging, confirm the existing TestFlight gate still lacks signing
+credentials so this web-only security update cannot publish a native build.
